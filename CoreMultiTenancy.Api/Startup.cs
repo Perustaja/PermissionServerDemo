@@ -1,4 +1,5 @@
 using System;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,8 +20,16 @@ namespace CoreMultiTenancy.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCustomAuthentication(Configuration);
+            // services.AddCustomAuthentication(Configuration);
             services.AddControllers();
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = "https://localhost:5100/";
+                    options.RequireHttpsMetadata = false; // NOTE: dev only
+                    options.ApiName = "totalflightapi";
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -35,7 +44,6 @@ namespace CoreMultiTenancy.Api
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

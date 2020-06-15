@@ -15,25 +15,35 @@ namespace CoreMultiTenancy.Identity
             { 
                 new IdentityResources.OpenId(), // Required for OpenID Connect
                 new IdentityResources.Profile(),
+                // The current selected tenant
+                new IdentityResource("tid", "Tenant Id", new string[] { "tid" }),
             };
 
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[] 
-            { };
+            { 
+                new ApiResource("totalflightapi", "TotalFlight API", new string[] { "tid" }),
+            };
         
         public static IEnumerable<Client> Clients =>
             new Client[] 
             { 
+                // MVC
                 new Client()
                 {
-                    ClientName = "Total Flight Api",
-                    ClientId = "totalflightapi",
+                    ClientName = "Total Flight MVC",
+                    ClientId = "totalflightmvc",
                     AllowedGrantTypes = GrantTypes.Code,
+                    RequireConsent = false,
+                    RequirePkce = true,
                     RedirectUris = { "https://localhost:5001/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
                     AllowedScopes = 
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        "tid",
+                        "totalflightapi",
                     },
                     ClientSecrets = { new Secret("secret".Sha256()) },
                 },
