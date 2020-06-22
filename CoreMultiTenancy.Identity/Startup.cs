@@ -4,6 +4,7 @@
 
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Services;
 using CoreMultiTenancy.Identity.Tenancy;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace CoreMultiTenancy.Identity
@@ -28,17 +30,18 @@ namespace CoreMultiTenancy.Identity
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => 
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("IdentityDb")));
 
             services.AddIdentityCore<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
-            
+
             services.AddAuthentication()
                 // Support multi-step login
                 .AddCookie(Constants.PartialLoginScheme);
-            
+
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiResources(Config.Apis)
@@ -56,7 +59,10 @@ namespace CoreMultiTenancy.Identity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseHsts();
             }
+            app.UseHttpsRedirection();
+            app.UseRouting();
 
             app.UseAuthentication(); // May be unnecessary
             app.UseIdentityServer();
