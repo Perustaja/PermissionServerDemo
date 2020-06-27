@@ -37,14 +37,14 @@ namespace CoreMultiTenancy.Identity
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("IdentityDb")));
 
-            services.AddIdentity<User, IdentityRole<Guid>>()
+            services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication()
                 // Support multi-step login
-                .AddCookie(Constants.PortalLoginScheme);
+                .AddCookie(Constants.Schemes.PortalLoginScheme);
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
@@ -55,7 +55,7 @@ namespace CoreMultiTenancy.Identity
                 .AddProfileService<TenantedProfileService>();
             builder.AddDeveloperSigningCredential();
 
-            services.AddRazorPages();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -66,13 +66,18 @@ namespace CoreMultiTenancy.Identity
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseIdentityServer();
 
             app.UseEndpoints(e =>
                 {
-                    e.MapRazorPages();
+                    e.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller}/{action}/{id?}",
+                        defaults: new { controller = "home", Action = "index" }
+                    );
                 });
         }
     }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreMultiTenancy.Identity.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

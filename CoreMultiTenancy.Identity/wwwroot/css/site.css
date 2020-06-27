@@ -1,0 +1,80 @@
+/* ASP.NET CORE SPECIFIC */
+
+.validation-summary-valid span {
+    display: none;
+}
+
+.theme-aspen {
+    background-image: url("../img/loginbg.jpg");
+    background-size: cover;
+    color: whitesmoke;
+}
+
+/* GENERAL USAGE */
+
+.text-right {
+    text-align: right;
+}
+
+.table-list {
+    border-collapse: collapse;
+}
+
+.table-list th {
+    padding: 3px 10px;
+}
+
+.v-scroll {
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+/* LOGIN-PAGE */
+
+.login-container-parent {
+    opacity: .98;
+    display: table;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.login-container {
+    display: table-cell;
+    vertical-align: middle;
+    margin: auto;
+    background-clip: content-box;
+    filter: drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.5));
+    background-color: white;
+    color: black;
+    padding: 10px;
+}
+
+.login-form-container {
+    min-width: 600px;
+    max-width: 800px;
+}
+
+.login-form {
+    margin: auto;
+}
+
+.login-logo-wrapper {
+    padding: 15px;
+    text-align: center;
+}
+
+.login-header {
+    text-align: center;
+    font-size: 200%;
+    font-weight: 400;
+    color: black;
+    letter-spacing: .5px;
+}
+
+.login-lead {
+    text-align: center;
+}
+
+.login-trail {
+    text-align: center;
+}
