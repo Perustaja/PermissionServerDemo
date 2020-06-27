@@ -2,13 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.Services;
 using CoreMultiTenancy.Identity.Tenancy;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -33,14 +37,14 @@ namespace CoreMultiTenancy.Identity
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("IdentityDb")));
 
-            services.AddIdentityCore<User>()
+            services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication()
                 // Support multi-step login
-                .AddCookie(Constants.PartialLoginScheme);
+                .AddCookie(Constants.PortalLoginScheme);
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
@@ -64,7 +68,6 @@ namespace CoreMultiTenancy.Identity
             app.UseHttpsRedirection();
             app.UseRouting();
 
-            app.UseAuthentication(); // May be unnecessary
             app.UseIdentityServer();
 
             app.UseEndpoints(e =>
