@@ -12,7 +12,7 @@ namespace CoreMultiTenancy.Identity
     {
         public static IEnumerable<IdentityResource> Ids =>
             new IdentityResource[]
-            { 
+            {
                 new IdentityResources.OpenId(), // Required for OpenID Connect
                 new IdentityResources.Profile(),
                 // The current selected tenant
@@ -20,34 +20,50 @@ namespace CoreMultiTenancy.Identity
             };
 
         public static IEnumerable<ApiResource> Apis =>
-            new ApiResource[] 
-            { 
-                new ApiResource("totalflightapi", "TotalFlight API", new string[] { "tid" }),
+            new ApiResource[]
+            {
+                new ApiResource("testapi", "Test API", new string[] { "tid" }),
             };
-        
+
         public static IEnumerable<Client> Clients =>
-            new Client[] 
+            new Client[]
             { 
                 // MVC
                 new Client()
                 {
-                    ClientName = "Total Flight MVC",
-                    ClientId = "totalflightmvc",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientName = "Test MVC Client",
+                    ClientId = "testmvc",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
                     RequireConsent = false,
-                    RequirePkce = true,
-                    RedirectUris = { "https://localhost:5001/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
-                    AllowedScopes = 
+                    // RequirePkce = true,
+                    // RedirectUris = { "https://localhost:5001/signin-oidc" },
+                    // PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
+                    AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "tid",
-                        "totalflightapi",
+                        "testapi",
+                    },
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+                },
+                // Console (for basic testing via HttpClient)
+                new Client()
+                {
+                    ClientName = "Test Console Client",
+                    ClientId = "testconsole",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    RequireConsent = false,
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "tid",
+                        "testapi",
                     },
                     ClientSecrets = { new Secret("secret".Sha256()) },
                 },
             };
-        
+
     }
 }

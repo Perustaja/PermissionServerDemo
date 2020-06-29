@@ -19,35 +19,7 @@
     </environment>
 </head>
 <body>
-    <div class="navbar navbar-inverse fixed-top es-header">
-        <div class="container">
-            <div class="row">
-                <div class="navbar-header col-sm-6 col-xs-8">
-                    <a asp-controller="home" asp-action="ReturnToOriginalApplication" asp-route-returnUrl="@ViewData["ReturnUrl"]">
-                        <div class="navbar-brand"></div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div>
         @RenderBody()
-        <br /><br />
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <br><div class="brand"></div>
-                    </div>
-                    <div class="col-sm-6">
-                        <img class="text hidden-xs" src="~/images/main_footer_text.PNG" width="335" height="26" alt="footer text image" />
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-
 
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>

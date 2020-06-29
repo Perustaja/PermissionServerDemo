@@ -6,7 +6,9 @@ namespace CoreMultiTenancy.Identity.Models
 {
     public class User : IdentityUser<Guid>
     {
+        [PersonalData]
         public string FirstName { get; private set; }
+        [PersonalData]
         public string LastName { get; private set; }
         public Guid SelectedOrg { get; private set; }
         public List<UserOrganization> UserOrganizations { get; set; }

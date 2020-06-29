@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Models;
 using IdentityServer4.Extensions;
@@ -36,9 +37,8 @@ namespace CoreMultiTenancy.Identity.Tenancy
             var principal = await _principalsFactory.CreateAsync(user);
 
             // Append our tenancy id claim
-            var tidClaim = context.Subject.Claims.FirstOrDefault(c => c.Type == "tid");
-            if (tidClaim != null)
-                principal.Claims.Append(tidClaim);
+            var tidClaim = new Claim("tid", user.SelectedOrg.ToString());
+            principal.Claims.Append(tidClaim);
             
             context.AddRequestedClaims(principal.Claims);
         }
