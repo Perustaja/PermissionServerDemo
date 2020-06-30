@@ -36,9 +36,9 @@ namespace CoreMultiTenancy.Mvc
                 .AddOpenIdConnect("oidc", options =>
                 {
                     options.Authority = "https://localhost:5100";
-                    options.RequireHttpsMetadata = false;
+                    options.RequireHttpsMetadata = false; // NOTE: Dev only
 
-                    options.ClientId = "totalflightmvc";
+                    options.ClientId = "testmvc";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code";
 

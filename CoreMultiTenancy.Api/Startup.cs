@@ -25,6 +25,14 @@ namespace CoreMultiTenancy.Api
         {
             services.AddControllers();
             services.AddCustomAuthentication(Configuration);
+            services.AddAuthorization(o =>
+            {
+                o.AddPolicy("ApiScope", p =>
+                {
+                    p.RequireAuthenticatedUser();
+                    p.RequireClaim("scope", "testapi", "tid");
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,7 +51,8 @@ namespace CoreMultiTenancy.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers()
+                    .RequireAuthorization("ApiScope");
             });
         }
     }

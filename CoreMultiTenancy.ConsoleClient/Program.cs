@@ -11,6 +11,7 @@ namespace CoreMultiTenancy.ConsoleClient
     {
         static async Task Main(string[] args)
         {
+            // Try to ignore any SSL issues for development
             ServicePointManager.ServerCertificateValidationCallback += (o, c, ch, er) => true;
             
             // discover endpoints from metadata

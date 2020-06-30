@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Controllers
 {
+    [SecurityHeaders]
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
@@ -33,7 +35,6 @@ namespace CoreMultiTenancy.Identity.Controllers
             _signInManager = signInManager;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
@@ -88,14 +89,12 @@ namespace CoreMultiTenancy.Identity.Controllers
             return View(vm);
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel vm)

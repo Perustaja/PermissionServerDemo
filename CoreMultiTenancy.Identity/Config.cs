@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 using System.Collections.Generic;
@@ -15,14 +16,12 @@ namespace CoreMultiTenancy.Identity
             {
                 new IdentityResources.OpenId(), // Required for OpenID Connect
                 new IdentityResources.Profile(),
-                // The current selected tenant
-                new IdentityResource("tid", "Tenant Id", new string[] { "tid" }),
             };
 
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[]
             {
-                new ApiResource("testapi", "Test API", new string[] { "tid" }),
+                new ApiResource("testapi", "Test API", new[] { JwtClaimTypes.Name, "tid"  })
             };
 
         public static IEnumerable<Client> Clients =>
@@ -33,16 +32,15 @@ namespace CoreMultiTenancy.Identity
                 {
                     ClientName = "Test MVC Client",
                     ClientId = "testmvc",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Code,
                     RequireConsent = false,
-                    // RequirePkce = true,
-                    // RedirectUris = { "https://localhost:5001/signin-oidc" },
-                    // PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    RedirectUris = { "https://localhost:5001/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "tid",
                         "testapi",
                     },
                     ClientSecrets = { new Secret("secret".Sha256()) },
@@ -54,11 +52,12 @@ namespace CoreMultiTenancy.Identity
                     ClientId = "testconsole",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     RequireConsent = false,
+                    AlwaysSendClientClaims = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "tid",
                         "testapi",
                     },
                     ClientSecrets = { new Secret("secret".Sha256()) },

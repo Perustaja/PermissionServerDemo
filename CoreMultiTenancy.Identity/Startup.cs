@@ -50,7 +50,6 @@ namespace CoreMultiTenancy.Identity
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiResources(Config.Apis)
                 .AddInMemoryClients(Config.Clients)
-                .AddTestUsers(TestData.TestUsers.Users)
                 .AddAspNetIdentity<User>()
                 .AddProfileService<TenantedProfileService>();
             builder.AddDeveloperSigningCredential();

@@ -27,6 +27,9 @@ namespace CoreMultiTenancy.Identity.Tenancy
         }
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
+            foreach (var t in context.RequestedClaimTypes)
+                _logger.LogInformation(t);
+            
             context.LogProfileRequest(_logger);
             // Use the information we have to get the user associated with the subject and then its claims
             var subId = context.Subject.GetSubjectId();
@@ -36,11 +39,12 @@ namespace CoreMultiTenancy.Identity.Tenancy
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == parsedId) ?? throw new Exception($"Unable to find user with ID: {parsedId}.");
             var principal = await _principalsFactory.CreateAsync(user);
 
-            // Append our tenancy id claim
+            // Append our custom claims
+            var claims = principal.Claims.ToList();
             var tidClaim = new Claim("tid", user.SelectedOrg.ToString());
-            principal.Claims.Append(tidClaim);
+            claims.Add(tidClaim);
             
-            context.AddRequestedClaims(principal.Claims);
+            context.AddRequestedClaims(claims);
         }
         public async Task IsActiveAsync(IsActiveContext context)
         {
