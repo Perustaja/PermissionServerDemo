@@ -43,6 +43,9 @@ namespace CoreMultiTenancy.Mvc
                     options.ResponseType = "code";
 
                     options.SaveTokens = true;
+
+                    // Request additional resources for api
+                    options.Scope.Add("testapi");
                 });
         }
 

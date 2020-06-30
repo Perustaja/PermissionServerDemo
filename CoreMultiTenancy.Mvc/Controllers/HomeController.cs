@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using System;
+using Microsoft.AspNetCore.Authentication;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace CoreMultiTenancy.Mvc.Controllers
 {
@@ -18,9 +21,22 @@ namespace CoreMultiTenancy.Mvc.Controllers
             _logger = logger;
         }
 
-        public IActionResult IndexAsync()
+        public IActionResult Index()
         {
             return View();
+        }
+        public async Task<IActionResult> CallApi()
+        {
+            // Get access token and display information
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            _logger.LogInformation(accessToken);
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var content = await client.GetStringAsync("https://localhost:6100/identity"); // Call API
+
+            ViewBag.Json = JArray.Parse(content).ToString();
+            return View("Json");
         }
     }
 }

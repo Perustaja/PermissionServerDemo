@@ -34,7 +34,6 @@ namespace CoreMultiTenancy.Identity
                     ClientId = "testmvc",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireConsent = false,
-                    AlwaysIncludeUserClaimsInIdToken = true,
                     RedirectUris = { "https://localhost:5001/signin-oidc" },
                     PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
                     AllowedScopes =

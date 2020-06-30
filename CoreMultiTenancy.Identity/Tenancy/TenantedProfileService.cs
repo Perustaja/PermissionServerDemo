@@ -45,6 +45,8 @@ namespace CoreMultiTenancy.Identity.Tenancy
             claims.Add(tidClaim);
             
             context.AddRequestedClaims(claims);
+            foreach (var c in context.IssuedClaims)
+                _logger.LogInformation($"{c.Type}, {c.Value}");
         }
         public async Task IsActiveAsync(IsActiveContext context)
         {
