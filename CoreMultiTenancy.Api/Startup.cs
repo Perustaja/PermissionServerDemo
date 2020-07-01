@@ -30,7 +30,7 @@ namespace CoreMultiTenancy.Api
                 o.AddPolicy("ApiScope", p =>
                 {
                     p.RequireAuthenticatedUser();
-                    p.RequireClaim("scope", "testapi", "tid");
+                    p.RequireClaim("scope", "testapi");
                 });
             });
         }
@@ -71,36 +71,22 @@ namespace CoreMultiTenancy.Api
                 {
                     o.Authority = identityUrl;
                     o.RequireHttpsMetadata = false; // NOTE: dev only
-                    o.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateAudience = false,
-                    };
+                }).AddCookie(o => 
+                {
+                    o.ExpireTimeSpan = TimeSpan.FromMinutes(cookieLifetime);
+                }).AddOpenIdConnect(options =>
+                {
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.Authority = identityUrl;
+                    options.SignedOutRedirectUri = callbackUrl;
+                    options.ClientId = "totalflightapi";
+                    options.ClientSecret = "temporary";
+                    options.ResponseType = "code id_token";
+                    options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.UsePkce = true;
+                    options.RequireHttpsMetadata = false; // NOTE: only for development
                 });
-
-            // services.AddAuthentication(options =>
-            // {
-            //     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            // }).AddJwtBearer(options =>
-            // {
-            //     options.Authority = identityUrl;
-            //     options.RequireHttpsMetadata = false; // NOTE: only for development
-            //     options.Audience = "totalflightapi";
-            // }).AddCookie(setup =>
-            // {
-            //     setup.ExpireTimeSpan = TimeSpan.FromMinutes(cookieLifetime);
-            // }).AddOpenIdConnect(options =>
-            // {
-            //     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //     options.Authority = identityUrl;
-            //     options.SignedOutRedirectUri = callbackUrl;
-            //     options.ClientId = "totalflightapi";
-            //     options.ClientSecret = "temporary";
-            //     options.ResponseType = "code id_token";
-            //     options.SaveTokens = true;
-            //     options.GetClaimsFromUserInfoEndpoint = true;
-            //     options.RequireHttpsMetadata = false; // NOTE: only for development
-            // });
 
             return services;
         }

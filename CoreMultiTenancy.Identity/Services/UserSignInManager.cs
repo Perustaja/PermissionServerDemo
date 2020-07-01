@@ -9,6 +9,9 @@ using Microsoft.Extensions.Options;
 
 namespace CoreMultiTenancy.Identity.Services
 {
+    /// <summary>
+    /// Required for Identity, even if not used directly within the application code.
+    /// </summary>
     public class UserSignInManager : SignInManager<User>
     {
         private readonly UserManager<User> _userManager;

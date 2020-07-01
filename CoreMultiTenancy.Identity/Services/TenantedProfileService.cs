@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace CoreMultiTenancy.Identity.Tenancy
+namespace CoreMultiTenancy.Identity.Services
 {
     public class TenantedProfileService : IProfileService
     {
@@ -27,26 +27,18 @@ namespace CoreMultiTenancy.Identity.Tenancy
         }
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-            foreach (var t in context.RequestedClaimTypes)
-                _logger.LogInformation(t);
-            
             context.LogProfileRequest(_logger);
-            // Use the information we have to get the user associated with the subject and then its claims
-            var subId = context.Subject.GetSubjectId();
-            if (!Guid.TryParse(subId, out var parsedId))
-                throw new Exception($"TenantedProfileService could not parse SubjectId: {subId} into usable Guid.");
-            
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == parsedId) ?? throw new Exception($"Unable to find user with ID: {parsedId}.");
+            // Retrieve the user and its ClaimsPrincipal from the context
+            var user = await _userManager.GetUserAsync(context.Subject) 
+                ?? throw new Exception($"{this.GetType().Name}: Unable to find user with ID: {context.Subject.GetSubjectId()}.");
             var principal = await _principalsFactory.CreateAsync(user);
 
-            // Append our custom claims
+            // Add our custom claims
             var claims = principal.Claims.ToList();
             var tidClaim = new Claim("tid", user.SelectedOrg.ToString());
             claims.Add(tidClaim);
             
             context.AddRequestedClaims(claims);
-            foreach (var c in context.IssuedClaims)
-                _logger.LogInformation($"{c.Type}, {c.Value}");
         }
         public async Task IsActiveAsync(IsActiveContext context)
         {
