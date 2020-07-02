@@ -20,12 +20,12 @@ namespace CoreMultiTenancy.Identity.Services
     {
         private readonly ILogger<AuthorizeInteractionResponseGenerator> _logger;
         private readonly UserManager<User> _userManager;
-        private readonly ITenantInfoValidator<Guid> _validator;
+        private readonly ITenantAuthService<Guid> _validator;
         public PortalInteractionResponseGenerator(ISystemClock clock, 
         ILogger<AuthorizeInteractionResponseGenerator> logger,
         IConsentService consentService, IProfileService profileService,
         UserManager<User> userManager,
-        ITenantInfoValidator<Guid> validator)
+        ITenantAuthService<Guid> validator)
             : base(clock, logger, consentService, profileService) 
             {
                 _logger = logger;
@@ -40,39 +40,8 @@ namespace CoreMultiTenancy.Identity.Services
             var response = await base.ProcessInteractionAsync(req, consent);
             var readyToAdvance = !(response.IsConsent || response.IsError || response.IsLogin);
 
-            // Get the user associated with this request and validate it
-            var user = await _userManager.GetUserAsync(req.Subject) 
-                ?? throw new Exception($"{this.GetType().Name}: Unable to find user with ID: {req.Subject.GetSubjectId()}.");
-            var vResult = _validator.ValidateSelectedOrganization(user.Id, user.SelectedOrg);
 
-            // Respond based on possible validation errors
-            if (vResult.TenantNotFound)
-            {
-                _logger.LogError($"User: {user.Id} SelectedOrg: {user.SelectedOrg} Organization doesn't exist in database. Redirecting to portal.");
-                return new InteractionResponse() 
-                { 
-                    RedirectUrl = "/Portal",
-                    ErrorDescription = "There was an error accessing the selected company. If the problem persists, contact site administration.",
-                };
-            }
-            if (vResult.TenantInactive)
-            {
-                _logger.LogInformation($"User: {user.Id} SelectedOrg: {user.SelectedOrg} Organization inactive. Redirecting to portal.");
-                return new InteractionResponse() 
-                { 
-                    RedirectUrl = "/Portal",
-                    ErrorDescription = "The selected company is inactive. Please contact the company's administation for further information.",
-                };
-            }
-            if (vResult.UserUnauthorized)
-            {
-                _logger.LogInformation($"User: {user.Id} SelectedOrg: {user.SelectedOrg} User unauthorized to access this Organization. Redirecting to portal.");
-                return new InteractionResponse() 
-                { 
-                    RedirectUrl = "/Portal",
-                    ErrorDescription = "You no longer have access to this company. Please contact the company's administation for further information.",
-                };
-            }
+            // Get the user associated with this request and validate it
 
             return response; // Continue on normally
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using CoreMultiTenancy.Identity.Data;
+using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.Services;
@@ -44,6 +45,8 @@ namespace CoreMultiTenancy.Identity
                 .AddProfileService<TenantedProfileService>();
             builder.AddDeveloperSigningCredential();
 
+            services.AddScoped<IAccessRevokedEventRepository, AccessRevokedEventRepository>();
+            
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
