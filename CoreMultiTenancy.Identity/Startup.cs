@@ -42,11 +42,10 @@ namespace CoreMultiTenancy.Identity
                 .AddInMemoryApiResources(Config.Apis)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<User>()
-                .AddProfileService<TenantedProfileService>();
+                .AddProfileService<TenantedProfileService>()
+                .AddAuthorizeInteractionResponseGenerator<PortalInteractionResponseGenerator>();
             builder.AddDeveloperSigningCredential();
 
-            services.AddScoped<IAccessRevokedEventRepository, AccessRevokedEventRepository>();
-            
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
