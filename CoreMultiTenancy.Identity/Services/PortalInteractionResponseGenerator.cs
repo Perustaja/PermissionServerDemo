@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -39,7 +38,7 @@ namespace CoreMultiTenancy.Identity.Services
 
             if (req.Subject.HasClaim(c => c.Type == "tid" && c.Value == Guid.Empty.ToString()))
             // Get the user associated with this request and validate it
-            
+
             sw.Stop();
             _logger.LogDebug($"{this.GetType().Name}: check completed in {sw.ElapsedMilliseconds}ms.");
             return response; // Continue on normally

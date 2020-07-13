@@ -14,10 +14,10 @@ namespace CoreMultiTenancy.Identity
                 new IdentityResources.Profile(),
             };
 
-        public static IEnumerable<ApiResource> Apis =>
-            new ApiResource[]
+        public static IEnumerable<ApiScope> ApiScopes =>
+            new ApiScope[]
             {
-                new ApiResource("testapi", "Test API", new[] { JwtClaimTypes.Name, "tid"  })
+                new ApiScope("testapi", "Test API")
             };
 
         public static IEnumerable<Client> Clients =>

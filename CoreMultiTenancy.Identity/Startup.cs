@@ -1,7 +1,6 @@
 ﻿using System;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
-using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Builder;
@@ -39,11 +38,10 @@ namespace CoreMultiTenancy.Identity
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
-                .AddInMemoryApiResources(Config.Apis)
+                .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<User>()
-                .AddProfileService<TenantedProfileService>()
-                .AddAuthorizeInteractionResponseGenerator<PortalInteractionResponseGenerator>();
+                .AddProfileService<TenantedProfileService>();
             builder.AddDeveloperSigningCredential();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();

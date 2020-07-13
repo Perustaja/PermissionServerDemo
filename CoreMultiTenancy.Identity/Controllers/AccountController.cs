@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.ViewModels.Account;
 using IdentityServer4.Services;
@@ -40,7 +41,10 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             var context = await _interactionSvc.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null)
-                throw new NotImplementedException("External login not implemented.");
+            {
+                _logger.LogWarning("External login service requested, but not implemented.");
+                return NotFound();
+            }
 
             var vm = new LoginViewModel()
             {
@@ -56,31 +60,38 @@ namespace CoreMultiTenancy.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel vm)
         {
+            // Get context of request
+            var context = await _interactionSvc.GetAuthorizationContextAsync(vm.ReturnUrl);
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(vm.Email);
                 if (await _userManager.CheckPasswordAsync(user, vm.Password))
                 {
-                    var tknLifetime = _config.GetValue("TokenLifetimeMinutes", 60);
-                    var props = new AuthenticationProperties()
+                    // Set AuthenticationProperties if credentials are proper
+                    var props = new AuthenticationProperties() { RedirectUri = vm.ReturnUrl };
+                    if (AccountOptions.AllowRememberLogin && vm.RememberMe)
                     {
-                        ExpiresUtc = DateTime.UtcNow.AddMinutes(tknLifetime),
-                        AllowRefresh = true,
-                        RedirectUri = vm.ReturnUrl,
-                    };
-                    if (vm.RememberMe)
-                    {
-                        props.ExpiresUtc = DateTime.UtcNow.AddYears(1);
+                        props.ExpiresUtc = DateTime.UtcNow.Add(AccountOptions.RememberMeLoginDuration);
                         props.IsPersistent = true;
                     }
 
                     await _signInManager.SignInAsync(user, props);
-                    if (_interactionSvc.IsValidReturnUrl(vm.ReturnUrl))
+                    // Redirect Portal if tenant selection unset
+                    if (user.SelectedOrg == Guid.Empty)
+                        return RedirectToAction("Index", "Portal", new { ReturnUrl = vm.ReturnUrl });
+                    // Else, if ReturnUrl is valid, redirect
+                    else if (context != null)
                     {
+                        if (context.IsNativeClient())
+                            return this.LoadingPage("Redirect", vm.ReturnUrl);
                         return Redirect(vm.ReturnUrl);
                     }
-                    // Redirect to client home
-                    return Redirect("~/");
+                    else if (Url.IsLocalUrl(vm.ReturnUrl))
+                        return Redirect(vm.ReturnUrl);
+                    // Return to home if ReturnUrl is null or invalid
+                    else
+                        return Redirect("~/");
                 }
                 ModelState.AddModelError("", "Invalid email or password.");
             }

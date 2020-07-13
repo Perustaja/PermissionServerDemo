@@ -24,7 +24,16 @@ namespace CoreMultiTenancy.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddCustomAuthentication(Configuration);
+            services.AddHttpContextAccessor();
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", o =>
+                {
+                    o.Authority = "https://localhost:5100";
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                    };
+                });
             services.AddAuthorization(o =>
             {
                 o.AddPolicy("ApiScope", p =>
@@ -54,41 +63,6 @@ namespace CoreMultiTenancy.Api
                 endpoints.MapControllers()
                     .RequireAuthorization("ApiScope");
             });
-        }
-    }
-    static class Extensions
-    {
-        public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration config)
-        {
-            var identityUrl = config.GetValue<string>("IdentityUrl");
-            var callbackUrl = config.GetValue<string>("CallbackUrl");
-            var cookieLifetime = config.GetValue("CookieLifetime", 60);
-
-            IdentityModelEventSource.ShowPII = true;
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, o =>
-                {
-                    o.Authority = identityUrl;
-                    o.RequireHttpsMetadata = false; // NOTE: dev only
-                }).AddCookie(o => 
-                {
-                    o.ExpireTimeSpan = TimeSpan.FromMinutes(cookieLifetime);
-                }).AddOpenIdConnect(options =>
-                {
-                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.Authority = identityUrl;
-                    options.SignedOutRedirectUri = callbackUrl;
-                    options.ClientId = "totalflightapi";
-                    options.ClientSecret = "temporary";
-                    options.ResponseType = "code id_token";
-                    options.SaveTokens = true;
-                    options.GetClaimsFromUserInfoEndpoint = true;
-                    options.UsePkce = true;
-                    options.RequireHttpsMetadata = false; // NOTE: only for development
-                });
-
-            return services;
         }
     }
 }

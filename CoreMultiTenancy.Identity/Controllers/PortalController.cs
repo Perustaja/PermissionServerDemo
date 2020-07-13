@@ -42,13 +42,13 @@ namespace CoreMultiTenancy.Identity.Controllers
             // NOTE: ensure viewdata["errormessage"] is displayed with redirect and set in responsegen
             return View(vm);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SelectOrganization(Guid orgId)
-        {
-            // Validate selectedorg
-            // Set user's selectedorg
-            // redirect to returnUrl
-        }
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public IActionResult SelectOrganization(Guid orgId)
+        // {
+        //     // Validate selectedorg
+        //     // Set user's selectedorg
+        //     // redirect to returnUrl
+        // }
     }
 }

@@ -5,9 +5,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityModel.Client;
 using System;
+using System.Net.Http.Json;
 using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Xml;
 
 namespace CoreMultiTenancy.Mvc.Controllers
 {
@@ -30,12 +33,12 @@ namespace CoreMultiTenancy.Mvc.Controllers
             // Get access token and display information
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             _logger.LogInformation(accessToken);
-
+            
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.GetStringAsync("https://localhost:6100/identity"); // Call API
+            var result  = await client.GetFromJsonAsync<string>("https://localhost:6100/identity"); // Call API
 
-            ViewBag.Json = JArray.Parse(content).ToString();
+            ViewBag.Json = result;
             return View("Json");
         }
     }
