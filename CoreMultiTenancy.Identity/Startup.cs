@@ -44,6 +44,7 @@ namespace CoreMultiTenancy.Identity
                 .AddProfileService<TenantedProfileService>();
             builder.AddDeveloperSigningCredential();
 
+            services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 

@@ -10,6 +10,7 @@ namespace CoreMultiTenancy.Identity.Data
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     {
         public DbSet<Organization> Organizations { get; set; }
+        public DbSet<OrganizationAccessToken> OrganizationAccessTokens { get; set; }
         public DbSet<UserOrganization> UserOrganizations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

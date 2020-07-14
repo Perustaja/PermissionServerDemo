@@ -40,23 +40,6 @@ namespace CoreMultiTenancy.Identity
                     },
                     ClientSecrets = { new Secret("secret".Sha256()) },
                 },
-                // Console (for basic testing via HttpClient)
-                new Client()
-                {
-                    ClientName = "Test Console Client",
-                    ClientId = "testconsole",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    RequireConsent = false,
-                    AlwaysSendClientClaims = true,
-                    AlwaysIncludeUserClaimsInIdToken = true,
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "testapi",
-                    },
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-                },
             };
 
     }
