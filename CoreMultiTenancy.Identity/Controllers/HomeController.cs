@@ -8,5 +8,9 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             return View();
         }
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }

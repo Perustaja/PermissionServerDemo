@@ -3,7 +3,7 @@
 
 
 
-namespace CoreMultiTenancy.Identity
+namespace CoreMultiTenancy.Identity.ViewModels
 {
     public class RedirectViewModel
     {

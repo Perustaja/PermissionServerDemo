@@ -65,33 +65,34 @@ namespace CoreMultiTenancy.Identity.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(vm.Email);
-                if (await _userManager.CheckPasswordAsync(user, vm.Password))
+                var result = await _signInManager.PasswordSignInAsync(vm.Email, vm.Password, vm.RememberMe, lockoutOnFailure: true);
+                if (result.Succeeded)
                 {
-                    // Set AuthenticationProperties if credentials are proper
-                    var props = new AuthenticationProperties() { RedirectUri = vm.ReturnUrl };
-                    if (AccountOptions.AllowRememberLogin && vm.RememberMe)
-                    {
-                        props.ExpiresUtc = DateTime.UtcNow.Add(AccountOptions.RememberMeLoginDuration);
-                        props.IsPersistent = true;
-                    }
-
-                    await _signInManager.SignInAsync(user, props);
-                    // Redirect Portal if tenant selection unset
+                    var user = await _userManager.FindByEmailAsync(vm.Email);
+                    // Redirect to Portal if tenant selection unset
                     if (user.SelectedOrg == Guid.Empty)
+                    {
                         return RedirectToAction("Index", "Portal", new { ReturnUrl = vm.ReturnUrl });
-                    // Else, if ReturnUrl is valid, redirect
+                    }
+                    // Else if ReturnUrl is valid redirect
                     else if (context != null)
                     {
                         if (context.IsNativeClient())
+                        {
                             return this.LoadingPage("Redirect", vm.ReturnUrl);
+                        }
                         return Redirect(vm.ReturnUrl);
                     }
+                    // Else if local, redirect
                     else if (Url.IsLocalUrl(vm.ReturnUrl))
+                    {
                         return Redirect(vm.ReturnUrl);
+                    }
                     // Return to home if ReturnUrl is null or invalid
                     else
+                    {
                         return Redirect("~/");
+                    }
                 }
                 ModelState.AddModelError("", "Invalid email or password.");
             }

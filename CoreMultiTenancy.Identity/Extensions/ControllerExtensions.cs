@@ -1,4 +1,5 @@
 using System.Security.Policy;
+using CoreMultiTenancy.Identity.ViewModels;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;

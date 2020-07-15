@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CoreMultiTenancy.Identity.Data.Migrations
+namespace CoreMultiTenancy.Identity.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,7 +51,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organization",
+                name: "Organizations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -60,7 +60,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organization", x => x.Id);
+                    table.PrimaryKey("PK_Organizations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,7 +170,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserOrganization",
+                name: "UserOrganizations",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
@@ -178,15 +178,15 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserOrganization", x => new { x.UserId, x.OrganizationId });
+                    table.PrimaryKey("PK_UserOrganizations", x => new { x.UserId, x.OrganizationId });
                     table.ForeignKey(
-                        name: "FK_UserOrganization_Organization_OrganizationId",
+                        name: "FK_UserOrganizations_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
-                        principalTable: "Organization",
+                        principalTable: "Organizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserOrganization_AspNetUsers_UserId",
+                        name: "FK_UserOrganizations_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -231,8 +231,8 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserOrganization_OrganizationId",
-                table: "UserOrganization",
+                name: "IX_UserOrganizations_OrganizationId",
+                table: "UserOrganizations",
                 column: "OrganizationId");
         }
 
@@ -254,13 +254,13 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UserOrganization");
+                name: "UserOrganizations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Organization");
+                name: "Organizations");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

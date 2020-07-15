@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CoreMultiTenancy.Identity.Data.Migrations
+namespace CoreMultiTenancy.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200627205626_Init")]
-    partial class Init
+    [Migration("20200715220248_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organization");
+                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Models.Role", b =>
@@ -149,7 +149,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("UserOrganization");
+                    b.ToTable("UserOrganizations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

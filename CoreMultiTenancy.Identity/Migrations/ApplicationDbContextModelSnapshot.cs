@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CoreMultiTenancy.Identity.Data.Migrations
+namespace CoreMultiTenancy.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -31,7 +31,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organization");
+                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Models.Role", b =>
@@ -147,7 +147,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("UserOrganization");
+                    b.ToTable("UserOrganizations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

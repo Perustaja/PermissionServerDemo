@@ -1,6 +1,7 @@
 ﻿using System;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
+using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +46,12 @@ namespace CoreMultiTenancy.Identity
             builder.AddDeveloperSigningCredential();
 
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IOrganizationInviteCodeService, OrganizationInviteCodeService>();
+            
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
+
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 

@@ -16,23 +16,31 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         {
           _connectionString = config.GetConnectionString("IdentityDb"); 
         }
-        public Task<Organization> GetByIdAsync(Guid id)
+        public async Task<Organization> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                return await conn.QuerySingleOrDefaultAsync<Organization>(
+                    @"SELECT * FROM Organizations
+                    WHERE Id = @id
+                    LIMIT 1", 
+                    new { id }
+                );
+            }
         }
 
         public async Task<List<Organization>> GetUsersOrgsById(Guid userId)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
-                var result = await conn.QueryAsync<Organization>(
+                var res = await conn.QueryAsync<Organization>(
                     @"SELECT * FROM Organizations
                     WHERE O.Id IN 
                     (SELECT OrganizationId FROM UserOrganizations
-                    WHERE UserId = @UserId)",
-                    new { UserId = userId }
+                    WHERE UserId = @userId)",
+                    new { userId }
                 );
-                return result.ToList();
+                return res.ToList();
             }
         }
     }
