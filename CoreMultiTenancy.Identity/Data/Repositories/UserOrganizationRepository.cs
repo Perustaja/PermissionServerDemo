@@ -1,8 +1,10 @@
 using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Models;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -29,7 +31,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             await _applicationContext.SaveChangesAsync();   
         }
 
-        public async Task<bool> UserHasAccess(Guid userId, Guid orgId)
+        public async Task<bool> ExistsAsync(Guid userId, Guid orgId)
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -41,6 +43,11 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 );
                 return res > 0;
             }
+        }
+        public async Task<UserOrganization> GetByIdsAsync(Guid userId, Guid orgId)
+        {
+            return await _applicationContext.Set<UserOrganization>()
+                .FirstOrDefaultAsync(uo => uo.UserId == userId && uo.OrganizationId == orgId);
         }
     }
 }

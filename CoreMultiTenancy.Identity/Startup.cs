@@ -41,13 +41,13 @@ namespace CoreMultiTenancy.Identity
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
-                .AddAspNetIdentity<User>()
-                .AddProfileService<TenantedProfileService>();
+                .AddAspNetIdentity<User>();
             builder.AddDeveloperSigningCredential();
 
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IOrganizationInviteCodeService, OrganizationInviteCodeService>();
+            services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
+            services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
             
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();

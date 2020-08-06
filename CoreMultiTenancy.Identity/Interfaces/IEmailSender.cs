@@ -6,6 +6,5 @@ namespace CoreMultiTenancy.Identity.Interfaces
     {
         Task SendAccountConfirmationEmail(string email, string confirmationUrl);
         Task SendPasswordResetEmail(string email, string resetUrl);
-        Task SendOrganizationInviteEmail(string email, string orgId);
     }
 }

@@ -9,11 +9,10 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     {
         Task AddAsync(UserOrganization uo);
         Task DeleteAsync(UserOrganization uo);
-        
         /// <summary>
-        /// Returns whether the User associated with the first id has access to the Organization
-        /// associated with the second id.
+        /// Returns a single UserOrganization based on the ids, or null.
         /// </summary>
-        Task<bool> UserHasAccess(Guid userId, Guid orgId);
+        Task<UserOrganization> GetByIdsAsync(Guid userId, Guid orgId);
+        Task<bool> ExistsAsync(Guid userId, Guid orgId);
     }
 }

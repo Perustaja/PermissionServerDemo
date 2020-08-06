@@ -44,20 +44,5 @@ namespace CoreMultiTenancy.Identity.Services
 
             await client.SendEmailAsync(msg);
         }
-        public async Task SendOrganizationInviteEmail(string email, string inviteUrl)
-        {
-            var client = new SendGridClient(_options.SendGridKey);
-            var msg = new SendGridMessage()
-            {
-                Subject = "TestApp - Organization Invitation",
-                From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
-                PlainTextContent = $"Use this link to join the organization {inviteUrl}.",
-            };
-            msg.AddTo(new EmailAddress(email));
-
-            msg.SetClickTracking(false, false);
-
-            await client.SendEmailAsync(msg);
-        }
     }
 }
