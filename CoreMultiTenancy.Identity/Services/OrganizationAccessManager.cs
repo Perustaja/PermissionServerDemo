@@ -20,7 +20,7 @@ namespace CoreMultiTenancy.Identity.Services
         }
         public async Task<AccessModifiedResult> GrantAccessAsync(User user, Organization org)
         {
-            if (!await _userOrgRepo.ExistsAsync(user.Id, org.Id))
+            if (await _userOrgRepo.ExistsAsync(user.Id, org.Id))
                 return new AccessModifiedResult() { ExistingAccess = true };
             // TODO: check if user is on blacklist
 

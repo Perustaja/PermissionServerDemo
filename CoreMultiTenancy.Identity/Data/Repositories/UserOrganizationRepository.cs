@@ -1,11 +1,11 @@
 using System;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Models;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
@@ -33,7 +33,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public async Task<bool> ExistsAsync(Guid userId, Guid orgId)
         {
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = new MySqlConnection(_connectionString))
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM UserOrganizations

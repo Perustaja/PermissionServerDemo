@@ -1,47 +1,33 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Models;
 using Dapper;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
     public class OrganizationRepository : IOrganizationRepository
     {
-        private readonly string _connectionString;
-        public OrganizationRepository(IConfiguration config)
+        private readonly ApplicationDbContext _applicationContext;
+        public OrganizationRepository(ApplicationDbContext applicationContext)
         {
-          _connectionString = config.GetConnectionString("IdentityDb"); 
+            _applicationContext = applicationContext ?? throw new ArgumentNullException(nameof(applicationContext));
         }
         public async Task<Organization> GetByIdAsync(Guid id)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                return await conn.QuerySingleOrDefaultAsync<Organization>(
-                    @"SELECT * FROM Organizations
-                    WHERE Id = @id
-                    LIMIT 1", 
-                    new { id }
-                );
-            }
+            return await _applicationContext.Set<Organization>()
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<List<Organization>> GetUsersOrgsById(Guid userId)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                var res = await conn.QueryAsync<Organization>(
-                    @"SELECT * FROM Organizations
-                    WHERE O.Id IN 
-                    (SELECT OrganizationId FROM UserOrganizations
-                    WHERE UserId = @userId)",
-                    new { userId }
-                );
-                return res.ToList();
-            }
+            return await _applicationContext.Set<UserOrganization>()
+                .Where(uo => uo.UserId == userId)
+                .Include(uo => uo.Organization)
+                .Select(uo => uo.Organization)
+                .ToListAsync();
         }
     }
 }

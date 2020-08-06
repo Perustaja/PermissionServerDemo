@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ namespace CoreMultiTenancy.Identity.Controllers
             // Verify user is logged in and attempt to use invite code
             if (User?.Identity.IsAuthenticated == true)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.GetSubjectId();
                 var user = await _userManager.FindByIdAsync(userId);
                 var invResult = await _inviteService.UsePermInvitationLink(user, inviteCode);
                 // Display view with appropriate message and status

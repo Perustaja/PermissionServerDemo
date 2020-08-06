@@ -20,30 +20,42 @@ namespace CoreMultiTenancy.Identity.Services
         public string CreatePermInvitationLink(Guid orgId) => EncodePerm(orgId);
         public async Task<InviteResult> UsePermInvitationLink(User user, string link)
         {
-            var guid = DecodePerm(link);
+            if (!TryDecodePerm(link, out var guid))
+                return InviteResult.LinkInvalid();
+            
             var org = await _orgRepo.GetByIdAsync(guid);
-            if (org == null)
-                return InviteResult.LinkInvalid();
-
-            // link corresponds to a valid Organization, change access and return result
-            var res = await _orgAccessManager.GrantAccessAsync(user, org);
-            if (res.Success)
-                return res.RequiresConfirmation ? InviteResult.RequiresConfirmation(org.Title) : InviteResult.ImmediateSuccess(org.Title);
-            else if (res.UserBlacklisted)
-                return InviteResult.Blacklisted();
-            else if (res.ExistingAccess)
-                return InviteResult.ExistingAccess(org.Title);
-            else
-                return InviteResult.LinkInvalid();
+            if (org != null)
+            {
+                // link corresponds to a valid Organization, change access and return result
+                var res = await _orgAccessManager.GrantAccessAsync(user, org);
+                if (res.Success)
+                    return res.RequiresConfirmation ? InviteResult.RequiresConfirmation(org.Title) : InviteResult.ImmediateSuccess(org.Title);
+                else if (res.UserBlacklisted)
+                    return InviteResult.Blacklisted();
+                else if (res.ExistingAccess)
+                    return InviteResult.ExistingAccess(org.Title);
+            }
+            // No Organization found or some miscellaneous failure occurred
+            return InviteResult.LinkInvalid();
         }
         private string EncodePerm(Guid id) =>
             Convert.ToBase64String(id.ToByteArray()).Replace("/", "_").Replace("+", "-").Substring(0, 22);
 
-        private Guid DecodePerm(string code)
+        private bool TryDecodePerm(string code, out Guid guid)
         {
             var originalCode = code.Replace("_", "/").Replace("-", "+") + "==";
-            byte[] buffer = Convert.FromBase64String(originalCode);
-            return new Guid(buffer);
+            // Try and convert, if not return false
+            try
+            {
+                byte[] buffer = Convert.FromBase64String(originalCode);
+                guid = new Guid(buffer);
+                return true;
+            }
+            catch
+            {
+                guid = Guid.Empty;
+                return false;
+            }
         }
     }
 }

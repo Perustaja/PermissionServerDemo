@@ -3,16 +3,14 @@ using System;
 using CoreMultiTenancy.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CoreMultiTenancy.Identity.Migrations
+namespace CoreMultiTenancy.Identity.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200715220248_init")]
-    partial class init
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,6 +24,9 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("RequiresConfirmation")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Title")
