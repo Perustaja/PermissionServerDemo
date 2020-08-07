@@ -69,13 +69,8 @@ namespace CoreMultiTenancy.Identity.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByEmailAsync(vm.Email);
-                    // Redirect to Portal if tenant selection unset
-                    if (user.SelectedOrg == Guid.Empty)
-                    {
-                        return RedirectToAction("Index", "Portal", new { ReturnUrl = vm.ReturnUrl });
-                    }
-                    // Else if ReturnUrl is valid redirect
-                    else if (context != null)
+                    // if ReturnUrl is valid redirect
+                    if (context != null)
                     {
                         if (context.IsNativeClient())
                         {

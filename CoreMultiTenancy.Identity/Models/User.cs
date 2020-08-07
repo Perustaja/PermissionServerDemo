@@ -22,5 +22,9 @@ namespace CoreMultiTenancy.Identity.Models
             Email = email;
             SelectedOrg = Guid.Empty;
         }
+        public bool HasUnsetSelectedOrg()
+        {
+            return SelectedOrg == Guid.Empty;
+        }
     }
 }

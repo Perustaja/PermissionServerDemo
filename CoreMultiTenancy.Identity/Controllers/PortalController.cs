@@ -26,7 +26,7 @@ namespace CoreMultiTenancy.Identity.Controllers
             _orgRepository = orgRepository ?? throw new ArgumentNullException(nameof(orgRepository));
         }
         [HttpGet]
-        public async Task<IActionResult> SelectOrganization(string returnUrl)
+        public async Task<IActionResult> Index(string returnUrl)
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value
                 ?? throw new Exception("Unable to find subject claim.");

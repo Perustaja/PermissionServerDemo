@@ -5,12 +5,15 @@ using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Controllers
 {
+    [SecurityHeaders]
+    [Authorize]
     public class InviteController : Controller
     {
         private readonly UserManager<User> _userManager;

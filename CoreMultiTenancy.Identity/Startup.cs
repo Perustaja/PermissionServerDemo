@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
@@ -33,9 +34,7 @@ namespace CoreMultiTenancy.Identity
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication()
-                // Support multi-step login
-                .AddCookie(Constants.Schemes.PortalLoginScheme);
+            services.AddAuthentication();
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
@@ -44,6 +43,14 @@ namespace CoreMultiTenancy.Identity
                 .AddAspNetIdentity<User>();
             builder.AddDeveloperSigningCredential();
 
+            // AutoMapper
+            services.AddAutoMapper(config =>
+            {
+                config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+            },
+            AppDomain.CurrentDomain.GetAssemblies());
+
+            // Custom
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
@@ -67,13 +74,14 @@ namespace CoreMultiTenancy.Identity
             app.UseRouting();
 
             app.UseIdentityServer();
+            app.UseAuthorization();
 
             app.UseEndpoints(e =>
                 {
                     e.MapControllerRoute(
                         name: "default",
                         pattern: "{controller}/{action}/{id?}",
-                        defaults: new { controller = "home", Action = "index" }
+                        defaults: new { controller = "Portal", Action = "Index" }
                     );
                 });
         }
