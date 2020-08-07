@@ -146,6 +146,24 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("char(36)");
 
+                    b.Property<bool>("AwaitingApproval")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Blacklisted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("DateApproved")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateBlacklisted")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateSubmitted")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("InternalNotes")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.HasKey("UserId", "OrganizationId");
 
                     b.HasIndex("OrganizationId");

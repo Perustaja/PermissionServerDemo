@@ -175,7 +175,13 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                    OrganizationId = table.Column<Guid>(nullable: false)
+                    OrganizationId = table.Column<Guid>(nullable: false),
+                    AwaitingApproval = table.Column<bool>(nullable: false),
+                    Blacklisted = table.Column<bool>(nullable: false),
+                    InternalNotes = table.Column<string>(nullable: true),
+                    DateSubmitted = table.Column<DateTime>(nullable: false),
+                    DateApproved = table.Column<DateTime>(nullable: false),
+                    DateBlacklisted = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

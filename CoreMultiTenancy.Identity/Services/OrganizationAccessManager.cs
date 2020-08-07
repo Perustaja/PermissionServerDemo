@@ -20,9 +20,17 @@ namespace CoreMultiTenancy.Identity.Services
         }
         public async Task<AccessModifiedResult> GrantAccessAsync(User user, Organization org)
         {
-            if (await _userOrgRepo.ExistsAsync(user.Id, org.Id))
-                return new AccessModifiedResult() { ExistingAccess = true };
-            // TODO: check if user is on blacklist
+            var record = await _userOrgRepo.GetByIdsAsync(user.Id, org.Id);
+            // Check existing record to see its status
+            if (record != null)
+            {
+                if (record.Blacklisted)
+                    return new AccessModifiedResult() { UserBlacklisted = true };
+                else if (record.AwaitingApproval)
+                    return new AccessModifiedResult() { AwaitingConfirmation = true };
+                else
+                    return new AccessModifiedResult() { ExistingAccess = true };
+            }
 
             // Attempt to save new record
             var accessGrant = new UserOrganization(user.Id, org.Id);
@@ -33,11 +41,11 @@ namespace CoreMultiTenancy.Identity.Services
             catch 
             {
                 _logger.LogError($"Exception while trying to create new UserOrganization. User: {accessGrant.UserId} Organization: {accessGrant.OrganizationId}.");
-                return new AccessModifiedResult(); // Return an empty result indicating complete failure
+                var errorResult = new AccessModifiedResult() { ErrorMessage = "An unexpected error has occurred. If the issue persists, contact site administration." };
+                return errorResult; // Return an empty result indicating complete failure
             }
             return AccessModifiedResult.SuccessfulResult(org.RequiresConfirmation);
         }
-
         public async Task<bool> RevokeAccessAsync(Guid userId, Guid orgId)
         {
             var uo = await _userOrgRepo.GetByIdsAsync(userId, orgId);
@@ -55,8 +63,7 @@ namespace CoreMultiTenancy.Identity.Services
             }
             return true;
         }
-
         public async Task<bool> UserHasAccessAsync(Guid userId, Guid orgId)
-            => await _userOrgRepo.ExistsAsync(userId, orgId);
+            => await _userOrgRepo.ExistsWithAccessAsync(userId, orgId);
     }
 }

@@ -4,6 +4,7 @@ namespace CoreMultiTenancy.Identity.Results
     {
         public bool Success { get; set; }
         public bool RequiresConfirmation { get; set; }
+        public bool AwaitingConfirmation { get; set; }
         public bool ExistingAccess { get; set; }
         public bool UserBlacklisted { get; set; }
         public string ErrorMessage { get; set; }

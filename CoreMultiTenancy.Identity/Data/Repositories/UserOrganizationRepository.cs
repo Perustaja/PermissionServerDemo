@@ -44,6 +44,21 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 return res > 0;
             }
         }
+        public async Task<bool> ExistsWithAccessAsync(Guid userId, Guid orgId)
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                var res = await conn.QuerySingleAsync<int>(
+                    @"SELECT COUNT(*) FROM UserOrganizations
+                    WHERE UserId = @userId
+                    AND OrganizationId = @orgId
+                    AND AwaitingApproval = false
+                    AND Blacklisted = false",
+                    new { userId, orgId }
+                );
+                return res > 0;
+            }
+        }
         public async Task<UserOrganization> GetByIdsAsync(Guid userId, Guid orgId)
         {
             return await _applicationContext.Set<UserOrganization>()
