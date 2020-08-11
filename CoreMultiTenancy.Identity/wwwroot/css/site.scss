@@ -1,0 +1,29 @@
+@import "./scss/variables";
+@import "./scss/controls";
+@import "./scss/portal";
+
+body {
+    background-color: $color-bg;
+}
+main {
+    width: 100%;
+}
+.panel-parent {
+    max-width: 700px;
+    margin: auto;
+}
+.panel-header-lite {
+    width: 100%;
+    justify-content: space-between;
+}
+.panel-content {
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    background-color: $color-fg;
+}
+.title-box {
+    font-size: 26px;
+    font-weight: 500;
+    justify-content: center;
+    margin: 0;
+}

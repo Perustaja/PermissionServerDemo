@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoreMultiTenancy.Identity.Data.Repositories;
-using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.ViewModels.Portal;
 using CoreMultiTenancy.Identity.ViewModels.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Controllers
 {
+    [SecurityHeaders]
+    [Authorize]
     public class PortalController : Controller
     {
         private readonly ILogger<PortalController> _logger;

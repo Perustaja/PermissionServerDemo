@@ -1,80 +1,201 @@
-/* ASP.NET CORE SPECIFIC */
-
-.validation-summary-valid span {
-    display: none;
+.btn-cstm {
+  border-radius: 0px;
 }
 
-.theme-aspen {
-    background-image: url("../img/loginbg.jpg");
-    background-size: cover;
-    color: whitesmoke;
+.btn-primary {
+  color: black;
+  background-color: #ada1a1;
+  border-color: #ada1a1;
 }
 
-/* GENERAL USAGE */
-
-.text-right {
-    text-align: right;
+.btn-primary:focus, .btn-primary.focus, .btn-primary:hover,
+.btn-primary:active, .btn-primary.active {
+  color: black;
+  background-color: #beb2b2 !important;
+  border-color: #ada1a1 !important;
+  background-image: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.table-list {
-    border-collapse: collapse;
+.open > .dropdown-toggle.btn-primary,
+.btn-primary:active:hover,
+.btn-primary.active:hover,
+.open > .dropdown-toggle.btn-primary:hover,
+.btn-primary:active:focus,
+.btn-primary.active:focus,
+.open > .dropdown-toggle.btn-primary:focus,
+.btn-primary:active.focus,
+.btn-primary.active.focus,
+.open > .dropdown-toggle.btn-primary.focus,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled].focus,
+fieldset[disabled] .btn-primary.focus {
+  color: black;
+  background-color: #ada1a1 !important;
+  border-color: #ada1a1 !important;
 }
 
-.table-list th {
-    padding: 3px 10px;
+.open > .dropdown-toggle.btn-primary {
+  color: black;
+  background-color: #ada1a1 !important;
+  border-color: #ada1a1 !important;
+  background-image: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.v-scroll {
-    max-height: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-/* LOGIN-PAGE */
-
-.login-container-parent {
-    opacity: .98;
-    display: table;
-    height: 100%;
-    margin: 0 auto;
+.btn-primary {
+  color: black;
+  background-color: #ada1a1;
+  border-color: #ada1a1;
 }
 
-.login-container {
-    display: table-cell;
-    vertical-align: middle;
-    margin: auto;
-    background-clip: content-box;
-    filter: drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.5));
-    background-color: white;
-    color: black;
-    padding: 10px;
+.btn-primary:hover {
+  color: black;
+  background-color: #beb2b2;
+  border-color: #ada1a1;
 }
 
-.login-form-container {
-    min-width: 600px;
-    max-width: 800px;
+.btn-check:focus + .btn-primary, .btn-primary:focus {
+  color: black;
+  background-color: #beb2b2;
+  border-color: #ada1a1;
+  box-shadow: 0 0 0 0.2rem #ada1a1;
 }
 
-.login-form {
-    margin: auto;
+.btn-check:checked + .btn-primary,
+.btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+  color: black;
+  background-color: #beb2b2;
+  border-color: #ada1a1;
 }
 
-.login-logo-wrapper {
-    padding: 15px;
-    text-align: center;
+.btn-check:checked + .btn-primary:focus,
+.btn-check:active + .btn-primary:focus, .btn-primary:active:focus, .btn-primary.active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem #ada1a1;
 }
 
-.login-header {
-    text-align: center;
-    font-size: 200%;
-    font-weight: 400;
-    color: black;
-    letter-spacing: .5px;
+.btn-primary:disabled, .btn-primary.disabled {
+  color: black;
+  background-color: #ada1a1;
+  border-color: #ada1a1;
 }
 
-.login-lead {
-    text-align: center;
+.btn-org-sel {
+  border-radius: 0px;
+  padding: 6px 12px 6px 12px;
 }
 
-.login-trail {
-    text-align: center;
+.btn-org-sel.dropdown-toggle-split {
+  border-color: transparent transparent transparent #f1f1f1;
 }
+
+.org-container {
+  display: flex;
+  align-items: flex-start;
+  height: 45vh;
+  padding-top: 25px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.org-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.associated-link {
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.associated-link a {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1.1;
+  text-decoration: underline;
+  color: #292626;
+}
+
+.associated-link p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 3px;
+}
+
+.org-img img {
+  width: 75px;
+  height: 50px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #bdbcbc;
+  border-radius: 2px;
+  margin-right: 20px;
+}
+
+.org-item {
+  background-color: #e0dfdf;
+  width: 100%;
+  padding: 15px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.org-title {
+  font-size: 18px;
+  display: flex;
+  flex-grow: 2;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.org-ctrls {
+  display: flex;
+}
+
+body {
+  background-color: #e0dfdf;
+}
+
+main {
+  width: 100%;
+}
+
+.panel-parent {
+  max-width: 700px;
+  margin: auto;
+}
+
+.panel-header-lite {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.panel-content {
+  width: 100%;
+  padding: 5px 10px 5px 10px;
+  background-color: #f1f1f1;
+}
+
+.title-box {
+  font-size: 26px;
+  font-weight: 500;
+  justify-content: center;
+  margin: 0;
+}
+
+/*# sourceMappingURL=site.css.map */
