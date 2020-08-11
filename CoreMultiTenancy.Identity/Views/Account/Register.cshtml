@@ -1,48 +1,53 @@
 @model CoreMultiTenancy.Identity.ViewModels.Account.RegisterViewModel
 @{
-    Layout = "~/Views/Shared/_LoginPageLayout.cshtml";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
     ViewData["Title"] = "Register";
 }
-<div class="row login-form-container">
-    <div class="col-md-10 login-form">
-        <form method="post">
-            <div class="form-group">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
+<div class="row register-panel">
+    <div class="col-md-12 login-logo">
+        <img src="~/img/samplelogo.svg"
+            width="120" height="35" class="d-inline-block align-top">
+    </div>
+    <div class="col-md-12 login-title">
+        Create an account
+    </div>
+    <div class="col-md-12">
+        <form asp-controller="account" asp-action="register" method="post" autocomplete="off">
+            <div class="form-group row mb-1">
+                <label asp-for="FirstName">@Html.DisplayNameFor(m => m.FirstName)</label>
+                <input asp-for="FirstName" class="form-control">
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
+            <div class="form-group row mb-1">
+                <label asp-for="LastName">@Html.DisplayNameFor(m => m.LastName)</label>
+                <input asp-for="LastName" class="form-control">
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
+            <div class="form-group row mb-1">
+                <label asp-for="Email">@Html.DisplayNameFor(m => m.Email)</label>
+                <input asp-for="Email" class="form-control">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-1">
+                <label asp-for="Password">@Html.DisplayNameFor(m => m.Password)</label>
+                <input asp-for="Password" class="form-control">
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
+            <div class="form-group row mb-1">
+                <label asp-for="ConfirmPassword">@Html.DisplayNameFor(m => m.ConfirmPassword)</label>
+                <input asp-for="ConfirmPassword" class="form-control">
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <div class="form-group">
-            <button type="submit" class="btn btn-secondary col-12">Register</button>
-            </div>
-            <div class="form-group form-group-last">
-                    <a asp-action="login" class="btn btn-light col-12">Already registered? Login here</a>
+            <div class="form-group row mt-4">
+                <input type="submit" value="Create an account" class="btn btn-secondary btn-login" />
             </div>
         </form>
-    </div>
+        <hr />
+        <div class="col-md-12 mb-1 text-center">
+            Already have an account? <a asp-controller="account" asp-action="login">Sign in.</a>
+        </div>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

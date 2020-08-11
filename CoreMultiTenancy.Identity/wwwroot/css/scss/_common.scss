@@ -1,0 +1,9 @@
+@import "./variables";
+// ASP.NET CORE SPECIFIC
+.validation-summary-valid span { 
+    display: none; 
+}
+// QOL CLASSES
+.fluid-height {
+    min-height: 100vh;
+}

@@ -1,48 +1,49 @@
 @model CoreMultiTenancy.Identity.ViewModels.Account.LoginViewModel
 @{
-    Layout = "~/Views/Shared/_LoginPageLayout.cshtml";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
     ViewData["Title"] = "Login";
 }
-
-<div class="row login-form-container">
-    <div class="col-md-10 login-form">
-        <section>
-            <form id="account" method="post">
-                <div class="form-group">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label asp-for="RememberMe">
-                            <input asp-for="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
-                        </label>
+<div class="row login-panel">
+    <div class="col-md-12 login-logo">
+        <img src="~/img/samplelogo.svg"
+            width="120" height="35" class="d-inline-block align-top">
+    </div>
+    <div class="col-md-12 login-title">
+        Sign in
+    </div>
+    <div class="col-md-12">
+        <form asp-controller="account" asp-action="register" method="post">
+            <div class="form-group row">
+                <label asp-for="Email">@Html.DisplayNameFor(m => m.Email)</label>
+                <input asp-for="Email" class="form-control">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Password">@Html.DisplayNameFor(m => m.Password)</label>
+                <input asp-for="Password" class="form-control">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group row justify-content-between">
+                <div class="d-flex justify-content-start vertical-align-center">
+                    <div class="form-check">
+                        <input class="form-check-input form-check-inline" asp-for="RememberMe">
+                        <label class="form-check-label" asp-for="RememberMe"></label>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-secondary col-12">Log in</button>
+                <div class="d-flex justify-content-end">
+                    <a asp-controller="account" asp-action="forgotpass">Forgot your password?</a>
                 </div>
-                <div class="form-group">
-                    <a asp-action="Register" class="btn btn-light col-12">Register</a>
-                </div>
-                <div class="form-group form-group-last">
-                    <a id="forgot-password" asp-action="ForgotPassword" class="btn btn-light col-12">Forgot your password?</a>
-                </div>
-            </form>
-        </section>
+            </div>
+            <div class="form-group row mt-5">
+                <input type="submit" value="Login" class="btn btn-secondary btn-login" />
+            </div>
+        </form>
+        <hr />
+        <div class="col-md-12 mt-4 text-center">
+            Are you a new user? <a asp-controller="account" asp-action="register">Create your account.</a>
+        </div>
     </div>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

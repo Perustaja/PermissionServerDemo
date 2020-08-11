@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@ViewData["Title"]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+        asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+        crossorigin="anonymous" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+        asp-fallback-href="~/lib/font-awesome.min.css" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+        crossorigin="anonymous" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ="/>
+    
+    <link rel="stylesheet" href="~/css/site.css"/>
+</head>
+<body>
+    <div class="container fluid-height">
+        <div class="login-container">
+            <div class="shadow-sm m-0 p-0 login-panel">
+                @* Main RenderBody *@
+                <main>
+                    @RenderBody()
+                </main>
+            </div>
+        </div>        
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
