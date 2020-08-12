@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
@@ -55,7 +56,7 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
-            
+
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
 
@@ -67,23 +68,51 @@ namespace CoreMultiTenancy.Identity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseNotFoundFilter("/notfound");
             app.UseRouting();
 
             app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(e =>
+            {
+                e.MapControllerRoute(
+                    name: "error",
+                    pattern: "error/{action}",
+                    defaults: new { controller = "Error", Action = "Index" }
+                );
+                e.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Portal", Action = "Index" }
+                );
+            });
+        }
+    }
+    public static class StartupExtensions
+    {
+        public static IApplicationBuilder UseNotFoundFilter(this IApplicationBuilder app, string path)
+        {
+            return app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
                 {
-                    e.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller}/{action}/{id?}",
-                        defaults: new { controller = "Portal", Action = "Index" }
-                    );
-                });
+                    // If 404 response, re-execute with notfound path request,
+                    // this proliferates the existing url in the user's browser.
+                    context.Request.Path = path;
+                    await next();
+                }
+            });
         }
     }
 }

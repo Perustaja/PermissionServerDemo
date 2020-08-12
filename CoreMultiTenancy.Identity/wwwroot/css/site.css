@@ -331,6 +331,14 @@ fieldset[disabled] .btn-primary.focus {
   display: flex;
 }
 
+.error {
+  padding: 20px 10px 5px 10px;
+}
+
+.error-desc {
+  padding: 0px 10px 0px 10px;
+}
+
 body {
   background-color: #e0dfdf;
 }
