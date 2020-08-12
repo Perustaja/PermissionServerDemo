@@ -1,0 +1,37 @@
+@model CoreMultiTenancy.Identity.ViewModels.Account.LoggedOutViewModel
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Logged Out";
+}
+<div class="row login-panel">
+    <div class="col-md-12 login-logo">
+        <img src="~/img/samplelogo.svg"
+            width="120" height="35" class="d-inline-block align-top">
+    </div>
+    <div class="col-md-12 login-title">
+        Log out successful
+    </div>
+    <hr class="col-md-12 p-0 m-2" />
+    <div class="col-md-12">
+        <span>You have been signed out of your account.</span>
+    </div>
+    @if (Model.PostLogoutRedirectUri != null)
+    {
+        <div>
+            Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
+            <span>@Model.ClientName</span> application.
+        </div>
+    }
+
+    @if (Model.SignOutIframeUrl != null)
+    {
+        <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl"></iframe>
+    }
+</div>
+@section scripts
+{
+    @if (Model.AutomaticRedirectAfterSignOut)
+    {
+        <script src="~/js/signout-redirect.js"></script>
+    }
+}

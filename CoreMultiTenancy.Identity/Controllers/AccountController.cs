@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.ViewModels.Account;
+using IdentityModel;
+using IdentityServer4.Events;
+using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -23,17 +26,20 @@ namespace CoreMultiTenancy.Identity.Controllers
         private readonly IIdentityServerInteractionService _interactionSvc;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IEventService _eventSvc;
         public AccountController(ILogger<AccountController> logger,
         IConfiguration config,
         IIdentityServerInteractionService interactionSvc,
         UserManager<User> userManager,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        IEventService eventService)
         {
-            _logger = logger;
-            _config = config;
-            _interactionSvc = interactionSvc;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _interactionSvc = interactionSvc ?? throw new ArgumentNullException(nameof(interactionSvc));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
 
         [HttpGet]
@@ -69,6 +75,7 @@ namespace CoreMultiTenancy.Identity.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByEmailAsync(vm.Email);
+                    await _eventSvc.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.Client.ClientId));
                     // if ReturnUrl is valid redirect
                     if (context != null)
                     {
@@ -102,6 +109,7 @@ namespace CoreMultiTenancy.Identity.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel vm)
@@ -117,6 +125,98 @@ namespace CoreMultiTenancy.Identity.Controllers
             }
 
             return RedirectToAction("Login", "Account");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            var vm = new LogoutViewModel() { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
+
+            // If user is not logged in, show default view
+            if (User?.Identity.IsAuthenticated != true)
+            {
+                vm.ShowLogoutPrompt = false;
+                return View(vm);
+            }
+
+            // Check if context requires logout prompt, if not it's safe to sign out
+            var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
+            if (context?.ShowSignoutPrompt != true)
+            {
+                vm.ShowLogoutPrompt = false;
+                return View(vm);
+            }
+
+            // show the logout prompt. this prevents attacks where the user
+            // is automatically signed out by another malicious web page.
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout(LogoutInputModel im)
+        {
+            var vm = await BuildLoggedOutViewModel(im.LogoutId);
+
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                // delete local authentication cookie
+                await _signInManager.SignOutAsync();
+
+                // raise the logout event
+                await _eventSvc.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            }
+
+            // check if we need to trigger sign-out at an upstream identity provider
+            if (vm.TriggerExternalSignout)
+            {
+                // build a return URL so the upstream provider will redirect back
+                // to us after the user has logged out. this allows us to then
+                // complete our single sign-out processing.
+                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+
+                // this triggers a redirect to the external provider for sign-out
+                return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+            }
+
+            return View("LoggedOut", vm);
+        }
+        private async Task<LoggedOutViewModel> BuildLoggedOutViewModel(string logoutId)
+        {
+            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
+
+            var vm = new LoggedOutViewModel
+            {
+                AutomaticRedirectAfterSignOut = AccountOptions.AutomaticRedirectAfterSignOut,
+                PostLogoutRedirectUri = context?.PostLogoutRedirectUri,
+                ClientName = string.IsNullOrEmpty(context?.ClientName) ? context?.ClientId : context?.ClientName,
+                SignOutIframeUrl = context?.SignOutIFrameUrl,
+                LogoutId = logoutId
+            };
+
+            // Handle user sign out if using an external provider
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+                if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
+                {
+                    var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                    if (providerSupportsSignout)
+                    {
+                        if (vm.LogoutId == null)
+                        {
+                            // if there's no current logout context, we need to create one
+                            // this captures necessary info from the current logged in user
+                            // before we signout and redirect away to the external IdP for signout
+                            vm.LogoutId = await _interactionSvc.CreateLogoutContextAsync();
+                        }
+
+                        vm.ExternalAuthenticationScheme = idp;
+                    }
+                }
+            }
+            return vm;
         }
         private void AddErrors(IdentityResult res)
         {
