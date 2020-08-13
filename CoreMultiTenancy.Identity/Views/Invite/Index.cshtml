@@ -1,6 +1,7 @@
-<p>@TempData["Message"].ToString()</p>
 @if ((bool)TempData["Success"]) {
-    <p>success controls</p>
+  <h3 class="error text-success">Invite Successful</h3>
 } else {
-  <p>failure controls</p>  
+  <h3 class="error text-danger">Invite Failed</h3>
 }
+<hr />
+<p class="error-descs">@TempData["Message"].ToString()</p>

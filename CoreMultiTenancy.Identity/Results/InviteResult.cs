@@ -9,7 +9,7 @@ namespace CoreMultiTenancy.Identity.Results
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
         public static InviteResult ImmediateSuccess(string orgName)
-            => Succeeded($"You have successfully been granted access to {orgName}. Changes should be reflected in your portal immediately");
+            => Succeeded($"You have successfully been granted access to {orgName}. Changes should be reflected in your portal immediately.");
         public static InviteResult RequiresConfirmation(string orgName)
             => Succeeded($"The Organization {orgName} requires manual confirmation of all users, a request has been sent and you will receive an email based on their decision.");
         public static InviteResult LinkExpired()

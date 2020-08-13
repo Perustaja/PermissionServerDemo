@@ -10,8 +10,8 @@ namespace CoreMultiTenancy.Identity.Models
         public bool Blacklisted { get; private set; }
         public string InternalNotes { get; private set; }
         public DateTime DateSubmitted { get; private set; }
-        public DateTime DateApproved { get; private set; }
-        public DateTime DateBlacklisted { get; private set; }
+        public DateTime? DateApproved { get; private set; }
+        public DateTime? DateBlacklisted { get; private set; }
         public User User { get; set; }
         public Organization Organization { get; set; }
         public UserOrganization() { }

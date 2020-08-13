@@ -7,6 +7,7 @@ using CoreMultiTenancy.Identity.ViewModels.Account;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,10 @@ namespace CoreMultiTenancy.Identity.Controllers
         public async Task<IActionResult> Login(string returnUrl)
         {
             var context = await _interactionSvc.GetAuthorizationContextAsync(returnUrl);
+            // Redirect as necessary if user is already logged in
+            if (User?.Identity.IsAuthenticated == true)
+                return RedirectUponLogin(context, returnUrl);
+
             if (context?.IdP != null)
             {
                 _logger.LogWarning("External login service requested, but not implemented.");
@@ -76,25 +81,8 @@ namespace CoreMultiTenancy.Identity.Controllers
                 {
                     var user = await _userManager.FindByEmailAsync(vm.Email);
                     await _eventSvc.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.Client.ClientId));
-                    // if ReturnUrl is valid redirect
-                    if (context != null)
-                    {
-                        if (context.IsNativeClient())
-                        {
-                            return this.LoadingPage("Redirect", vm.ReturnUrl);
-                        }
-                        return Redirect(vm.ReturnUrl);
-                    }
-                    // Else if local, redirect
-                    else if (Url.IsLocalUrl(vm.ReturnUrl))
-                    {
-                        return Redirect(vm.ReturnUrl);
-                    }
-                    // Return to home if ReturnUrl is null or invalid
-                    else
-                    {
-                        return Redirect("~/");
-                    }
+                    // Login successful and logged, now redirect user
+                    return RedirectUponLogin(context, vm.ReturnUrl);
                 }
                 ModelState.AddModelError("", "Invalid email or password.");
             }
@@ -132,12 +120,9 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             var vm = new LogoutViewModel() { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-            // If user is not logged in, show default view
+            // If user is not logged in, redirect them to the login page
             if (User?.Identity.IsAuthenticated != true)
-            {
-                vm.ShowLogoutPrompt = false;
-                return View(vm);
-            }
+                return RedirectToAction("Login");
 
             // Check if context requires logout prompt, if not it's safe to sign out
             var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
@@ -158,14 +143,15 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             var vm = await BuildLoggedOutViewModel(im.LogoutId);
 
-            if (User?.Identity.IsAuthenticated == true)
-            {
-                // delete local authentication cookie
-                await _signInManager.SignOutAsync();
+            // Show login page if user is not logged in currently
+            if (User?.Identity.IsAuthenticated != true)
+                return RedirectToAction("Login");
 
-                // raise the logout event
-                await _eventSvc.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
-            }
+            // delete local authentication cookie
+            await _signInManager.SignOutAsync();
+
+            // raise the logout event
+            await _eventSvc.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
 
             // check if we need to trigger sign-out at an upstream identity provider
             if (vm.TriggerExternalSignout)
@@ -222,6 +208,30 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             foreach (var err in res.Errors)
                 ModelState.AddModelError(String.Empty, err.Description);
+        }
+        /// <summary>
+        /// Redirects the logged in user back to its native client, redirectUrl, or the Idp home page.
+        /// </summary>
+        private IActionResult RedirectUponLogin(AuthorizationRequest context, string returnUrl)
+        {
+            if (context != null)
+            {
+                if (context.IsNativeClient())
+                {
+                    return this.LoadingPage("Redirect", returnUrl);
+                }
+                return Redirect(returnUrl);
+            }
+            // Else if local, redirect
+            else if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            // Return to home if ReturnUrl is null or invalid
+            else
+            {
+                return Redirect("~/");
+            }
         }
     }
 }
