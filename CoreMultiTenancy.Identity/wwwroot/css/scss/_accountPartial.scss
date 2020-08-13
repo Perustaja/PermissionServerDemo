@@ -1,0 +1,29 @@
+@import "./variables";
+.account-img {
+    color: darken($color: $color-fg, $amount: 40);
+    font-size: 30px;
+}
+.account-img:hover {
+    filter: brightness(1.1);
+}
+.nav-text {
+    margin-bottom: -5px;
+}
+// Dropdown
+// align dropdown with panel
+.account-dropdown .dropdown-toggle {
+    padding: 0px;
+    margin-right: -5px;
+}
+.account-dropdown .dropdown-menu {
+    border-radius: 0px;
+    margin-top: -2px;
+}
+// color changes and spacing
+.account-dropdown .dropdown-menu .dropdown-item:hover {
+    background-color: rgb(163, 162, 162);
+}
+.account-dropdown .nav-link.dropdown-toggle::after {
+    margin-left: -2px;
+    color: darken($color: $color-fg, $amount: 40);
+}

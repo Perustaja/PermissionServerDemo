@@ -42,7 +42,12 @@ namespace CoreMultiTenancy.Identity.Controllers
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
-
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Settings()
+        {
+            return View();
+        }
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {

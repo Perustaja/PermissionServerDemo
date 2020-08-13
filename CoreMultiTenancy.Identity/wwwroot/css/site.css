@@ -6,6 +6,10 @@
   min-height: 100vh;
 }
 
+.menu-item {
+  padding: 0px 5px 0px 5px;
+}
+
 .btn-cstm {
   border-radius: 0px;
 }
@@ -337,6 +341,38 @@ fieldset[disabled] .btn-primary.focus {
 
 .error-desc {
   padding: 0px 10px 0px 3px;
+}
+
+.account-img {
+  color: #8b8b8b;
+  font-size: 30px;
+}
+
+.account-img:hover {
+  filter: brightness(1.1);
+}
+
+.nav-text {
+  margin-bottom: -5px;
+}
+
+.account-dropdown .dropdown-toggle {
+  padding: 0px;
+  margin-right: -5px;
+}
+
+.account-dropdown .dropdown-menu {
+  border-radius: 0px;
+  margin-top: -2px;
+}
+
+.account-dropdown .dropdown-menu .dropdown-item:hover {
+  background-color: #a3a2a2;
+}
+
+.account-dropdown .nav-link.dropdown-toggle::after {
+  margin-left: -2px;
+  color: #8b8b8b;
 }
 
 body {
