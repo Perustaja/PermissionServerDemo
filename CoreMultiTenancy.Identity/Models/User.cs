@@ -10,7 +10,6 @@ namespace CoreMultiTenancy.Identity.Models
         public string FirstName { get; private set; }
         [PersonalData]
         public string LastName { get; private set; }
-        public Guid SelectedOrg { get; private set; }
         public List<UserOrganization> UserOrganizations { get; set; }
         public User() {} // Required by EF Core
         public User(string fName, string lName, string email)
@@ -20,11 +19,17 @@ namespace CoreMultiTenancy.Identity.Models
             LastName = lName;
             UserName = email;
             Email = email;
-            SelectedOrg = Guid.Empty;
         }
-        public bool HasUnsetSelectedOrg()
+        /// <summary>
+        /// Updates the User's associated name information. Silently fails if strings are empty.
+        /// </summary>
+        public void UpdateName(string fName, string lName)
         {
-            return SelectedOrg == Guid.Empty;
+            if (!String.IsNullOrWhiteSpace(fName) && !String.IsNullOrWhiteSpace(lName))
+            {
+                FirstName = fName;
+                LastName = lName;
+            }
         }
     }
 }

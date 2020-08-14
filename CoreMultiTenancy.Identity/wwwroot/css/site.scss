@@ -1,11 +1,23 @@
 @import "./scss/variables";
-@import "./scss/common";
 @import "./scss/controls";
 @import "./scss/login";
 @import "./scss/portal";
 @import "./scss/error";
 @import "./scss/accountPartial";
+@import "./scss/settings";
 
+// ASP.NET CORE SPECIFIC
+.validation-summary-valid span {
+    display: none;
+}
+// QOL CLASSES
+.fluid-height {
+    min-height: 100vh;
+}
+// GENERAL USAGE/COMMON
+.menu-item {
+    padding: 0px 5px 0px 5px;
+}
 
 body {
     background-color: $color-bg;
@@ -25,6 +37,8 @@ main {
     width: 100%;
     padding: 5px 10px 5px 10px;
     background-color: $color-fg;
+    margin: 0;
+    padding: 0;
 }
 .title-box {
     font-size: 26px;

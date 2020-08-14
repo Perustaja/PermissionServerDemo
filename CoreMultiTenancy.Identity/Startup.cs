@@ -84,10 +84,17 @@ namespace CoreMultiTenancy.Identity
 
             app.UseEndpoints(e =>
             {
+                // Error routing
                 e.MapControllerRoute(
                     name: "error",
                     pattern: "error/{action}",
                     defaults: new { controller = "Error", Action = "Index" }
+                );
+                // Account/Settings
+                e.MapControllerRoute(
+                    name: "accountsettings",
+                    pattern: "account/{controller}/{action}",
+                    defaults: new { controller = "Settings", Action = "Profile" }
                 );
                 e.MapControllerRoute(
                     name: "default",

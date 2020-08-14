@@ -29,6 +29,7 @@ namespace CoreMultiTenancy.Identity.Services
 
             await client.SendEmailAsync(msg);
         }
+
         public async Task SendPasswordResetEmail(string email, string resetUrl)
         {
             var client = new SendGridClient(_options.SendGridKey);
@@ -37,6 +38,22 @@ namespace CoreMultiTenancy.Identity.Services
                 Subject = "TestApp - Reset your password",
                 From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
                 PlainTextContent = $"Reset your account's password by using the following link: {resetUrl}."
+            };
+            msg.AddTo(new EmailAddress(email));
+
+            msg.SetClickTracking(false, false);
+
+            await client.SendEmailAsync(msg);
+        }
+
+        public async Task SendEmailChangeEmail(string email, string token)
+        {
+            var client = new SendGridClient(_options.SendGridKey);
+            var msg = new SendGridMessage()
+            {
+                Subject = "TestApp - Email change",
+                From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
+                PlainTextContent = $"Update your account's email address by clicking the following link: {token}."
             };
             msg.AddTo(new EmailAddress(email));
 

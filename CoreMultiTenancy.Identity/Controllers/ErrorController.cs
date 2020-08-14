@@ -19,7 +19,7 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             var handler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             // Log error if redirected here
-            if (handler.Error != null)
+            if (handler?.Error != null)
                 _logger.LogError($"Exception page invoked. Path: {handler?.Path} Error: {handler?.Error.Message}");
 
             return View();

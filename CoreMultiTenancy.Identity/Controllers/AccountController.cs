@@ -43,12 +43,6 @@ namespace CoreMultiTenancy.Identity.Controllers
             _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> Settings()
-        {
-            return View();
-        }
-        [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
             var context = await _interactionSvc.GetAuthorizationContextAsync(returnUrl);

@@ -1,0 +1,19 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="wrapper-acct-settings">
+    <div class="row tabs">
+        <a href="" class="tab col-3 col-md-2" data-selected="true">
+            Profile
+        </a>
+        <a href="" class="tab col-3 col-md-2">
+            Email
+        </a>
+        <a href="" class="tab col-3 col-md-2">
+            Password
+        </a>
+    </div>
+    <div class="panel-acct-settings">
+        @RenderBody()
+    </div>
+</div>

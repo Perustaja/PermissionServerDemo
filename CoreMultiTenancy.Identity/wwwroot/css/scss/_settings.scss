@@ -1,0 +1,48 @@
+@import "./variables";
+.wrapper-acct-settings {
+    height: 85vh;
+}
+.tab-title {
+    font-size: 16px;
+    padding: 5px;
+}
+.panel-acct-settings {
+    height: inherit;
+    margin: 0;
+    background-color: $color-fg;
+    padding: 10px;
+    overflow-y: scroll;
+}
+.panel-acct-contents {
+}
+.tabs {
+    background-color: $color-bg;
+    justify-content: start;
+    padding: 0;
+    margin: 0;
+}
+a.tab {
+    color: rgb(31, 31, 31);
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    background-color: darken($color: $color-bg, $amount: 10);
+    padding: 4px;
+    border: 1px solid rgb(180, 180, 180);
+}
+a.tab[data-selected="true"] {
+    border-top: 1px solid $color-primary;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    background-color: $color-fg;
+}
+// Hover changes
+a.tab:hover {
+    text-decoration: none;
+    background-color: $color-bg;
+}
+a.tab[data-selected="true"]:hover {
+    cursor: default;
+    background-color: $color-fg;
+}
