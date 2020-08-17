@@ -1,0 +1,55 @@
+@page
+@model RegisterModel
+@{
+    Layout = "~/Pages/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Register";
+}
+<div class="row register-panel">
+    <div class="col-md-12 login-logo">
+        <img src="~/img/samplelogo.svg"
+            width="120" height="35" class="d-inline-block align-top">
+    </div>
+    <div class="col-md-12 login-title">
+        Create an account
+    </div>
+    <div class="col-md-12">
+        <form method="post" autocomplete="off">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group row mb-1">
+                <label asp-for="Input.FirstName">@Html.DisplayNameFor(m => m.Input.FirstName)</label>
+                <input asp-for="Input.FirstName" class="form-control">
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-1">
+                <label asp-for="Input.LastName">@Html.DisplayNameFor(m => m.Input.LastName)</label>
+                <input asp-for="Input.LastName" class="form-control">
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-1">
+                <label asp-for="Input.Email">@Html.DisplayNameFor(m => m.Input.Email)</label>
+                <input asp-for="Input.Email" class="form-control">
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-1">
+                <label asp-for="Input.Password">@Html.DisplayNameFor(m => m.Input.Password)</label>
+                <input asp-for="Input.Password" class="form-control">
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group row mb-1">
+                <label asp-for="Input.ConfirmPassword">@Html.DisplayNameFor(m => m.Input.ConfirmPassword)</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control">
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group row mt-4">
+                <input type="submit" value="Create an account" class="btn btn-secondary btn-login" />
+            </div>
+        </form>
+        <hr />
+        <div class="col-md-12 mb-1 text-center">
+            Already have an account? <a asp-page="Login">Sign in.</a>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

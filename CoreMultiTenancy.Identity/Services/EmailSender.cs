@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -9,9 +10,12 @@ namespace CoreMultiTenancy.Identity.Services
 {
     public class EmailSender : IEmailSender
     {
+        private readonly ILogger<EmailSender> _logger;
         private readonly EmailSenderOptions _options;
-        public EmailSender(IOptions<EmailSenderOptions> optionsAccessor)
+        public EmailSender(ILogger<EmailSender> logger,
+            IOptions<EmailSenderOptions> optionsAccessor)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _options = optionsAccessor.Value ?? throw new ArgumentNullException(nameof(optionsAccessor));
         }
         public async Task SendAccountConfirmationEmail(string email, string confirmationUrl)
@@ -28,6 +32,7 @@ namespace CoreMultiTenancy.Identity.Services
             msg.SetClickTracking(false, false);
 
             await client.SendEmailAsync(msg);
+            _logger.LogInformation($"Account confirmation email sent to {email}.");
         }
 
         public async Task SendPasswordResetEmail(string email, string resetUrl)
@@ -44,6 +49,7 @@ namespace CoreMultiTenancy.Identity.Services
             msg.SetClickTracking(false, false);
 
             await client.SendEmailAsync(msg);
+            _logger.LogInformation($"Password reset email sent to {email}.");
         }
 
         public async Task SendEmailChangeEmail(string email, string token)
@@ -60,6 +66,7 @@ namespace CoreMultiTenancy.Identity.Services
             msg.SetClickTracking(false, false);
 
             await client.SendEmailAsync(msg);
+            _logger.LogInformation($"Email change email sent to {email}.");
         }
     }
 }

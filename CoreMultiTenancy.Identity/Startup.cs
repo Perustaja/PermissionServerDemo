@@ -60,7 +60,7 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
 
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -76,7 +76,7 @@ namespace CoreMultiTenancy.Identity
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseNotFoundFilter("/notfound");
+            app.UseNotFoundFilter("/error/notfound");
             app.UseRouting();
 
             app.UseIdentityServer();
@@ -84,23 +84,7 @@ namespace CoreMultiTenancy.Identity
 
             app.UseEndpoints(e =>
             {
-                // Error routing
-                e.MapControllerRoute(
-                    name: "error",
-                    pattern: "error/{action}",
-                    defaults: new { controller = "Error", Action = "Index" }
-                );
-                // Account/Settings
-                e.MapControllerRoute(
-                    name: "accountsettings",
-                    pattern: "account/{controller}/{action}",
-                    defaults: new { controller = "Settings", Action = "Profile" }
-                );
-                e.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Portal", Action = "Index" }
-                );
+                e.MapRazorPages();
             });
         }
     }

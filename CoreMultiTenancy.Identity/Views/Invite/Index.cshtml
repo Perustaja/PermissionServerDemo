@@ -1,9 +1,0 @@
-<div class="p-2">
-  @if ((bool)TempData["Success"]) {
-    <h3 class="error text-success">Invite Successful</h3>
-  } else {
-    <h3 class="error text-danger">Invite Failed</h3>
-  }
-  <hr />
-  <p class="error-descs">@TempData["Message"].ToString()</p>
-</div>

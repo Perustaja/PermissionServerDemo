@@ -1,0 +1,35 @@
+@page
+@model LogoutModel
+@{
+    Layout = "~/Pages/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Logout";
+}
+<div class="row login-panel">
+    <div class="col-md-12 login-logo">
+        <img src="~/img/samplelogo.svg"
+            width="120" height="35" class="d-inline-block align-top">
+    </div>
+    <div class="col-md-12 login-title">
+        Logging out... <i class="fas fa-spinner fa-pulse"></i>
+    </div>
+    <hr class="col-md-12 p-0 m-2" />
+    <div class="col-md-12">
+        <span>Please wait while we sign you out of your account.</span>
+    </div>
+    <div class="col-md-12">
+        <form method="post" id="logoutForm">
+            <input type="hidden" name="logoutId" value="@Model.Input.LogoutId"  />
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        window.onload = function() {
+            setTimeout(logout, 1000);
+        }
+        function logout() {
+            $("#logoutForm").submit();
+        }
+    </script>
+}

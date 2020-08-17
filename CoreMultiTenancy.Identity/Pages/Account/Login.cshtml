@@ -1,0 +1,51 @@
+@page
+@model LoginModel
+@{
+    Layout = "~/Pages/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Login";
+}
+<div class="row login-panel">
+    <div class="col-md-12 login-logo">
+        <img src="~/img/samplelogo.svg"
+            width="120" height="35" class="d-inline-block align-top">
+    </div>
+    <div class="col-md-12 login-title">
+        Sign in
+    </div>
+    <div class="col-md-12">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group row">
+                <label asp-for="Input.Email">@Html.DisplayNameFor(m => m.Input.Email)</label>
+                <input asp-for="Input.Email" class="form-control">
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Input.Password">@Html.DisplayNameFor(m => m.Input.Password)</label>
+                <input asp-for="Input.Password" class="form-control">
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group row justify-content-between">
+                <div class="d-flex justify-content-start vertical-align-center">
+                    <div class="form-check">
+                        <input class="form-check-input form-check-inline" asp-for="Input.RememberMe">
+                        <label class="form-check-label" asp-for="Input.RememberMe"></label>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <a asp-page="ForgotPassword">Forgot your password?</a>
+                </div>
+            </div>
+            <div class="form-group row mt-5">
+                <input type="submit" value="Login" class="btn btn-secondary btn-login" />
+            </div>
+        </form>
+        <hr />
+        <div class="col-md-12 mt-4 text-center">
+            Are you a new user? <a asp-page="Register">Create your account.</a>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
