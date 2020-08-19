@@ -29,6 +29,11 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
         [TempData]
         public string ResultMessage { get; set; }
 
+        [ViewData]
+        public string CurrentFirstName { get; set; }
+        [ViewData]
+        public string CurrentLastName { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -50,8 +55,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                Input.FirstName = user.FirstName;
-                Input.LastName = user.LastName;
+                SetPrepopulatedFormData(user);
                 return Page();
             }
             _logger.LogError($"{nameof(ProfileModel)}: User authenticated but lookup returned null User object.");
@@ -59,10 +63,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
-                var user = await _userManager.FindByIdAsync(userId);
                 if (user != null)
                 {
                     user.UpdateName(Input.FirstName, Input.LastName);
@@ -75,12 +79,19 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                         _logger.LogError($"{nameof(ProfileModel)}: Unable to update User profile information. FirstName: {Input?.FirstName}, LastName: {Input?.LastName}.");
                     }
                     Success = result.Succeeded;
+                    SetPrepopulatedFormData(user);
                     return Page();
                 }
                 _logger.LogError($"{nameof(ProfileModel)}: User {user.Id} authenticated but lookup returned null User object.");
-                return RedirectToAction("Index", "Error");
+                return RedirectToPage("error");
             }
+            SetPrepopulatedFormData(user);
             return Page();
+        }
+        private void SetPrepopulatedFormData(User user)
+        {
+            CurrentFirstName = user.FirstName;
+            CurrentLastName = user.LastName;
         }
     }
 }

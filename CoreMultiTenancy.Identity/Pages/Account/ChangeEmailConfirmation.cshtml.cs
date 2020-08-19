@@ -1,9 +1,7 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Models;
-using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +41,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             // Retrieve associated User and change their email
             var user = await _userManager.FindByIdAsync(userId);
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            // Note: ChangeEmailAsync also sets EmailConfirmed to true
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             Success = result.Succeeded;
             if (result.Succeeded)

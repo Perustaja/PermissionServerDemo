@@ -12,8 +12,7 @@
     background-color: $color-fg;
     padding: 10px;
     overflow-y: scroll;
-}
-.panel-acct-contents {
+    overflow-x: hidden;
 }
 .tabs {
     background-color: $color-bg;

@@ -199,7 +199,7 @@ fieldset[disabled] .btn-primary.focus {
   }
 
   .register-panel {
-    min-width: 650px;
+    width: 650px;
     margin-left: 0px;
     margin-right: 0px;
   }
@@ -378,6 +378,7 @@ fieldset[disabled] .btn-primary.focus {
   background-color: #f1f1f1;
   padding: 10px;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .tabs {
@@ -419,8 +420,8 @@ a.tab[data-selected=true]:hover {
   display: none;
 }
 
-.fluid-height {
-  min-height: 100vh;
+.fa-mid {
+  vertical-align: middle;
 }
 
 .menu-item {

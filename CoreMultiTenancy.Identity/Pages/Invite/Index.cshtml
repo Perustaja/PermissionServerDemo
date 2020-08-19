@@ -1,11 +1,13 @@
 @page
 @model IndexModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Register";
+    var headerClass = Model.Success ? "error text-success" : "error text-danger";
+    var headerText = Model.Success ? "Invite Successful" : "Invite Failed";
+}
 <div class="p-2">
-  @if (Model.Success) {
-    <h3 class="error text-success">Invite Successful</h3>
-  } else {
-    <h3 class="error text-danger">Invite Failed</h3>
-  }
+  <h3 class=@headerClass>@headerText</h3>
   <hr />
   <p class="error-descs">@Model.ResultMessage.ToString()</p>
 </div>

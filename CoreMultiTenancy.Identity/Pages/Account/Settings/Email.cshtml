@@ -1,7 +1,7 @@
 @page
 @model EmailModel
 @{
-    Layout = "~/Views/Shared/_AccountSettingsLayout.cshtml";
+    Layout = "~/Pages/Shared/_AccountSettingsLayout.cshtml";
     ViewData["Title"] = "Account - Email";
 }
 <div class="panel-acct-contents">
@@ -9,15 +9,29 @@
         <h3>Email Details</h3>
         <hr />
         <div>
-            <form method="post">
-                <div class="form-group">
-                    <label asp-for="Input.CurrentEmail"></label>
-                    <input asp-for="Input.CurrentEmail" readonly class="form-control-plaintext" />
+            <div class="form-group row">
+                <label asp-for="CurrentEmail" class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <div class="form-control-plaintext">@Model.CurrentEmail</div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Input.NewEmail"></label>
-                    <input asp-for="Input.NewEmail" class="form-control" />
-                    <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Status</label>
+                <div class="col-sm-9">
+                    @if (Model.EmailConfirmed) {
+                        <div class="form-control-plaintext"><i class="fas fa-check fa-lg text-success"></i> Confirmed</div>
+                    } else {
+                        <div class="form-control-plaintext">Not Confirmed - <a asp-page-handler="resendconfirmation">Resend confirmation</a></div>
+                    }
+                </div>
+            </div>
+            <form method="post">
+                <div class="form-group row">
+                    <label asp-for="Input.NewEmail" class="col-sm-3 col-form-label"></label>
+                    <div class="col-sm-9">
+                        <input asp-for="Input.NewEmail" class="form-control" />
+                        <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Update Email</button>
             </form>

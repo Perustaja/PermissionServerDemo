@@ -25,7 +25,6 @@ namespace CoreMultiTenancy.Identity.Pages.Invite
         [TempData]
         public string ResultMessage { get; set; }
 
-        [HttpGet]
         public async Task<IActionResult> OnGetAsync(string inviteCode)
         {
             // Verify user is logged in and attempt to use invite code

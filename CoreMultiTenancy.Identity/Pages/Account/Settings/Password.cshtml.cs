@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using IdentityModel;
@@ -51,7 +50,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             public string NewPassword { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm New password")]
+            [Display(Name = "Confirm Password")]
             [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
             public string ConfirmNewPassword { get; set; }
         }
@@ -68,27 +67,19 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user != null)
                 {
-                    if (await _userManager.CheckPasswordAsync(user, Input.CurrentPassword))
+                    var result = await _userManager.ChangePasswordAsync(user, Input.CurrentPassword, Input.ConfirmNewPassword);
+                    Success = result.Succeeded;
+                    if (result.Succeeded)
                     {
-                        var result = await _userManager.ChangePasswordAsync(user, Input.CurrentPassword, Input.ConfirmNewPassword);
-                        Success = result.Succeeded;
-                        if (result.Succeeded)
-                        {
-                            ResultMessage = $"Your password has successfully been changed.";
-                            await _signInManager.RefreshSignInAsync(user);
-                            return Page();
-                        }
-                        else
-                        {
-                            this.AddIdentityResultErrors(result);
-                            return RedirectToAction("Index", "Error");
-                        }
+                        ResultMessage = $"Your password has successfully been changed.";
+                        await _signInManager.RefreshSignInAsync(user);
+                        return Page();
                     }
                     ModelState.AddModelError(String.Empty, "Invalid email or password.");
                     return Page();
                 }
                 _logger.LogError($"{nameof(PasswordModel)}: User authenticated but lookup returned null User object.");
-                return RedirectToAction("Index", "Error");
+                return RedirectToPage("error");
             }
             return Page();
         }
