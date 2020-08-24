@@ -5,14 +5,23 @@
 @import "./scss/error";
 @import "./scss/accountPartial";
 @import "./scss/settings";
+@import "./scss/validation";
 
 // ASP.NET CORE SPECIFIC
 .validation-summary-valid span {
     display: none;
 }
+.validation-summary-errors.nobullet ul {
+    list-style-type: none;
+    padding: 0px;
+}
 // GENERAL USAGE/COMMON
 .fa-mid {
     vertical-align: middle;
+}
+.col-padding {
+    padding-right: 15px;
+    padding-left: 15px;
 }
 .menu-item {
     padding: 0px 5px 0px 5px;
@@ -22,6 +31,10 @@ body {
     background-color: $color-bg;
 }
 main {
+    width: 100%;
+}
+.panel-fill {
+    height: 85vh;
     width: 100%;
 }
 .panel-parent {

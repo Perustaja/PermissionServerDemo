@@ -323,7 +323,7 @@ fieldset[disabled] .btn-primary.focus {
   display: flex;
 }
 
-.error {
+.error-header {
   padding: 10px 10px 5px 2px;
 }
 
@@ -361,10 +361,6 @@ fieldset[disabled] .btn-primary.focus {
 .account-dropdown .nav-link.dropdown-toggle::after {
   margin-left: -2px;
   color: #8b8b8b;
-}
-
-.wrapper-acct-settings {
-  height: 85vh;
 }
 
 .tab-title {
@@ -416,12 +412,63 @@ a.tab[data-selected=true]:hover {
   background-color: #f1f1f1;
 }
 
+.validation-msg {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding: 10px;
+  width: 100%;
+  border-style: solid;
+  border-left-width: 5px;
+  border-top-width: 0.1pt;
+  border-right-width: 0.1pt;
+  border-bottom-width: 0.1pt;
+  border-radius: 2px;
+}
+
+.validation-msg.success {
+  border-color: #51b951;
+  background-color: #c7e6cf;
+}
+
+.validation-msg.error {
+  border-color: #f72424;
+  background-color: #f1cdcd;
+}
+
+.validation-msg.error .validation-icon i.error {
+  color: #f72424;
+}
+
+.validation-msg.success .validation-icon i.success {
+  color: #51b951;
+}
+
+.validation-icon {
+  padding-right: 10px;
+  align-self: flex-start;
+}
+
+.validation-text {
+  font-size: 15px;
+}
+
 .validation-summary-valid span {
   display: none;
 }
 
+.validation-summary-errors.nobullet ul {
+  list-style-type: none;
+  padding: 0px;
+}
+
 .fa-mid {
   vertical-align: middle;
+}
+
+.col-padding {
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .menu-item {
@@ -433,6 +480,11 @@ body {
 }
 
 main {
+  width: 100%;
+}
+
+.panel-fill {
+  height: 85vh;
   width: 100%;
 }
 

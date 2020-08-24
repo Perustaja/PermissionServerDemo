@@ -75,10 +75,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                         await _signInManager.RefreshSignInAsync(user);
                         return Page();
                     }
-                    ModelState.AddModelError(String.Empty, "Invalid email or password.");
+                    ResultMessage = "The current password entered is incorrect.";
                     return Page();
                 }
-                _logger.LogError($"{nameof(PasswordModel)}: User authenticated but lookup returned null User object.");
+                _logger.LogError($"User authenticated but lookup returned null User object.");
                 return RedirectToPage("error");
             }
             return Page();

@@ -58,7 +58,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 SetPrepopulatedFormData(user);
                 return Page();
             }
-            _logger.LogError($"{nameof(ProfileModel)}: User authenticated but lookup returned null User object.");
+            _logger.LogError($"User authenticated but lookup returned null User object.");
             return RedirectToPage("error");
         }
         public async Task<IActionResult> OnPostAsync()
@@ -76,13 +76,13 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                     else
                     {
                         ResultMessage = "There was an error updating your profile settings.";
-                        _logger.LogError($"{nameof(ProfileModel)}: Unable to update User profile information. FirstName: {Input?.FirstName}, LastName: {Input?.LastName}.");
+                        _logger.LogError($"Unable to update User profile information. FirstName: {Input?.FirstName}, LastName: {Input?.LastName}.");
                     }
                     Success = result.Succeeded;
                     SetPrepopulatedFormData(user);
                     return Page();
                 }
-                _logger.LogError($"{nameof(ProfileModel)}: User {user.Id} authenticated but lookup returned null User object.");
+                _logger.LogError($"User {user.Id} authenticated but lookup returned null User object.");
                 return RedirectToPage("error");
             }
             SetPrepopulatedFormData(user);

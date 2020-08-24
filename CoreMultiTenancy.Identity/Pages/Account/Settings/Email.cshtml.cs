@@ -61,7 +61,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 SetPrepopulatedFormData(user);
                 return Page();
             }
-            _logger.LogError($"{nameof(EmailModel)}: User authenticated but lookup returned null User object.");
+            _logger.LogError($"User authenticated but lookup returned null User object.");
             return RedirectToPage("error");
         }
 
@@ -76,7 +76,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _emailSender.SendAccountConfirmationEmail(user.Email, token);
                     Success = true;
-                    ResultMessage = "A confirmation has been sent to your email. You may need to check your spam folder";
+                    ResultMessage = "A confirmation has been sent to your email. You may need to check your spam folder.";
                     SetPrepopulatedFormData(user);
                     return Page();
                 }
@@ -85,7 +85,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 SetPrepopulatedFormData(user);
                 return Page();
             }
-            _logger.LogError($"{nameof(EmailModel)}: User authenticated but lookup returned null User object.");
+            _logger.LogError($"User authenticated but lookup returned null User object.");
             return RedirectToPage("error");
         }
 

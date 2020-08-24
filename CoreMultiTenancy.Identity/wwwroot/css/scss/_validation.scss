@@ -1,0 +1,35 @@
+@import "variables";
+.validation-msg {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+    width: 100%;
+    border-style: solid;
+    border-left-width: 5px;
+    border-top-width: 0.1pt;
+    border-right-width: 0.1pt;
+    border-bottom-width: 0.1pt;
+    border-radius: 2px;
+}
+.validation-msg.success {
+    border-color: rgb(81, 185, 81);
+    background-color: rgb(199, 230, 207);
+}
+.validation-msg.error {
+    border-color: rgb(247, 36, 36);
+    background-color: rgb(241, 205, 205);
+}
+.validation-msg.error .validation-icon i.error{
+    color: rgb(247, 36, 36);
+}
+.validation-msg.success .validation-icon i.success{
+    color: rgb(81, 185, 81);
+}
+.validation-icon {
+    padding-right: 10px;
+    align-self: flex-start;
+}
+.validation-text {
+    font-size: 15px;
+}

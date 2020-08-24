@@ -60,7 +60,13 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
 
-            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddRazorPages()
+                .AddRazorPagesOptions(o =>
+                {
+                    // Add default home page
+                    o.Conventions.AddPageRoute("/home/index", "");
+                })
+                .AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
