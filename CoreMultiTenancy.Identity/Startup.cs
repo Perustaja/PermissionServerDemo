@@ -8,7 +8,9 @@ using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,6 +69,19 @@ namespace CoreMultiTenancy.Identity
                     o.Conventions.AddPageRoute("/home/index", "");
                 })
                 .AddRazorRuntimeCompilation();
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.Configure<CookieTempDataProviderOptions>(options =>
+            {
+                options.Cookie.Name = "CoreMultiTenancyApp";
+                options.Cookie.IsEssential = true;
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -82,6 +97,7 @@ namespace CoreMultiTenancy.Identity
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseNotFoundFilter("/error/notfound");
             app.UseRouting();
 

@@ -22,9 +22,9 @@
                 <h3>Email Details</h3>
                 <hr />
                 <div>
-                    @if (this.ValidationMessageTempDataExists()) {
+                    @if (this.ValidationMessageViewDataExists()) {
                         <div class="form-group row mr-0 ml-0 justify-content-center">
-                            @await Html.PartialAsync("_ValidationMessagePartial", TempData)
+                            @await Html.PartialAsync("_ValidationMessagePartial", ViewData)
                         </div>
                     }
                     <div class="form-group row">

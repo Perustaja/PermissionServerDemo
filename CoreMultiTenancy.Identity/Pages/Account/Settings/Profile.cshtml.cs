@@ -24,9 +24,9 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
-        [TempData]
+        [ViewData]
         public bool Success { get; set; }
-        [TempData]
+        [ViewData]
         public string ResultMessage { get; set; }
 
         [ViewData]

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace CoreMultiTenancy.Identity.Extensions
@@ -8,9 +7,9 @@ namespace CoreMultiTenancy.Identity.Extensions
         /// <summary>
         /// Checks the current TempData dictionary for Success and ResultMessage entries.
         /// </summary>
-        public static bool ValidationMessageTempDataExists(this RazorPageBase page)
+        public static bool ValidationMessageViewDataExists(this RazorPageBase page)
         {
-            if (page.TempData.Peek("Success") != null && page.TempData.Peek("ResultMessage") != null)
+            if (page.ViewContext.ViewData["Success"] != null && page.ViewContext.ViewData["ResultMessage"] != null)
                 return true;
             return false;
         }

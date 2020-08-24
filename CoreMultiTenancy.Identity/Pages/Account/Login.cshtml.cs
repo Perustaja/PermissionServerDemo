@@ -65,7 +65,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             if (context?.IdP != null)
             {
                 _logger.LogWarning("External login service requested, but not implemented.");
-                return NotFound();
+                return RedirectToPage("error");
             }
 
             var model = new InputModel()
@@ -118,7 +118,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             // Return to home if ReturnUrl is null or invalid
             else
             {
-                return Redirect("~/");
+                return RedirectToPage("/home/index");
             }
         }
     }
