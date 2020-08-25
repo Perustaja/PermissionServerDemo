@@ -36,7 +36,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         public async Task<IActionResult> OnGetAsync(string userId, string email, string code)
         {
             if (userId == null || email == null || code == null)
-                return RedirectToPage("~/");
+                return RedirectToPage("error");
 
             // Retrieve associated User and change their email
             var user = await _userManager.FindByIdAsync(userId);

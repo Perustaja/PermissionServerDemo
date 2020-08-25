@@ -50,14 +50,14 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 
             public string Code { get; set; }
         }
-        public IActionResult OnGetAsync(string code, string Id)
+        public IActionResult OnGetAsync(string userId, string code)
         {
-            if (String.IsNullOrWhiteSpace(code) || Id == null)
+            if (String.IsNullOrWhiteSpace(code) || userId == null)
                 return RedirectToPage("error");
             Input = new InputModel
             {
                 Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
-                UserId = Id
+                UserId = userId
             };
             return Page();
         }

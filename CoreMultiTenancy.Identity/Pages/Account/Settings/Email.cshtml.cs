@@ -89,6 +89,40 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             return RedirectToPage("error");
         }
 
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    if (user.Email != Input.NewEmail)
+                    {
+                        var token = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
+                        var callbackUrl = Url.Page(
+                            "/account/changeemailconfirmation",
+                            pageHandler: null,
+                            values: new { userId = userId, email = Input.NewEmail, code = token },
+                            protocol: Request.Scheme);
+                        await _emailSender.SendEmailChangeEmail(Input.NewEmail, callbackUrl);
+                        Success = true;
+                        ResultMessage = $"An email containing a link to confirm your email change has been sent to {Input.NewEmail}.";
+                        SetPrepopulatedFormData(user);
+                        return Page();
+                    }
+                    Success = false;
+                    ResultMessage = "The entered email is the same as your existing email.";
+                    SetPrepopulatedFormData(user);
+                    return Page();
+                }
+                SetPrepopulatedFormData(user);
+                return Page();
+            }
+            _logger.LogError($"User authenticated but lookup returned null User object.");
+            return RedirectToPage("error");
+        }
+
         private void SetPrepopulatedFormData(User user)
         {
             CurrentEmail = user.Email;

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -17,32 +18,34 @@ namespace CoreMultiTenancy.Identity.Services
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _options = optionsAccessor.Value ?? throw new ArgumentNullException(nameof(optionsAccessor));
+            if (_options.SendGridKey == null || _options.SendGridUser == null)
+                throw new ArgumentNullException($"{nameof(EmailSender)}: SendGridKey or SendGridUser not set on launch. Please configure.");
         }
-        public async Task SendAccountConfirmationEmail(string email, string confirmationUrl)
+        public async Task SendAccountConfirmationEmail(string email, string callbackUrl)
         {
             var client = new SendGridClient(_options.SendGridKey);
             var msg = new SendGridMessage()
             {
                 Subject = "TestApp - Account verification required",
                 From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
-                PlainTextContent = $"Confirm your account by clicking the following link: {confirmationUrl}"
+                HtmlContent = $"Please confirm your account by clicking <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>."
             };
             msg.AddTo(new EmailAddress(email));
 
             msg.SetClickTracking(false, false);
 
-            await client.SendEmailAsync(msg);
+            var response = await client.SendEmailAsync(msg);
             _logger.LogInformation($"Account confirmation email sent to {email}.");
         }
 
-        public async Task SendPasswordResetEmail(string email, string resetUrl)
+        public async Task SendPasswordResetEmail(string email, string callbackUrl)
         {
             var client = new SendGridClient(_options.SendGridKey);
             var msg = new SendGridMessage()
             {
                 Subject = "TestApp - Reset your password",
                 From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
-                PlainTextContent = $"Reset your account's password by using the following link: {resetUrl}."
+                HtmlContent = $"Reset your account's password by clicking <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>."
             };
             msg.AddTo(new EmailAddress(email));
 
@@ -52,14 +55,14 @@ namespace CoreMultiTenancy.Identity.Services
             _logger.LogInformation($"Password reset email sent to {email}.");
         }
 
-        public async Task SendEmailChangeEmail(string email, string token)
+        public async Task SendEmailChangeEmail(string email, string callbackUrl)
         {
             var client = new SendGridClient(_options.SendGridKey);
             var msg = new SendGridMessage()
             {
-                Subject = "TestApp - Email change",
+                Subject = "TestApp - Change email",
                 From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
-                PlainTextContent = $"Update your account's email address by clicking the following link: {token}."
+                HtmlContent = $"Update your account's email address by clicking <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>."
             };
             msg.AddTo(new EmailAddress(email));
 

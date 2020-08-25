@@ -58,18 +58,22 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                     if (user.EmailConfirmed)
                     {
                         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        await _emailSender.SendPasswordResetEmail(user.Id, user.Email, token);
+                        var callbackUrl = Url.Page(
+                            "/account/resetpassword",
+                            pageHandler: null,
+                            values: new { userId = user.Id, code = token },
+                            protocol: Request.Scheme);
+                        await _emailSender.SendPasswordResetEmail(user.Email, callbackUrl);
                         Success = true;
-                        ResultMessage = $"An email containing a reset password link has been sent to {Input.Email}. This link expires in 24 hours.";
+                        ResultMessage = "If an account exists with this email, a password reset link has been emailed which will expire in 24 hours.";
                         return Page();
                     }
-                    _logger.LogWarning($"User {user.Id} attempted to reset password with an unverified email.");
                     Success = false;
                     ResultMessage = "The account associated with this email address has not been confirmed. Please confirm your account before resetting your password.";
                     return Page();
                 }
-                Success = false;
-                ResultMessage = "No account was found with the given email address.";
+                Success = true;
+                ResultMessage = "If an account exists with this email, a password reset link has been emailed which will expire in 24 hours.";
             }
             return Page();
         }

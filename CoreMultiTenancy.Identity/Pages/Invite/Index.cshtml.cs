@@ -27,6 +27,12 @@ namespace CoreMultiTenancy.Identity.Pages.Invite
 
         public async Task<IActionResult> OnGetAsync(string inviteCode)
         {
+            if (String.IsNullOrWhiteSpace(inviteCode))
+            {
+                Success = false;
+                ResultMessage = "No invitation code was found.";
+                return Page();
+            }
             // Verify user is logged in and attempt to use invite code
             if (User?.Identity.IsAuthenticated == true)
             {
