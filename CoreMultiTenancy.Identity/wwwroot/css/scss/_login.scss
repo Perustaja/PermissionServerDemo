@@ -15,7 +15,7 @@
 // Min-width while on desktop/laptop
 @media only screen and (min-width: 600px) {
     .login-panel {
-        min-width: 500px;
+        width: 500px;
     }
     .register-panel {
         width: 650px;
@@ -37,6 +37,7 @@
     padding: 15px;
     flex-direction: column;
     text-align: center;
+    margin: 0px auto;
 }
 .register-panel {
     background-color: $color-fg;
@@ -45,6 +46,7 @@
     padding: 15px;
     flex-direction: column;
     text-align: center;
+    margin: 0px auto;
 }
 .login-logo {
     margin-bottom: 10px;

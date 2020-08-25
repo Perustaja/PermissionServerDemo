@@ -195,7 +195,7 @@ fieldset[disabled] .btn-primary.focus {
 }
 @media only screen and (min-width: 600px) {
   .login-panel {
-    min-width: 500px;
+    width: 500px;
   }
 
   .register-panel {
@@ -219,6 +219,7 @@ fieldset[disabled] .btn-primary.focus {
   padding: 15px;
   flex-direction: column;
   text-align: center;
+  margin: 0px auto;
 }
 
 .register-panel {
@@ -228,6 +229,7 @@ fieldset[disabled] .btn-primary.focus {
   padding: 15px;
   flex-direction: column;
   text-align: center;
+  margin: 0px auto;
 }
 
 .login-logo {
