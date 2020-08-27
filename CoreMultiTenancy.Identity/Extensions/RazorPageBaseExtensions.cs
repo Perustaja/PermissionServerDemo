@@ -5,7 +5,7 @@ namespace CoreMultiTenancy.Identity.Extensions
     public static class RazorPageBaseExtensions
     {
         /// <summary>
-        /// Checks the current TempData dictionary for Success and ResultMessage entries.
+        /// Checks the current ViewData dictionary for Success and ResultMessage entries.
         /// </summary>
         public static bool ValidationMessageViewDataExists(this RazorPageBase page)
         {

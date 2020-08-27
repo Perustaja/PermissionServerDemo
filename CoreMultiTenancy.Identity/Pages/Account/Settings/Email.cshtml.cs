@@ -65,30 +65,6 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             return RedirectToPage("error");
         }
 
-        public async Task<IActionResult> OnGetResendConfirmationAsync()
-        {
-            var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user != null)
-            {
-                if (!user.EmailConfirmed)
-                {
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    await _emailSender.SendAccountConfirmationEmail(user.Email, token);
-                    Success = true;
-                    ResultMessage = "A confirmation has been sent to your email. You may need to check your spam folder.";
-                    SetPrepopulatedFormData(user);
-                    return Page();
-                }
-                Success = false;
-                ResultMessage = "Your email has already been confirmed.";
-                SetPrepopulatedFormData(user);
-                return Page();
-            }
-            _logger.LogError($"User authenticated but lookup returned null User object.");
-            return RedirectToPage("error");
-        }
-
         public async Task<IActionResult> OnPostAsync()
         {
             var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;

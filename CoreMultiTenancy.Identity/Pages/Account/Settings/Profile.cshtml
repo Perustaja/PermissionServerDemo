@@ -22,6 +22,7 @@
                 <h3>Profile Details</h3>
                 <hr />
                 <div>
+                    @* ViewData validation message *@
                     @if (this.ValidationMessageViewDataExists()) {
                         <div class="form-group row pb-2 mr-0 ml-0 justify-content-center">
                             @await Html.PartialAsync("_ValidationMessagePartial", ViewData)

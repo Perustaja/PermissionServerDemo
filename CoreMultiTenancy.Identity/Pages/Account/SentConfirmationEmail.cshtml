@@ -1,0 +1,38 @@
+@page
+@model SentConfirmationEmailModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Email Confirmation Sent";
+}
+<div class="row m-0 panel-content shadow-sm">
+    <div class="col-sm-12 login-title">
+        Confirmation Email Sent
+        <hr />
+    </div>
+    <div class="p-2">
+        @* TempData validation message *@
+        @if (TempData.TryGetValue("RedirectSuccess", out var succ) && TempData.TryGetValue("RedirectResultMessage", out var msg)) {
+            <div class="col-sm-12 pb-4">
+            @{
+                string parentClasses;
+                string iconClasses;
+                if ((bool)succ) {
+                    parentClasses = "validation-msg success";
+                    iconClasses = "fas fa-check success";
+                } else {
+                    parentClasses = "validation-msg error";
+                    iconClasses = "fas fa-times error";
+                }
+            }
+                <div class="@parentClasses">
+                    <div class="validation-icon">
+                        <i class="@iconClasses"></i>
+                    </div>
+                    <div class="validation-text">
+                        <span>@msg.ToString()</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

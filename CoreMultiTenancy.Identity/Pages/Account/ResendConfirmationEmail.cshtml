@@ -1,8 +1,8 @@
 @page
-@model ResetPasswordModel
+@model ResendConfirmationEmailModel
 @{
     Layout = "~/Pages/Shared/_LoginLayout.cshtml";
-    ViewData["Title"] = "Reset Password";
+    ViewData["Title"] = "Resend Confirmation";
 }
 <div class="shadow-sm login-panel">
     <div class="row m-0">
@@ -11,27 +11,20 @@
                 width="120" height="35" class="d-inline-block align-top">
         </div>
         <div class="col-sm-12 login-title">
-            Reset your password
+            Resend Confirmation
         </div>
         <hr />
         <div class="col-sm-12">
-            Please enter in your new password below.
+            Please enter in the email address associated with the account below.
         </div>
         <hr />
         <div class="col-sm-12 text-left">
             <form method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
-                <input asp-for="@Model.Input.UserId" type="hidden" />
-                <input asp-for="@Model.Input.Code" type="hidden" />
                 <div class="form-group">
-                    <label asp-for="@Model.Input.NewPassword"></label>
-                    <input asp-for="@Model.Input.NewPassword" class="form-control" />
-                    <span asp-validation-for="@Model.Input.NewPassword" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.Input.ConfirmNewPassword"></label>
-                    <input asp-for="@Model.Input.ConfirmNewPassword" class="form-control" />
-                    <span asp-validation-for="@Model.Input.ConfirmNewPassword" class="text-danger"></span>
+                    <label asp-for="@Model.Input.Email"></label>
+                    <input asp-for="@Model.Input.Email" class="form-control" />
+                    <span asp-validation-for="@Model.Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-5">
                     <input type="submit" value="Resend Confirmation" class="btn btn-secondary btn-login" />

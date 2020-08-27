@@ -22,6 +22,7 @@
                 <h3>Email Details</h3>
                 <hr />
                 <div>
+                    @* ViewData validation message *@
                     @if (this.ValidationMessageViewDataExists()) {
                         <div class="form-group row mr-0 ml-0 justify-content-center">
                             @await Html.PartialAsync("_ValidationMessagePartial", ViewData)
@@ -39,7 +40,7 @@
                             @if (Model.EmailConfirmed) {
                                 <div class="form-control-plaintext"><i class="fas fa-check fa-lg text-success"></i> Confirmed</div>
                             } else {
-                                <div class="form-control-plaintext">Not Confirmed - <a asp-page-handler="resendconfirmation">Resend confirmation</a></div>
+                                <div class="form-control-plaintext">Not Confirmed - <a asp-page="/account/resendconfirmationemail" target="_blank">Resend confirmation</a></div>
                             }
                         </div>
                     </div>

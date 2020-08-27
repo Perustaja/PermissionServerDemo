@@ -87,6 +87,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     await _eventSvc.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.Client.ClientId));
                     // Login successful and logged, now redirect user

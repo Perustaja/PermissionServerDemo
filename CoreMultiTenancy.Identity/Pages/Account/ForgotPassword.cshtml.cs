@@ -57,23 +57,27 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                 {
                     if (user.EmailConfirmed)
                     {
+
                         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                         var callbackUrl = Url.Page(
                             "/account/resetpassword",
                             pageHandler: null,
+                            // UserId value prevents manual entering of email at resetpass form
                             values: new { userId = user.Id, code = token },
                             protocol: Request.Scheme);
                         await _emailSender.SendPasswordResetEmail(user.Email, callbackUrl);
                         Success = true;
-                        ResultMessage = "If an account exists with this email, a password reset link has been emailed which will expire in 24 hours.";
+                        ResultMessage = "If an account exists with this email, a password reset link has been sent to it.";
                         return Page();
                     }
                     Success = false;
-                    ResultMessage = "The account associated with this email address has not been confirmed. Please confirm your account before resetting your password.";
+                    ResultMessage =
+                        $@"The account associated with this email address has not been confirmed. Please confirm your account before resetting your password.
+                        Need a new confirmation link? <a href=""{Url.Page("account/resendconfirmationemail")}>Click here</a>""";
                     return Page();
                 }
                 Success = true;
-                ResultMessage = "If an account exists with this email, a password reset link has been emailed which will expire in 24 hours.";
+                ResultMessage = "If an account exists with this email, a password reset link has been sent to it.";
             }
             return Page();
         }

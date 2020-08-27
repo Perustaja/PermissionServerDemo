@@ -26,16 +26,21 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
+        //PRG TempData for ResetPasswordConfirmation page
         [TempData]
-        public bool Success { get; set; }
+        public bool RedirectSuccess { get; set; }
         [TempData]
-        public string ResultMessage { get; set; }
+        public string RedirectResultMessage { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
 
         public class InputModel
         {
+            public string UserId { get; set; }
+
+            public string Code { get; set; }
+
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
@@ -45,15 +50,12 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmNewPassword { get; set; }
-
-            public string UserId { get; set; }
-
-            public string Code { get; set; }
         }
         public IActionResult OnGetAsync(string userId, string code)
         {
-            if (String.IsNullOrWhiteSpace(code) || userId == null)
-                return RedirectToPage("error");
+            if (String.IsNullOrWhiteSpace(code) || String.IsNullOrWhiteSpace(userId))
+                return RedirectToPage("notfound");
+            // set hidden model values
             Input = new InputModel
             {
                 Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
@@ -62,20 +64,29 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             return Page();
         }
 
-        // public async Task<IActionResult> OnPostAsync()
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         // attempt to retrieve user object
-        //         var user = await _userManager.FindByIdAsync(Input.UserId);
-        //         if (user != null)
-        //         {
-        //             // attempt to reset password
-        //             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.ConfirmNewPassword);
-        //         }
-
-        //     }
-        //     // redirect with appropriate error message
-        // }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                // attempt to retrieve user object
+                var user = await _userManager.FindByIdAsync(Input.UserId);
+                if (user != null)
+                {
+                    // attempt to reset password
+                    var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.ConfirmNewPassword);
+                    if (result.Succeeded)
+                    {
+                        RedirectSuccess = true;
+                        RedirectResultMessage = "Your password has successfully been reset";
+                        return RedirectToPage("/account/passwordreset");
+                    }
+                }
+                // Redirect with error message
+                RedirectSuccess = false;
+                RedirectResultMessage = "The link provided was invalid or has expired. Please have a valid link sent to your email.";
+                return RedirectToPage("/account/passwordreset");
+            }
+            return Page();
+        }
     }
 }
