@@ -53,8 +53,8 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         }
         public IActionResult OnGetAsync(string userId, string code)
         {
-            if (String.IsNullOrWhiteSpace(code) || String.IsNullOrWhiteSpace(userId))
-                return RedirectToPage("notfound");
+            if (String.IsNullOrEmpty(code) || String.IsNullOrEmpty(userId))
+                return RedirectToPage("/error/notfound");
             // set hidden model values
             Input = new InputModel
             {

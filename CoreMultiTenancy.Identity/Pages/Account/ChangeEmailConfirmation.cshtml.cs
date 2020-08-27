@@ -28,9 +28,9 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         }
 
-        [TempData]
+        [ViewData]
         public bool Success { get; set; }
-        [TempData]
+        [ViewData]
         public string ResultMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string userId, string email, string code)

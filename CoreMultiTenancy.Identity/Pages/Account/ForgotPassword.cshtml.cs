@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -59,12 +60,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                     {
 
                         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        var callbackUrl = Url.Page(
-                            "/account/resetpassword",
-                            pageHandler: null,
-                            // UserId value prevents manual entering of email at resetpass form
-                            values: new { userId = user.Id, code = token },
-                            protocol: Request.Scheme);
+                        var callbackUrl = Url.ResetPasswordPageLink(user.Id.ToString(), token, Request.Scheme);
                         await _emailSender.SendPasswordResetEmail(user.Email, callbackUrl);
                         Success = true;
                         ResultMessage = "If an account exists with this email, a password reset link has been sent to it.";

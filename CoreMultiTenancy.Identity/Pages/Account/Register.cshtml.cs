@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
+using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,11 +18,14 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IEmailSender _emailSender;
         private readonly UserManager<User> _userManager;
         public RegisterModel(ILogger<RegisterModel> logger,
-        UserManager<User> userManager)
+            IEmailSender emailSender,
+            UserManager<User> userManager)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
@@ -76,7 +80,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                 this.AddIdentityResultErrors(res);
                 return Page();
             }
-
+            // Send email confirmation email
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            var callbackUrl = Url.ConfirmEmailPageLink(newUser.Id.ToString(), token, Request.Scheme);
+            await _emailSender.SendAccountConfirmationEmail(newUser.Email, callbackUrl);
             return RedirectToPage("Login");
         }
     }
