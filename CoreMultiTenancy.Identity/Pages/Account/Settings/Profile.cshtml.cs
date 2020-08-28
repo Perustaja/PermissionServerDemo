@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
@@ -58,7 +59,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 SetPrepopulatedFormData(user);
                 return Page();
             }
-            _logger.LogError($"User authenticated but lookup returned null User object.");
+            _logger.LogEmptyAuthenticatedUser(user);
             return RedirectToPage("error");
         }
         public async Task<IActionResult> OnPostAsync()
@@ -82,7 +83,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                     SetPrepopulatedFormData(user);
                     return Page();
                 }
-                _logger.LogError($"User {user.Id} authenticated but lookup returned null User object.");
+                _logger.LogEmptyAuthenticatedUser(user);
                 return RedirectToPage("error");
             }
             SetPrepopulatedFormData(user);

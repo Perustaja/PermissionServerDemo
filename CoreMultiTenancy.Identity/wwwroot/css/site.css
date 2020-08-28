@@ -240,6 +240,7 @@ fieldset[disabled] .btn-primary.focus {
   color: #2e2d2d;
   font-size: 30px;
   font-weight: 400;
+  padding-bottom: 4px;
 }
 
 .btn-login {
@@ -453,15 +454,20 @@ a.tab[data-selected=true]:hover {
 
 .validation-text {
   font-size: 15px;
+  text-align: left;
 }
 
 .validation-summary-valid span {
   display: none;
 }
 
-.validation-summary-errors.nobullet ul {
+.validation-summary-errors.no-bullet ul {
   list-style-type: none;
   padding: 0px;
+}
+
+.popover-content, .popover-body {
+  text-align: center;
 }
 
 .fa-mid {
@@ -513,6 +519,11 @@ main {
   font-weight: 500;
   justify-content: center;
   margin: 0;
+}
+
+.hover-info {
+  cursor: pointer;
+  outline: none !important;
 }
 
 /*# sourceMappingURL=site.css.map */

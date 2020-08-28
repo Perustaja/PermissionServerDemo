@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
@@ -24,7 +25,6 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private IEventService _eventSvc;
-
         public LoginModel(ILogger<LoginModel> logger,
             IConfiguration config,
             IIdentityServerInteractionService interactionSvc,
@@ -55,7 +55,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task<IActionResult> OnGetAsync(string returnUrl)
+        public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             var context = await _interactionSvc.GetAuthorizationContextAsync(returnUrl);
             // Redirect as necessary if user is already logged in
@@ -77,8 +77,9 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            ReturnUrl = returnUrl;
             // Get context of request
             var context = await _interactionSvc.GetAuthorizationContextAsync(ReturnUrl);
 
@@ -87,11 +88,21 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    
+
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     await _eventSvc.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName, clientId: context?.Client.ClientId));
                     // Login successful and logged, now redirect user
                     return RedirectUponLogin(context, ReturnUrl);
+                }
+                else if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError(String.Empty, $"Your account must be confirmed before logging in. Need a new confirmation link? <a href='/account/resendconfirmationemail'>Click here</a>");
+                    return Page();
+                }
+                else if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError(String.Empty, $"Your account is locked out. Please wait 10 minutes before attempting to sign in again.");
+                    return Page();
                 }
                 ModelState.AddModelError(String.Empty, "Invalid email or password.");
             }
@@ -114,7 +125,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             // Else if local, redirect
             else if (Url.IsLocalUrl(returnUrl))
             {
-                return Redirect(returnUrl);
+                return RedirectToPage(returnUrl);
             }
             // Return to home if ReturnUrl is null or invalid
             else

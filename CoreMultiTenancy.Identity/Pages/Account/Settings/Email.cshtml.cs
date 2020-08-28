@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using IdentityModel;
@@ -61,7 +62,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 SetPrepopulatedFormData(user);
                 return Page();
             }
-            _logger.LogError($"User authenticated but lookup returned null User object.");
+            _logger.LogEmptyAuthenticatedUser(user);
             return RedirectToPage("error");
         }
 
@@ -76,11 +77,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                     if (user.Email != Input.NewEmail)
                     {
                         var token = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
-                        var callbackUrl = Url.Page(
-                            "/account/changeemailconfirmation",
-                            pageHandler: null,
-                            values: new { userId = userId, email = Input.NewEmail, code = token },
-                            protocol: Request.Scheme);
+                        var callbackUrl = Url.ConfirmEmailPageLink(userId, token, Request.Scheme);
                         await _emailSender.SendEmailChangeEmail(Input.NewEmail, callbackUrl);
                         Success = true;
                         ResultMessage = $"An email containing a link to confirm your email change has been sent to {Input.NewEmail}.";
@@ -95,7 +92,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 SetPrepopulatedFormData(user);
                 return Page();
             }
-            _logger.LogError($"User authenticated but lookup returned null User object.");
+            _logger.LogEmptyAuthenticatedUser(user);
             return RedirectToPage("error");
         }
 

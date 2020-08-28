@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,19 +17,14 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     [ValidateAntiForgeryToken]
     public class ResetPasswordModel : PageModel
     {
-        private readonly ILogger<ResetPasswordModel> _logger;
         private readonly UserManager<User> _userManager;
 
-        public ResetPasswordModel(ILogger<ResetPasswordModel> logger,
-            UserManager<User> userManager)
+        public ResetPasswordModel(UserManager<User> userManager)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
-        //PRG TempData for ResetPasswordConfirmation page
-        [TempData]
-        public bool RedirectSuccess { get; set; }
+        //PRG TempData for Login page on success
         [TempData]
         public string RedirectResultMessage { get; set; }
 
@@ -76,15 +72,13 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                     var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.ConfirmNewPassword);
                     if (result.Succeeded)
                     {
-                        RedirectSuccess = true;
                         RedirectResultMessage = "Your password has successfully been reset";
-                        return RedirectToPage("/account/passwordreset");
+                        return RedirectToPage("/account/login");
                     }
+                    this.AddIdentityResultErrors(result);
+                    return Page();
                 }
-                // Redirect with error message
-                RedirectSuccess = false;
-                RedirectResultMessage = "The link provided was invalid or has expired. Please have a valid link sent to your email.";
-                return RedirectToPage("/account/passwordreset");
+                ModelState.AddModelError("", "The link provided was invalid or has expired. Please have a valid link sent to your email.");
             }
             return Page();
         }

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
@@ -15,15 +14,12 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     [ValidateAntiForgeryToken]
     public class ChangeEmailConfirmationModel : PageModel
     {
-        private readonly ILogger<ChangeEmailConfirmationModel> _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public ChangeEmailConfirmationModel(ILogger<ChangeEmailConfirmationModel> logger,
-            UserManager<User> userManager,
+        public ChangeEmailConfirmationModel(UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
         }

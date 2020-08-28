@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using IdentityModel;
@@ -78,7 +79,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                     ResultMessage = "The current password entered is incorrect.";
                     return Page();
                 }
-                _logger.LogError($"User authenticated but lookup returned null User object.");
+                _logger.LogEmptyAuthenticatedUser(user);
                 return RedirectToPage("error");
             }
             return Page();

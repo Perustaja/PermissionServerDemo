@@ -1,0 +1,11 @@
+@* Uses TempData["RedirectResultMessage"] (string) to share a success message after redirect. *@
+@if (TempData.TryGetValue("RedirectResultMessage", out var msg)) {
+    <div class="sticky-top">
+        <div class="alert alert-success alert-dismissable fade show">
+            @msg.ToString()
+        </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}

@@ -17,14 +17,11 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     [ValidateAntiForgeryToken]
     public class RegisterModel : PageModel
     {
-        private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<User> _userManager;
-        public RegisterModel(ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+        public RegisterModel(IEmailSender emailSender,
             UserManager<User> userManager)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }

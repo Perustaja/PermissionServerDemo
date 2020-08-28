@@ -29,9 +29,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
 
-        // PRG TempData for SentConfirmationEmail page
-        [TempData]
-        public bool RedirectSuccess { get; set; }
+        //PRG TempData for Login page on success
         [TempData]
         public string RedirectResultMessage { get; set; }
 
@@ -72,9 +70,8 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         await _emailSender.SendAccountConfirmationEmail(user.Email, token);
                     }
-                    RedirectSuccess = true;
                     RedirectResultMessage = $"A confirmation link has been sent to {user.Email} if this account is not verified already. You may need to check your spam folder.";
-                    return RedirectToPage("/account/sentconfirmationemail");
+                    return RedirectToPage("/account/login");
                 }
                 // The user can easily figure out if an email is registered by attempting to make an
                 // account under it, so exposing this detail here is not a security concern.
@@ -100,16 +97,14 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                     // User should not encounter redirect unless they manually make a request to this page
                     if (user.EmailConfirmed)
                     {  
-                        RedirectSuccess = true;
                         RedirectResultMessage = "Your account's email is already confirmed.";
-                        return RedirectToPage("/account/sentconfirmationemail");
+                        return RedirectToPage("/account/login");
                     }
                     // Else, resend confirmation
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _emailSender.SendAccountConfirmationEmail(user.Email, token);
-                    RedirectSuccess = true;
                     RedirectResultMessage = $"A confirmation link has been sent to {user.Email}. You may need to check your spam folder.";
-                    return RedirectToPage("/account/sentconfirmationemail");
+                    return RedirectToPage("/account/login");
                 }
                 _logger.LogWarning("User authenticated but UserManager returned null object.");
                 return RedirectToPage("/error");

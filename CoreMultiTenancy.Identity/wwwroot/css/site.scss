@@ -11,10 +11,16 @@
 .validation-summary-valid span {
     display: none;
 }
-.validation-summary-errors.nobullet ul {
+.validation-summary-errors.no-bullet ul {
     list-style-type: none;
     padding: 0px;
 }
+
+// BOOTSTRAP OVERRIDES
+.popover-content, .popover-body {
+    text-align: center;
+}
+
 // GENERAL USAGE/COMMON
 .fa-mid {
     vertical-align: middle;
@@ -57,4 +63,10 @@ main {
     font-weight: 500;
     justify-content: center;
     margin: 0;
+}
+// popover
+.hover-info {
+    cursor: pointer;
+    // suppress tab index outline
+    outline: none !important;
 }

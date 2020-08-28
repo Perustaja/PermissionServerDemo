@@ -5,19 +5,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel
     {
-        private readonly ILogger<ConfirmEmailModel> _logger;
         private readonly UserManager<User> _userManager;
 
-        public ConfirmEmailModel(ILogger<ConfirmEmailModel> logger, UserManager<User> userManager)
+        public ConfirmEmailModel(UserManager<User> userManager)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
@@ -26,6 +23,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 
         [ViewData]
         public string ResultMessage { get; set; }
+
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {
             if (String.IsNullOrEmpty(userId) || String.IsNullOrEmpty(code))
