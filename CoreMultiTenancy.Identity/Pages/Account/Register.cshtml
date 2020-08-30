@@ -15,7 +15,8 @@
         </div>
         <div class="col-sm-12">
             <form method="post" autocomplete="off">
-                <div asp-validation-summary="ModelOnly" class="d-flex justify-content-center text-danger no-bullet"></div>
+                @* Custom validation-summary *@
+                @await Html.PartialAsync("_ValidationSummaryPartial", ModelState)
                 <div class="form-group row mb-1">
                     <label asp-for="Input.FirstName">@Html.DisplayNameFor(m => m.Input.FirstName)</label>
                     <input asp-for="Input.FirstName" class="form-control">

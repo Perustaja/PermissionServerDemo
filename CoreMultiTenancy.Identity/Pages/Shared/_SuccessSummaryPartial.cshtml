@@ -1,0 +1,14 @@
+@* Displays a success message. Requires ViewData["SuccessMessage"] (string) to be set by the pagemodel *@
+@* Should be used exactly like a normal validation-summary, can be used in tandem with modelstate summary *@
+@if (this.SuccessMessageViewDataExists()) {
+<div class="form-group row">
+    <div class="validation-msg success">
+        <div class="validation-icon success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="validation-text text-success no-bullet">
+            <ul>@ViewData["SuccessMessage"].ToString()</ul>
+        </div>
+    </div>
+</div>
+}

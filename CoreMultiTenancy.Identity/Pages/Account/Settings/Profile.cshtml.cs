@@ -26,9 +26,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
         }
 
         [ViewData]
-        public bool Success { get; set; }
-        [ViewData]
-        public string ResultMessage { get; set; }
+        public string SuccessMessage { get; set; }
 
         [ViewData]
         public string CurrentFirstName { get; set; }
@@ -73,15 +71,18 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                     user.UpdateName(Input.FirstName, Input.LastName);
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)
-                        ResultMessage = "Profile settings updated. Please allow up to an hour for changes to be reflected.";
+                    {
+                        SuccessMessage = "Profile settings updated. Please allow up to an hour for changes to be reflected.";
+                        SetPrepopulatedFormData(user);
+                        return Page();
+                    }
                     else
                     {
-                        ResultMessage = "There was an error updating your profile settings.";
+                        ModelState.AddModelError(String.Empty, "There was an error updating your profile settings.");
                         _logger.LogError($"Unable to update User profile information. FirstName: {Input?.FirstName}, LastName: {Input?.LastName}.");
+                        SetPrepopulatedFormData(user);
+                        return Page();
                     }
-                    Success = result.Succeeded;
-                    SetPrepopulatedFormData(user);
-                    return Page();
                 }
                 _logger.LogEmptyAuthenticatedUser(user);
                 return RedirectToPage("error");

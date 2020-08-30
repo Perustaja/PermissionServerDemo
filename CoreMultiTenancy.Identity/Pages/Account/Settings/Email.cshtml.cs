@@ -31,9 +31,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
         }
 
         [ViewData]
-        public bool Success { get; set; }
-        [ViewData]
-        public string ResultMessage { get; set; }
+        public string SuccessMessage { get; set; }
 
         [ViewData]
         [EmailAddress]
@@ -79,13 +77,11 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                         var token = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                         var callbackUrl = Url.ConfirmEmailPageLink(userId, token, Request.Scheme);
                         await _emailSender.SendEmailChangeEmail(Input.NewEmail, callbackUrl);
-                        Success = true;
-                        ResultMessage = $"An email containing a link to confirm your email change has been sent to {Input.NewEmail}.";
+                        SuccessMessage = $"An email containing a link to confirm your email change has been sent to {Input.NewEmail}.";
                         SetPrepopulatedFormData(user);
                         return Page();
                     }
-                    Success = false;
-                    ResultMessage = "The entered email is the same as your existing email.";
+                    ModelState.AddModelError(String.Empty, "The entered email is the same as your existing email.");
                     SetPrepopulatedFormData(user);
                     return Page();
                 }

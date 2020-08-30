@@ -31,9 +31,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
         }
 
         [ViewData]
-        public bool Success { get; set; }
-        [ViewData]
-        public string ResultMessage { get; set; }
+        public string SuccessMessage { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -69,14 +67,13 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 if (user != null)
                 {
                     var result = await _userManager.ChangePasswordAsync(user, Input.CurrentPassword, Input.ConfirmNewPassword);
-                    Success = result.Succeeded;
                     if (result.Succeeded)
                     {
-                        ResultMessage = $"Your password has successfully been changed.";
+                        SuccessMessage = $"Your password has successfully been changed.";
                         await _signInManager.RefreshSignInAsync(user);
                         return Page();
                     }
-                    ResultMessage = "The current password entered is incorrect.";
+                    ModelState.AddModelError(String.Empty, "The current password entered is incorrect.");
                     return Page();
                 }
                 _logger.LogEmptyAuthenticatedUser(user);

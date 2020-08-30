@@ -415,11 +415,15 @@ a.tab[data-selected=true]:hover {
   background-color: #f1f1f1;
 }
 
+.validation-summary-valid {
+  display: none;
+}
+
 .validation-msg {
   display: flex;
   align-items: center;
   flex-direction: row;
-  padding: 10px;
+  padding: 10px 10px 0px 10px;
   width: 100%;
   border-style: solid;
   border-left-width: 5px;
@@ -439,11 +443,11 @@ a.tab[data-selected=true]:hover {
   background-color: #f1cdcd;
 }
 
-.validation-msg.error .validation-icon i.error {
+.validation-icon.error {
   color: #f72424;
 }
 
-.validation-msg.success .validation-icon i.success {
+.validation-icon.success {
   color: #51b951;
 }
 
@@ -457,17 +461,13 @@ a.tab[data-selected=true]:hover {
   text-align: left;
 }
 
-.validation-summary-valid span {
-  display: none;
-}
-
-.validation-summary-errors.no-bullet ul {
-  list-style-type: none;
-  padding: 0px;
-}
-
 .popover-content, .popover-body {
   text-align: center;
+}
+
+.no-bullet ul {
+  list-style-type: none;
+  padding: 0px;
 }
 
 .fa-mid {
@@ -519,6 +519,14 @@ main {
   font-weight: 500;
   justify-content: center;
   margin: 0;
+}
+
+.dropdown-custom {
+  padding: 0px;
+}
+
+.dropdown-custom .dropdown-item {
+  padding: 0.5rem 1.5rem;
 }
 
 .hover-info {

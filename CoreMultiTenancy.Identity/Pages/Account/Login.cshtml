@@ -9,16 +9,17 @@
 
 <div class="shadow-sm login-panel">
     <div class="row m-0">
-        <div class="col-md-12 login-logo">
+        <div class="col-sm-12 login-logo">
             <img src="~/img/samplelogo.svg"
                 width="120" height="35" class="d-inline-block align-top">
         </div>
-        <div class="col-md-12 login-title">
+        <div class="col-sm-12 login-title">
             Sign in
         </div>
-        <div class="col-md-12">
+        <div class="col-sm-12">
             <form method="post">
-                <div asp-validation-summary="ModelOnly" class="d-flex justify-content-center text-danger"></div>
+                @* Custom validation-summary *@
+                @await Html.PartialAsync("_ValidationSummaryPartial", ModelState)
                 <div class="form-group row">
                     <label asp-for="Input.Email">@Html.DisplayNameFor(m => m.Input.Email)</label>
                     <input asp-for="Input.Email" class="form-control">
@@ -45,7 +46,7 @@
                 </div>
             </form>
             <hr />
-            <div class="col-md-12 mt-4 text-center">
+            <div class="col-sm-12 mt-4 text-center">
                 Are you a new user? <a asp-page="Register">Create your account.</a>
             </div>
         </div>

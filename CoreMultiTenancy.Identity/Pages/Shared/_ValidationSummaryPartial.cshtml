@@ -1,0 +1,19 @@
+@* Creates a custom validation summary. Currently only supports validation-summary type of ModelOnly *@
+@* This is simply a specific replacement for the default asp-validation-summary with custom styling *@
+@model ModelStateDictionary
+
+<div class="@(Html.ViewData.ModelState.IsValid ? "validation-summary-valid" : "validation-summary-errors") form-group row">
+    <div class="validation-msg error">
+        <div class="validation-icon error">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="validation-text text-danger no-bullet">
+            <ul>
+                @foreach(var modelError in Model.SelectMany(kvp => kvp.Value.Errors))
+                {
+                    <li>@modelError.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

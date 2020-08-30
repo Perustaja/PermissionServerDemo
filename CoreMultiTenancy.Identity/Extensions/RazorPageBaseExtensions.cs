@@ -5,13 +5,9 @@ namespace CoreMultiTenancy.Identity.Extensions
     public static class RazorPageBaseExtensions
     {
         /// <summary>
-        /// Checks the current ViewData dictionary for Success and ResultMessage entries.
+        /// Checks the current ViewData dictionary for a SuccessMessage key with accompanying data.
         /// </summary>
-        public static bool ValidationMessageViewDataExists(this RazorPageBase page)
-        {
-            if (page.ViewContext.ViewData["Success"] != null && page.ViewContext.ViewData["ResultMessage"] != null)
-                return true;
-            return false;
-        }
+        public static bool SuccessMessageViewDataExists(this RazorPageBase page)
+            => page.ViewContext.ViewData["SuccessMessage"] != null;
     }
 }

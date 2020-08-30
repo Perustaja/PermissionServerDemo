@@ -7,21 +7,16 @@
 @import "./scss/settings";
 @import "./scss/validation";
 
-// ASP.NET CORE SPECIFIC
-.validation-summary-valid span {
-    display: none;
-}
-.validation-summary-errors.no-bullet ul {
-    list-style-type: none;
-    padding: 0px;
-}
-
 // BOOTSTRAP OVERRIDES
 .popover-content, .popover-body {
     text-align: center;
 }
 
 // GENERAL USAGE/COMMON
+.no-bullet ul {
+    list-style-type: none;
+    padding: 0px;
+}
 .fa-mid {
     vertical-align: middle;
 }
@@ -63,6 +58,12 @@ main {
     font-weight: 500;
     justify-content: center;
     margin: 0;
+}
+.dropdown-custom {
+    padding: 0px;
+}
+.dropdown-custom .dropdown-item {
+    padding: .5rem 1.5rem;
 }
 // popover
 .hover-info {

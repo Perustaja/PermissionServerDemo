@@ -1,9 +1,13 @@
 @import "variables";
+// ASP.NET CORE SPECIFIC
+.validation-summary-valid {
+    display: none;
+}
 .validation-msg {
     display: flex;
     align-items: center;
     flex-direction: row;
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
     width: 100%;
     border-style: solid;
     border-left-width: 5px;
@@ -20,10 +24,10 @@
     border-color: rgb(247, 36, 36);
     background-color: rgb(241, 205, 205);
 }
-.validation-msg.error .validation-icon i.error{
+.validation-icon.error {
     color: rgb(247, 36, 36);
 }
-.validation-msg.success .validation-icon i.success{
+.validation-icon.success {
     color: rgb(81, 185, 81);
 }
 .validation-icon {

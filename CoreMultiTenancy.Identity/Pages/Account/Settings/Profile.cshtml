@@ -21,30 +21,28 @@
             <div class="acct-form">
                 <h3>Profile Details</h3>
                 <hr />
-                <div>
-                    @* ViewData validation message *@
-                    @if (this.ValidationMessageViewDataExists()) {
-                        <div class="form-group row pb-2 mr-0 ml-0 justify-content-center">
-                            @await Html.PartialAsync("_ValidationMessagePartial", ViewData)
-                        </div>
-                    }
-                    <form method="post">
-                        <div class="form-group row pb-2">
-                            <label asp-for="Input.FirstName" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10">
-                                <input asp-for="Input.FirstName" class="form-control" value="@Model.CurrentFirstName" />
-                                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                <div class="row m-0">
+                    <div class="col-sm-12">
+                        <form method="post">
+                            @* Success summary *@
+                            @await Html.PartialAsync("_SuccessSummaryPartial", ViewData)
+                            <div class="form-group row">
+                                <label asp-for="Input.FirstName" class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <input asp-for="Input.FirstName" class="form-control" value="@Model.CurrentFirstName" />
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row pb-2">
-                            <label asp-for="Input.LastName" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10">
-                                <input asp-for="Input.LastName" class="form-control" value="@Model.CurrentLastName" />
-                                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                            <div class="form-group row">
+                                <label asp-for="Input.LastName" class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                    <input asp-for="Input.LastName" class="form-control" value="@Model.CurrentLastName" />
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
                             </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Update Profile</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

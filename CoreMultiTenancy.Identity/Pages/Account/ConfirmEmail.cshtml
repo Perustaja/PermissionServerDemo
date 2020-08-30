@@ -10,12 +10,8 @@
         <hr />
     </div>
     <div class="p-2">
-        @* ViewData validation message *@
-        @if (this.ValidationMessageViewDataExists()) {
-            <div class="col-sm-12 pb-4">
-                @await Html.PartialAsync("_ValidationMessagePartial", ViewData)
-            </div>
-        }
+        @* Success summary *@
+        @await Html.PartialAsync("_SuccessSummaryPartial", ViewData)
         <div class="mb-1 text-center">
             <a asp-page="/account/login">Return to sign in.</a>
         </div>

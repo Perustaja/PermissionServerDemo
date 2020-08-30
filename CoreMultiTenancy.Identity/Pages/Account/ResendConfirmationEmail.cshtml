@@ -20,7 +20,8 @@
         <hr />
         <div class="col-sm-12 text-left">
             <form method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
+                @* Custom validation-summary *@
+                @await Html.PartialAsync("_ValidationSummaryPartial", ModelState)
                 <div class="form-group">
                     <label asp-for="@Model.Input.Email"></label>
                     <input asp-for="@Model.Input.Email" class="form-control" />

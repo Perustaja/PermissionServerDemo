@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
@@ -69,7 +68,19 @@ namespace CoreMultiTenancy.Identity
                     o.Conventions.AddPageRoute("/home/index", "");
                 })
                 .AddRazorRuntimeCompilation();
+            // Identity config
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Lockout
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                // Password
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+            });
 
+            // Cookie config
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => false;
@@ -78,10 +89,9 @@ namespace CoreMultiTenancy.Identity
 
             services.Configure<CookieTempDataProviderOptions>(options =>
             {
-                options.Cookie.Name = "CoreMultiTenancyApp";
+                options.Cookie.Name = "CMTApp";
                 options.Cookie.IsEssential = true;
             });
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

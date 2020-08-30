@@ -21,39 +21,39 @@
             <div class="acct-form">
                 <h3>Email Details</h3>
                 <hr />
-                <div>
-                    @* ViewData validation message *@
-                    @if (this.ValidationMessageViewDataExists()) {
-                        <div class="form-group row mr-0 ml-0 justify-content-center">
-                            @await Html.PartialAsync("_ValidationMessagePartial", ViewData)
-                        </div>
-                    }
-                    <div class="form-group row">
-                        <label asp-for="CurrentEmail" class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-9">
-                            <div class="form-control-plaintext">@Model.CurrentEmail</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Status</label>
-                        <div class="col-sm-9">
-                            @if (Model.EmailConfirmed) {
-                                <div class="form-control-plaintext"><i class="fas fa-check fa-lg text-success"></i> Confirmed</div>
-                            } else {
-                                <div class="form-control-plaintext">Not Confirmed - <a asp-page="/account/resendconfirmationemail" target="_blank">Resend confirmation</a></div>
-                            }
-                        </div>
-                    </div>
-                    <form method="post">
+                <div class="row m-0">
+                    <div class="col-sm-12">
+                        @* Success summary *@
+                        @await Html.PartialAsync("_SuccessSummaryPartial", ViewData)
+                        @* Custom validation-summary *@
+                        @await Html.PartialAsync("_ValidationSummaryPartial", ModelState)
                         <div class="form-group row">
-                            <label asp-for="Input.NewEmail" class="col-sm-3 col-form-label"></label>
+                            <label asp-for="CurrentEmail" class="col-sm-3 col-form-label"></label>
                             <div class="col-sm-9">
-                                <input asp-for="Input.NewEmail" class="form-control" />
-                                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                                <div class="form-control-plaintext">@Model.CurrentEmail</div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Email</button>
-                    </form>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Status</label>
+                            <div class="col-sm-9">
+                                @if (Model.EmailConfirmed) {
+                                    <div class="form-control-plaintext"><i class="fas fa-check fa-lg text-success"></i> Confirmed</div>
+                                } else {
+                                    <div class="form-control-plaintext">Not Confirmed - <a asp-page="/account/resendconfirmationemail" target="_blank">Resend confirmation</a></div>
+                                }
+                            </div>
+                        </div>
+                        <form method="post">
+                            <div class="form-group row">
+                                <label asp-for="Input.NewEmail" class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                    <input asp-for="Input.NewEmail" class="form-control" />
+                                    <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Email</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
