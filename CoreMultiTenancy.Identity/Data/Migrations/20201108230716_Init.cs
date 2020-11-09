@@ -42,8 +42,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    SelectedOrg = table.Column<Guid>(nullable: false)
+                    LastName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -180,8 +179,8 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     Blacklisted = table.Column<bool>(nullable: false),
                     InternalNotes = table.Column<string>(nullable: true),
                     DateSubmitted = table.Column<DateTime>(nullable: false),
-                    DateApproved = table.Column<DateTime>(nullable: false),
-                    DateBlacklisted = table.Column<DateTime>(nullable: false)
+                    DateApproved = table.Column<DateTime>(nullable: true),
+                    DateBlacklisted = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {

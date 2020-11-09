@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreMultiTenancy.Identity.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200807161444_Init")]
+    [Migration("20201108230716_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -118,9 +118,6 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<Guid>("SelectedOrg")
-                        .HasColumnType("char(36)");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -154,10 +151,10 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.Property<bool>("Blacklisted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("DateApproved")
+                    b.Property<DateTime?>("DateApproved")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("DateBlacklisted")
+                    b.Property<DateTime?>("DateBlacklisted")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DateSubmitted")

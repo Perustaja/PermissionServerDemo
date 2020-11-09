@@ -19,12 +19,12 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     [ValidateAntiForgeryToken]
     public class LogoutModel : PageModel
     {
-        private readonly ILogger<LoginModel> _logger;
+        private readonly ILogger<LogoutModel> _logger;
         private readonly IIdentityServerInteractionService _interactionSvc;
         private readonly SignInManager<User> _signInManager;
         private IEventService _eventSvc;
 
-        public LogoutModel(ILogger<LoginModel> logger,
+        public LogoutModel(ILogger<LogoutModel> logger,
             IConfiguration config,
             IIdentityServerInteractionService interactionSvc,
             SignInManager<User> signInManager,
@@ -35,29 +35,35 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
+        [ViewData]
+        public string LogoutId { get; set; }
+        [ViewData]
+        public bool ShowLogoutPrompt { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; }
 
         public class InputModel
         {
             public string LogoutId { get; set; }
-            public bool ShowLogoutPrompt { get; set; } = true;
         }
 
         public async Task<IActionResult> OnGetAsync(string logoutId)
         {
-            Input.LogoutId = logoutId;
-            Input.ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt;
+            if (String.IsNullOrEmpty(logoutId))
+                return RedirectToPage("/error");
+            LogoutId = logoutId;
+            ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt;
 
             // If user is not logged in, redirect them to the login page
-            if (User?.Identity.IsAuthenticated != true)
+            if (User?.Identity?.IsAuthenticated != true)
                 return RedirectToAction("Login");
 
             // Check if context requires logout prompt, if not it's safe to sign out
             var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
             if (context?.ShowSignoutPrompt != true)
             {
-                Input.ShowLogoutPrompt = false;
+                ShowLogoutPrompt = false;
                 return Page();
             }
 

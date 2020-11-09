@@ -19,19 +19,8 @@
         </div>
         <div class="col-sm-12">
             <form method="post" id="logoutForm">
-                <input type="hidden" name="logoutId" value="@Model.Input.LogoutId"  />
+                @* <input type="hidden" name="logoutId" value="@Model.Input.LogoutId"  /> *@
             </form>
         </div>
     </div>
 </div>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        window.onload = function() {
-            setTimeout(logout, 1000);
-        }
-        function logout() {
-            $("#logoutForm").submit();
-        }
-    </script>
-}
