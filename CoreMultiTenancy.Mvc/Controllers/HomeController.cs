@@ -3,14 +3,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IdentityModel.Client;
-using System;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
-using System.Text.Json;
-using System.Xml;
 
 namespace CoreMultiTenancy.Mvc.Controllers
 {

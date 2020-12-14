@@ -49,7 +49,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
         }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
             var user = await _userManager.FindByIdAsync(userId);

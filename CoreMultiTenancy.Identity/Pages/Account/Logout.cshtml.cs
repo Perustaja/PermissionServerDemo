@@ -20,12 +20,12 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     [SecurityHeaders]
     public class LogoutModel : PageModel
     {
-        private readonly ILogger<LoginModel> _logger;
+        private readonly ILogger<LogoutModel> _logger;
         private readonly IIdentityServerInteractionService _interactionSvc;
         private readonly SignInManager<User> _signInManager;
         private IEventService _eventSvc;
 
-        public LogoutModel(ILogger<LoginModel> logger,
+        public LogoutModel(ILogger<LogoutModel> logger,
             IConfiguration config,
             IIdentityServerInteractionService interactionSvc,
             SignInManager<User> signInManager,
@@ -36,6 +36,11 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
+        [ViewData]
+        public string LogoutId { get; set; }
+        [ViewData]
+        public bool ShowLogoutPrompt { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; }
         public class InputModel 
@@ -65,9 +70,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             // Check if context requires logout prompt, if not it's safe to sign out
             var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
             if (context?.ShowSignoutPrompt == false)
-            {
                 return await OnPostAsync();
-            }
 
             // show the logout prompt. this prevents attacks where the user
             // is automatically signed out by another malicious web page.
