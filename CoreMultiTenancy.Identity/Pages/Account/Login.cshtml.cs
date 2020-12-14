@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class LoginModel : PageModel
     {
         private readonly ILogger<LoginModel> _logger;

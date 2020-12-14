@@ -13,6 +13,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;

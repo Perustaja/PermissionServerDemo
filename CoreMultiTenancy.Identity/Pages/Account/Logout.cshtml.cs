@@ -17,6 +17,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [Authorize]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class LogoutModel : PageModel
     {
         private readonly ILogger<LoginModel> _logger;
@@ -37,28 +38,35 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         }
         [BindProperty]
         public InputModel Input { get; set; }
-
-        public class InputModel
+        public class InputModel 
         {
             public string LogoutId { get; set; }
-            public bool ShowLogoutPrompt { get; set; } = true;
-        }
+            public bool ShowLogoutPrompt { get; set; }
+        } 
 
+
+        // Logout should not be directly called by user, rather a client uses the end-session
+        // endpoint to initiate a signout. logoutid MAY be provided by this, if state is necessary.
         public async Task<IActionResult> OnGetAsync(string logoutId)
         {
-            Input.LogoutId = logoutId;
-            Input.ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt;
+            Input = new InputModel 
+            {
+                LogoutId = logoutId,
+                ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt
+            };
 
-            // If user is not logged in, redirect them to the login page
-            if (User?.Identity.IsAuthenticated != true)
-                return RedirectToAction("Login");
+            // If somehow user is not logged in, show logged out page
+            if (User?.Identity.IsAuthenticated != true) 
+            {
+                Input.ShowLogoutPrompt = false;
+                return RedirectToPage("LoggedOut");
+            }
 
             // Check if context requires logout prompt, if not it's safe to sign out
             var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
-            if (context?.ShowSignoutPrompt != true)
+            if (context?.ShowSignoutPrompt == false)
             {
-                Input.ShowLogoutPrompt = false;
-                return Page();
+                return await OnPostAsync();
             }
 
             // show the logout prompt. this prevents attacks where the user

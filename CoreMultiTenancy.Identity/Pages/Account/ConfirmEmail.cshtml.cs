@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [SecurityHeaders]
     public class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<User> _userManager;

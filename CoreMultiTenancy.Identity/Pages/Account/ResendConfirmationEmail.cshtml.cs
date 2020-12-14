@@ -14,6 +14,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class ResendConfirmationEmailModel : PageModel
     {
         private readonly ILogger<PageModel> _logger;

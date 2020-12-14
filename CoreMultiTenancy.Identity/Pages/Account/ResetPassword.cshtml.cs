@@ -15,6 +15,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class ResetPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;

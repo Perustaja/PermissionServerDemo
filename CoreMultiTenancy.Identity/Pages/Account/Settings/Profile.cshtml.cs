@@ -14,6 +14,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
 {
     [Authorize]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class ProfileModel : PageModel
     {
         private readonly ILogger<ProfileModel> _logger;

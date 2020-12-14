@@ -15,6 +15,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 {
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
+    [SecurityHeaders]
     public class RegisterModel : PageModel
     {
         private readonly IEmailSender _emailSender;
