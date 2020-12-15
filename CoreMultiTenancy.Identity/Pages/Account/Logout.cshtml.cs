@@ -36,22 +36,35 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
-        [ViewData]
-        public string LogoutId { get; set; }
-        [ViewData]
-        public bool ShowLogoutPrompt { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
+
+        [ViewData]
+        // Data for post-signout results. Breaks razor page conventions but necessary for security.
+        public LoggedOutViewModel LogoutResult { get; set; }
+
+        public class LoggedOutModel 
+        {
+            public string LogoutId { get; set; }
+            public string PostLogoutRedirectUri { get; set; }
+            public string ClientName { get; set; }
+            public string SignOutIframeUrl { get; set; }
+            public bool AutomaticRedirectAfterSignOut { get; set; }
+            public bool TriggerExternalSignout => ExternalAuthenticationScheme != null;
+            public string ExternalAuthenticationScheme { get; set; }
+        }
         public class InputModel 
         {
             public string LogoutId { get; set; }
             public bool ShowLogoutPrompt { get; set; }
         } 
 
-
-        // Logout should not be directly called by user, rather a client uses the end-session
-        // endpoint to initiate a signout. logoutid MAY be provided by this, if state is necessary.
+        /// <summary>
+        /// /// Logs the user out. Logout should be called via the end-session endpoint.
+        /// </summary>
+        /// <param name="logoutId">Internal id used to store state. If null, it is created by idsrv.</param>
+        /// <returns></returns>
         public async Task<IActionResult> OnGetAsync(string logoutId)
         {
             Input = new InputModel 
@@ -60,11 +73,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                 ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt
             };
 
-            // If somehow user is not logged in, show logged out page
+            // If somehow user is not logged in, show login page
             if (User?.Identity.IsAuthenticated != true) 
             {
-                Input.ShowLogoutPrompt = false;
-                return RedirectToPage("LoggedOut");
+                return RedirectToPage("Login");
             }
 
             // Check if context requires logout prompt, if not it's safe to sign out
@@ -77,9 +89,13 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             return Page();
         }
 
+        /// <summary>
+        /// Logs user out and returns page. Redirecting to a loggedOut page in a secure way without ugly
+        /// query string params in the url while maintaining razor page conventions is tricky. This is a tradeoff.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
-            var vm = await BuildLoggedOutViewModel(Input.LogoutId);
+            LogoutResult = await BuildLoggedOutViewModelAsync(Input.LogoutId);
 
             // Show login page if user is not logged in currently
             if (User?.Identity.IsAuthenticated != true)
@@ -92,20 +108,21 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             await _eventSvc.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
 
             // check if we need to trigger sign-out at an upstream identity provider
-            if (vm.TriggerExternalSignout)
+            if (LogoutResult.TriggerExternalSignout)
             {
                 // build a return URL so the upstream provider will redirect back
                 // to us after the user has logged out. this allows us to then
                 // complete our single sign-out processing.
-                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+                string url = Url.Action("Logout", new { logoutId = LogoutResult.LogoutId });
 
                 // this triggers a redirect to the external provider for sign-out
-                return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+                return SignOut(new AuthenticationProperties { RedirectUri = url }, LogoutResult.ExternalAuthenticationScheme);
             }
 
-            return RedirectToPage("LoggedOut", vm);
+            return Page(); // Page will update if user is logged out, and redirect if necessary.
         }
-        private async Task<LoggedOutViewModel> BuildLoggedOutViewModel(string logoutId)
+
+        private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
         {
             // get context information (client name, post logout redirect URI and iframe for federated signout)
             var context = await _interactionSvc.GetLogoutContextAsync(logoutId);
