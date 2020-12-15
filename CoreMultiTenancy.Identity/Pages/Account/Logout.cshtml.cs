@@ -40,7 +40,6 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
-        [ViewData]
         // Data for post-signout results. Breaks razor page conventions but necessary for security.
         public LoggedOutViewModel LogoutResult { get; set; }
 

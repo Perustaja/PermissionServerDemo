@@ -125,7 +125,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             // Else if local, redirect
             else if (Url.IsLocalUrl(returnUrl))
             {
-                return RedirectToPage(returnUrl);
+                return LocalRedirect(returnUrl);
             }
             // Return to home if ReturnUrl is null or invalid
             else
