@@ -20,15 +20,15 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
     {
         private readonly ILogger<PageModel> _logger;
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IAccountEmailService _acctEmailService;
 
         public EmailModel(ILogger<PageModel> logger,
             UserManager<User> userManager,
-            IEmailSender emailSender)
+            IAccountEmailService acctEmailService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            _acctEmailService = acctEmailService ?? throw new ArgumentNullException(nameof(acctEmailService));
         }
 
         [ViewData]
@@ -47,7 +47,6 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
 
         public class InputModel
         {
-            [Required]
             [EmailAddress]
             [Display(Name = "New Email")]
             public string NewEmail { get; set; }
@@ -65,27 +64,24 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             return RedirectToPage("error");
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostChangeEmailAsync()
         {
             var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                if (ModelState.IsValid)
+                // Manually check email field so multiple forms can be present on page
+                if (!String.IsNullOrEmpty(Input.NewEmail))
                 {
-                    if (user.Email != Input.NewEmail)
-                    {
-                        var token = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
-                        var callbackUrl = Url.ConfirmEmailPageLink(userId, token, Request.Scheme);
-                        await _emailSender.SendEmailChangeEmail(Input.NewEmail, callbackUrl);
-                        SuccessMessage = $"An email containing a link to confirm your email change has been sent to {Input.NewEmail}.";
-                        SetPrepopulatedFormData(user);
-                        return Page();
-                    }
-                    ModelState.AddModelError(String.Empty, "The entered email is the same as your existing email.");
+                    var res = await _acctEmailService.SendEmailChangeEmail(user.Email, Input.NewEmail);
+                    if (res.Approved)
+                        SuccessMessage = res.Message;
+                    else
+                        ModelState.AddModelError("", res.Message);
                     SetPrepopulatedFormData(user);
                     return Page();
                 }
+                ModelState.AddModelError("", "The NewEmail field is required.");
                 SetPrepopulatedFormData(user);
                 return Page();
             }
@@ -93,6 +89,25 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             return RedirectToPage("error");
         }
 
+        public async Task<IActionResult> OnPostSendConfAsync()
+        {
+            var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var res = await _acctEmailService.SendConfToAuthUserAsync(user);
+                if (res.Approved)
+                    SuccessMessage = res.Message;
+                else
+                    ModelState.AddModelError("", res.Message);
+                SetPrepopulatedFormData(user);
+                return Page();
+            }
+            _logger.LogEmptyAuthenticatedUser(user);
+            return RedirectToPage("error");
+        }
+
+        [NonHandler]
         private void SetPrepopulatedFormData(User user)
         {
             CurrentEmail = user.Email;

@@ -72,5 +72,22 @@ namespace CoreMultiTenancy.Identity.Services
             await client.SendEmailAsync(msg);
             _logger.LogInformation($"Email change email sent to {email}.");
         }
+
+        public async Task SendUnverifiedPassResetEmail(string email, string callbackUrl)
+        {
+            var client = new SendGridClient(_options.SendGridKey);
+            var msg = new SendGridMessage()
+            {
+                Subject = "TestApp - Password Reset",
+                From = new EmailAddress("no-reply@testapp.dev", _options.SendGridUser),
+                HtmlContent = $"A password reset request was made for the account associated with this email. However, your account must be verified. First, verify by clicking <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>, then make another password reset request."
+            };
+            msg.AddTo(new EmailAddress(email));
+
+            msg.SetClickTracking(false, false);
+
+            await client.SendEmailAsync(msg);
+            _logger.LogInformation($"User associated with {email} attempted to reset password without verification. Sent explanation email.");
+        }
     }
 }

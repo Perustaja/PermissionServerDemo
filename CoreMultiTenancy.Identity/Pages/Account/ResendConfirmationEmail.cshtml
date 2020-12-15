@@ -20,6 +20,8 @@
         <hr />
         <div class="col-sm-12 text-left">
             <form method="post">
+                @* Success summary *@
+                @await Html.PartialAsync("_SuccessSummaryPartial", ViewData)
                 @* Custom validation-summary *@
                 @await Html.PartialAsync("_ValidationSummaryPartial", ModelState)
                 <div class="form-group">

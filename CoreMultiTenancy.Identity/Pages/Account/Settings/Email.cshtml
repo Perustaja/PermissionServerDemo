@@ -39,11 +39,13 @@
                                 @if (Model.EmailConfirmed) {
                                     <div class="form-control-plaintext"><i class="fas fa-check fa-lg text-success"></i> Confirmed</div>
                                 } else {
-                                    <div class="form-control-plaintext">Not Confirmed - <a asp-page="/account/resendconfirmationemail" target="_blank">Resend confirmation</a></div>
+                                    <form method="post" asp-page-handler="sendconf">
+                                        <div class="form-control-plaintext">Not Confirmed - <button type="submit" class="btn btn-link">Resend confirmation</button></div>
+                                    </form>
                                 }
                             </div>
                         </div>
-                        <form method="post">
+                        <form method="post" asp-page-handler="changeemail">
                             <div class="form-group row">
                                 <label asp-for="Input.NewEmail" class="col-sm-3 col-form-label"></label>
                                 <div class="col-sm-9">

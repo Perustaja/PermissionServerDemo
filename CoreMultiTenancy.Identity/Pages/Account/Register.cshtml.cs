@@ -18,12 +18,12 @@ namespace CoreMultiTenancy.Identity.Pages.Account
     [SecurityHeaders]
     public class RegisterModel : PageModel
     {
-        private readonly IEmailSender _emailSender;
+        private readonly IAccountEmailService _acctEmailService;
         private readonly UserManager<User> _userManager;
-        public RegisterModel(IEmailSender emailSender,
+        public RegisterModel(IAccountEmailService acctEmailService,
             UserManager<User> userManager)
         {
-            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            _acctEmailService = acctEmailService ?? throw new ArgumentNullException(nameof(acctEmailService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
@@ -79,9 +79,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
                 return Page();
             }
             // Send email confirmation email
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            var callbackUrl = Url.ConfirmEmailPageLink(newUser.Id.ToString(), token, Request.Scheme);
-            await _emailSender.SendAccountConfirmationEmail(newUser.Email, callbackUrl);
+            await _acctEmailService.SendConfToAuthUserAsync(newUser);
             return RedirectToPage("Login");
         }
     }

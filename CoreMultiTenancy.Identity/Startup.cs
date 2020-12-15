@@ -59,6 +59,7 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
+            services.AddScoped<IAccountEmailService, AccountEmailService>();
 
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
