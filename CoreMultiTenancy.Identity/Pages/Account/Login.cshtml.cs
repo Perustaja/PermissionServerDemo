@@ -118,7 +118,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             {
                 if (context.IsNativeClient())
                 {
-                    return this.LoadingPage("Redirect", returnUrl);
+                    return this.NativeRedirectPage(returnUrl);
                 }
                 return Redirect(returnUrl);
             }

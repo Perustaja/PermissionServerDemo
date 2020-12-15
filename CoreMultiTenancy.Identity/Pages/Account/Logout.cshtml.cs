@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Options;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
@@ -23,17 +25,20 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         private readonly ILogger<LogoutModel> _logger;
         private readonly IIdentityServerInteractionService _interactionSvc;
         private readonly SignInManager<User> _signInManager;
+        private readonly OidcAccountOptions _oidcAccountOptions;
         private IEventService _eventSvc;
 
         public LogoutModel(ILogger<LogoutModel> logger,
             IConfiguration config,
             IIdentityServerInteractionService interactionSvc,
             SignInManager<User> signInManager,
+            IOptions<OidcAccountOptions> optionsAccessor,
             IEventService eventService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _interactionSvc = interactionSvc ?? throw new ArgumentNullException(nameof(interactionSvc));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _oidcAccountOptions = optionsAccessor.Value ?? throw new ArgumentNullException(nameof(optionsAccessor));
             _eventSvc = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
 
@@ -60,16 +65,19 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         } 
 
         /// <summary>
-        /// /// Logs the user out. Logout should be called via the end-session endpoint.
+        /// Logs the user out. Logout should be called via the end-session endpoint.
         /// </summary>
-        /// <param name="logoutId">Internal id used to store state. If null, it is created by idsrv.</param>
+        /// <param name="logoutId">
+        /// Internal id used to store state. If null, it is created by idsrv. ValidateAntiForgeryToken
+        /// ensures that this value is not manipulated in the form, so it is safe to not validate (you can't validate it anyway).
+        /// </param>
         /// <returns></returns>
         public async Task<IActionResult> OnGetAsync(string logoutId)
         {
             Input = new InputModel 
             {
                 LogoutId = logoutId,
-                ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt
+                ShowLogoutPrompt = _oidcAccountOptions.ShowLogoutPrompt
             };
 
             // If somehow user is not logged in, show login page
@@ -128,7 +136,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
 
             var vm = new LoggedOutViewModel
             {
-                AutomaticRedirectAfterSignOut = AccountOptions.AutomaticRedirectAfterSignOut,
+                AutomaticRedirectAfterSignOut = _oidcAccountOptions.AutomaticRedirectAfterSignOut,
                 PostLogoutRedirectUri = context?.PostLogoutRedirectUri,
                 ClientName = string.IsNullOrEmpty(context?.ClientName) ? context?.ClientId : context?.ClientName,
                 SignOutIframeUrl = context?.SignOutIFrameUrl,

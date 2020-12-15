@@ -4,6 +4,7 @@ using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,6 +55,7 @@ namespace CoreMultiTenancy.Identity
 
             // Custom
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
+            services.Configure<OidcAccountOptions>(Configuration.GetSection("OidcAccountOptions"));
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();

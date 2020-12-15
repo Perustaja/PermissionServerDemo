@@ -2,6 +2,7 @@ using System;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Interfaces;
+using CoreMultiTenancy.Identity.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
