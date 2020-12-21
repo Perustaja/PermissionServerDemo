@@ -2,6 +2,7 @@
 using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
+using CoreMultiTenancy.Identity.Grpc;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Models;
 using CoreMultiTenancy.Identity.Options;
@@ -52,6 +53,7 @@ namespace CoreMultiTenancy.Identity
                 config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
             },
             AppDomain.CurrentDomain.GetAssemblies());
+            services.AddGrpc();
 
             // Custom
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
@@ -71,6 +73,7 @@ namespace CoreMultiTenancy.Identity
                     o.Conventions.AddPageRoute("/home/index", "");
                 })
                 .AddRazorRuntimeCompilation();
+
             // Identity config
             services.Configure<IdentityOptions>(options =>
             {
@@ -120,6 +123,7 @@ namespace CoreMultiTenancy.Identity
             app.UseEndpoints(e =>
             {
                 e.MapRazorPages();
+                e.MapGrpcService<AuthorizationService>();
             });
         }
     }

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package authorize;
+
+service Authorizer {
+    rpc Authorize(AuthorizeRequest) returns(AuthorizeDecision);
+}
+
+// Authentication information sent in header
+message AuthorizeRequest {
+    string tenantId = 1; // Id of organization or tenant user is attempting to access
+    string actionName = 2; // Action name of api controller
+}
+
+message AuthorizeDecision {
+    bool allowed = 1;
+    string message = 2; // Error message, reason, etc. formatted for end-user
+}

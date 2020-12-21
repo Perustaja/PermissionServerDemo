@@ -20,7 +20,7 @@
     "CoreMultiTenancy.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "test api",
       "applicationUrl": "https://localhost:6100",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
