@@ -8,11 +8,11 @@ service Authorizer {
 
 // Authentication information sent in header
 message AuthorizeRequest {
-    string tenantId = 1; // Id of organization or tenant user is attempting to access
-    string actionName = 2; // Action name of api controller
+    string tenantId = 1; // Id of organization or tenant user is attempting to access.
+    string actionName = 2; // Name of action associated with the api endpoint.
 }
 
 message AuthorizeDecision {
-    bool allowed = 1;
-    string message = 2; // Error message, reason, etc. formatted for end-user
+    bool allowed = 1; // Whether the user is authorized to perform the action within the scope of the current tenant.
+    string message = 2; // Error message, reason, etc. formatted for end-user.
 }

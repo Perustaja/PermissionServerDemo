@@ -17,9 +17,9 @@ namespace CoreMultiTenancy.Identity.Grpc
         /// <summary>
         /// Returns whether the given user has access to the action within a given tenant's scope.
         /// </summary>
-        public override Task<AuthorizeDecision> Authorize(AuthorizeRequest request, ServerCallContext ctx)
+        public override async Task<AuthorizeDecision> Authorize(AuthorizeRequest request, ServerCallContext ctx)
         {
-            return Task.FromResult(new AuthorizeDecision{ Allowed = true, Message = "Hello world!" });
+            return await Task.FromResult(new AuthorizeDecision{ Allowed = true, Message = "Hello world!" });
         }
     }
 }

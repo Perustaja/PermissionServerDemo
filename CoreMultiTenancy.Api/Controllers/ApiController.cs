@@ -33,7 +33,7 @@ namespace CoreMultiTenancy.Api.Controllers
 
             if (!reply.Allowed)
                 return Unauthorized();
-            return Ok(new Aircraft() { RegNumber = "N12345" });
+            return Ok(new Aircraft("N12345"));
         }
     }
 }

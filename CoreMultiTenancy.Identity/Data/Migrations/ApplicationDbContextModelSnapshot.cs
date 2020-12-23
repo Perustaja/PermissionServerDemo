@@ -17,7 +17,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CoreMultiTenancy.Identity.Models.Organization", b =>
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Organization", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,36 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.ToTable("Organizations");
                 });
 
-            modelBuilder.Entity("CoreMultiTenancy.Identity.Models.Role", b =>
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("PermCategoryId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermCategoryId");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.PermissionCategory", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PermissionCategories");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,6 +76,13 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
@@ -55,16 +91,36 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
                         .HasMaxLength(256);
 
+                    b.Property<Guid?>("OrgId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasName("RoleNameIndex");
 
+                    b.HasIndex("OrgId");
+
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("CoreMultiTenancy.Identity.Models.User", b =>
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.RolePermission", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("PermissionId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissions");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,7 +191,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("CoreMultiTenancy.Identity.Models.UserOrganization", b =>
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.UserOrganization", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -166,6 +222,24 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("UserOrganizations");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.UserOrganizationRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("OrgId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("UserId", "OrgId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserOrganizationRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -267,16 +341,66 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CoreMultiTenancy.Identity.Models.UserOrganization", b =>
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
                 {
-                    b.HasOne("CoreMultiTenancy.Identity.Models.Organization", "Organization")
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.PermissionCategory", "PermCategory")
+                        .WithMany()
+                        .HasForeignKey("PermCategoryId");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Role", b =>
+                {
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Organization", "Organization")
+                        .WithMany("Roles")
+                        .HasForeignKey("OrgId");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.RolePermission", b =>
+                {
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.UserOrganization", b =>
+                {
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Organization", "Organization")
                         .WithMany("UserOrganizations")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreMultiTenancy.Identity.Models.User", "User")
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.User", "User")
                         .WithMany("UserOrganizations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.UserOrganizationRole", b =>
+                {
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Role", "Role")
+                        .WithMany("UserOrganizationRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Organization", "Organization")
+                        .WithMany("UserOrganizationRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.User", "User")
+                        .WithMany("UserOrganizationRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -284,7 +408,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("CoreMultiTenancy.Identity.Models.Role", null)
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -293,7 +417,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("CoreMultiTenancy.Identity.Models.User", null)
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -302,7 +426,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("CoreMultiTenancy.Identity.Models.User", null)
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -311,13 +435,13 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("CoreMultiTenancy.Identity.Models.Role", null)
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreMultiTenancy.Identity.Models.User", null)
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -326,7 +450,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("CoreMultiTenancy.Identity.Models.User", null)
+                    b.HasOne("CoreMultiTenancy.Identity.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

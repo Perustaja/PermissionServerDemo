@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

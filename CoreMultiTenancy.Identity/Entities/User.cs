@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace CoreMultiTenancy.Identity.Models
+namespace CoreMultiTenancy.Identity.Entities
 {
     public class User : IdentityUser<Guid>
     {
@@ -11,7 +11,9 @@ namespace CoreMultiTenancy.Identity.Models
         [PersonalData]
         public string LastName { get; private set; }
         public List<UserOrganization> UserOrganizations { get; set; }
-        public User() {} // Required by EF Core
+        public List<UserOrganizationRole> UserOrganizationRoles { get; set; }
+        public User() {}
+
         public User(string fName, string lName, string email)
         {
             Id = Guid.NewGuid();
@@ -20,6 +22,7 @@ namespace CoreMultiTenancy.Identity.Models
             UserName = email;
             Email = email;
         }
+
         /// <summary>
         /// Updates the User's associated name information. Silently fails if strings are empty.
         /// </summary>

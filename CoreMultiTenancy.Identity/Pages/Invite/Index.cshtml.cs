@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {

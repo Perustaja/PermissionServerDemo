@@ -1,6 +1,6 @@
 using System;
 using CoreMultiTenancy.Identity.Data;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

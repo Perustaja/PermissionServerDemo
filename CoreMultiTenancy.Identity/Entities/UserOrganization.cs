@@ -1,7 +1,11 @@
 using System;
 
-namespace CoreMultiTenancy.Identity.Models
+namespace CoreMultiTenancy.Identity.Entities
 {
+    /// <summary>
+    /// Join table for Users and Organizations. Acts as an access record, with details of the user's
+    /// tenure with the tenant.
+    /// </summary>
     public class UserOrganization
     {
         public Guid UserId { get; private set; }
@@ -15,23 +19,27 @@ namespace CoreMultiTenancy.Identity.Models
         public User User { get; set; }
         public Organization Organization { get; set; }
         public UserOrganization() { }
+
         public UserOrganization(Guid userId, Guid orgId)
         {
             UserId = userId;
             OrganizationId = orgId;
             DateSubmitted = DateTime.Today;
         }
+
         public void Approve() 
         {
             AwaitingApproval = false;
             DateApproved = DateTime.Today;
         }
+
         public void Blacklist()
         {
             Blacklisted = true;
             AwaitingApproval = true;
             DateBlacklisted = DateTime.Today;
         }
+        
         public void SetInternalNotes(string notes) => InternalNotes = notes;
     }
 }

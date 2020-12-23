@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
 
 namespace CoreMultiTenancy.Identity.Interfaces

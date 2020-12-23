@@ -4,7 +4,7 @@ using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Grpc;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Builder;

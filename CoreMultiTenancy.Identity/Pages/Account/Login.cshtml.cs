@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using IdentityServer4.Events;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
