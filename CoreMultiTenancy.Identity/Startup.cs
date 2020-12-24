@@ -2,7 +2,6 @@
 using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
-using CoreMultiTenancy.Identity.Grpc;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Options;
@@ -16,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using CoreMultiTenancy.Identity.Grpc;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -123,7 +123,7 @@ namespace CoreMultiTenancy.Identity
             app.UseEndpoints(e =>
             {
                 e.MapRazorPages();
-                e.MapGrpcService<AuthorizationService>();
+                e.MapGrpcService<BaseAuthzService>();
             });
         }
     }

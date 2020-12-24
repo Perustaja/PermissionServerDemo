@@ -14,6 +14,7 @@ The logical conclusion is to server permissions via a separate server which dete
 In this case, the policy server is coupled with the Identity server for ease of accessing the underlying database containing users, tenants, etc.
 #### Communication
 Communication is done via gRPC calls from the API server to the Identity server. authorization.proto contains the details of the request/reply.
+https://chromium.googlesource.com/external/github.com/grpc/grpc/+/HEAD/src/csharp/BUILD-INTEGRATION.md
 # Setup
 #### Email Configuration
 Email configuration is stored in user secrets and injected via the IOptions<TOptions> interface.

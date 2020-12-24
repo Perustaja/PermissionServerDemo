@@ -10,10 +10,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Proto\authorization.proto" GrpcServices="Client" Link="Protos\authorization.proto" />
+    <Protobuf Include="..\Proto\base.proto" GrpcServices="Client" Link="Protos\base.proto" ProtoRoot="..\Proto" />
+    <Protobuf Include="..\Proto\aircraft.proto" GrpcServices="Client" Link="Protos\aircraft.proto" ProtoRoot="..\Proto" />
   </ItemGroup>
 
   <PropertyGroup>

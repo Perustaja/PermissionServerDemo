@@ -1,15 +1,17 @@
 syntax = "proto3";
 
-package authorize;
+package cmt.protobuf;
 
-service Authorizer {
-    rpc Authorize(AuthorizeRequest) returns(AuthorizeDecision);
+/*
+    A standard authorization request only authorizing based on tenant id. This is to be used for api 
+    endpoints that have no special permission associated with them.
+*/
+service Authorize {
+    rpc Authorize(BaseAuthorizeRequest) returns(AuthorizeDecision);
 }
 
-// Authentication information sent in header
-message AuthorizeRequest {
+message BaseAuthorizeRequest {
     string tenantId = 1; // Id of organization or tenant user is attempting to access.
-    string actionName = 2; // Name of action associated with the api endpoint.
 }
 
 message AuthorizeDecision {

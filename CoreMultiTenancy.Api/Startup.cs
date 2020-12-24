@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
 namespace CoreMultiTenancy.Api
 {
@@ -19,6 +21,7 @@ namespace CoreMultiTenancy.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddApiVersioning();
             services.AddHttpContextAccessor();
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", o =>
