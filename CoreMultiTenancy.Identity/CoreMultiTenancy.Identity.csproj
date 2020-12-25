@@ -5,8 +5,6 @@
     <UserSecretsId>9c5c93d2-5bbf-4c42-9da6-583b78c47ade</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Google.Protobuf" Version="3.14.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />

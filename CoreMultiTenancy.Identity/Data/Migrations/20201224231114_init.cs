@@ -179,7 +179,9 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 name: "Permissions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<byte>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     PermCategoryId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -274,7 +276,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 columns: table => new
                 {
                     RoleId = table.Column<Guid>(nullable: false),
-                    PermissionId = table.Column<string>(nullable: false)
+                    PermissionId = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -6,15 +6,15 @@ package cmt.protobuf;
     A standard authorization request only authorizing based on tenant id. This is to be used for api 
     endpoints that have no special permission associated with them.
 */
-service Authorize {
+service BaseAuthorize {
     rpc Authorize(BaseAuthorizeRequest) returns(AuthorizeDecision);
 }
 
 message BaseAuthorizeRequest {
-    string tenantId = 1; // Id of organization or tenant user is attempting to access.
+    string tenantId = 1;
 }
 
 message AuthorizeDecision {
-    bool allowed = 1; // Whether the user is authorized to perform the action within the scope of the current tenant.
+    bool allowed = 1;
     string message = 2; // Error message, reason, etc. formatted for end-user.
 }

@@ -1,4 +1,5 @@
 using System;
+using CoreMultiTenancy.Identity.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities
 {
@@ -8,12 +9,12 @@ namespace CoreMultiTenancy.Identity.Entities
     public class RolePermission
     {
         public Guid RoleId { get; private set; }
-        public string PermissionId { get; private set; }
+        public PermissionEnum PermissionId { get; private set; }
         public Role Role { get; set; }
         public Permission Permission { get; set; }
         public RolePermission() { }
         
-        public RolePermission(Guid roleId, string permId)
+        public RolePermission(Guid roleId, PermissionEnum permId)
         {
             RoleId = roleId;
             PermissionId = permId;

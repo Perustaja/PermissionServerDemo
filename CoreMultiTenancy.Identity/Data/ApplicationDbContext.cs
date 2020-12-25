@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Data.Configuration;
 using CoreMultiTenancy.Identity.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -24,7 +26,27 @@ namespace CoreMultiTenancy.Identity.Data
             builder.ApplyConfiguration(new RolePermissionEntityTypeConfiguration());
             builder.ApplyConfiguration(new UserOrganizationRoleEntityTypeConfiguration());
 
+
             base.OnModelCreating(builder);
+        }
+
+        /// <summary>
+        /// Seeds permission data from PermissionEnum with associated values.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public ModelBuilder SeedPermissionsData(ModelBuilder builder)
+        {
+            var permissions = new List<Permission>();
+            foreach (PermissionEnum p in Enum.GetValues(typeof(PermissionEnum))
+            {
+                permissions.Add(new Permission(p, "", "", null));
+            }
+            builder.Entity<Permission>().HasData(
+            // Get each permission enum field
+
+            // Populate with its data via reflection
+            )
         }
     }
 }

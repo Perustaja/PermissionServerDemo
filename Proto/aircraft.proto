@@ -3,18 +3,21 @@ import "base.proto";
 
 package cmt.protobuf;
 
-// Get has no special permission required
-
 // Create(Post)
 service CreateAircraft {
-    rpc CreateAircraft(BaseAuthorizeRequest) returns(AuthorizeDecision);
+    rpc CreateAircraft(CreateAircraftRequest) returns(AuthorizeDecision);
+}
+
+message CreateAircraftRequest {
+    string tenantId = 1;
 }
 
 // Edit(Put) - showcases additional information from the request being factored into authorization.
 service EditAircraft {
     rpc EditAircraft(EditAircraftRequest) returns(AuthorizeDecision);
 }
+
 message EditAircraftRequest {
-    BaseAuthorizeRequest base = 1;
+    string tenantId = 1;
     bool isGrounded = 2;
 }

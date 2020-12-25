@@ -39,8 +39,14 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PermCategoryId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -110,8 +116,8 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("PermissionId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<byte>("PermissionId")
+                        .HasColumnType("tinyint unsigned");
 
                     b.HasKey("RoleId", "PermissionId");
 

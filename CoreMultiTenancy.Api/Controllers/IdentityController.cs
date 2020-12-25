@@ -16,6 +16,7 @@ namespace CoreMultiTenancy.Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            // Todo: update to show tenant-specific stuff
             var claims = JsonConvert.SerializeObject(from c in User.Claims select new { c.Type, c.Value });
             var cookies = JsonConvert.SerializeObject(from c in _httpContext.HttpContext.Request.Cookies select new { c.Key, c.Value });
             return new JsonResult(claims + cookies);

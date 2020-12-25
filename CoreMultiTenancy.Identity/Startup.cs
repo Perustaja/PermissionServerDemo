@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
@@ -16,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CoreMultiTenancy.Identity.Grpc;
+using CoreMultiTenancy.Identity.Grpc.Aircraft;
+using Microsoft.AspNetCore.Routing;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -47,13 +48,8 @@ namespace CoreMultiTenancy.Identity
                 .AddAspNetIdentity<User>();
             builder.AddDeveloperSigningCredential();
 
-            // AutoMapper
-            services.AddAutoMapper(config =>
-            {
-                config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
-            },
-            AppDomain.CurrentDomain.GetAssemblies());
             services.AddGrpc();
+            services.AddHttpContextAccessor();
 
             // Custom
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
@@ -123,7 +119,7 @@ namespace CoreMultiTenancy.Identity
             app.UseEndpoints(e =>
             {
                 e.MapRazorPages();
-                e.MapGrpcService<BaseAuthzService>();
+                e.MapGrpcAuthorizationServices();
             });
         }
     }
@@ -143,6 +139,14 @@ namespace CoreMultiTenancy.Identity
                     await next();
                 }
             });
+        }
+
+        public static IEndpointRouteBuilder MapGrpcAuthorizationServices(this IEndpointRouteBuilder e)
+        {
+            e.MapGrpcService<BaseAuthzService>();
+            e.MapGrpcService<CreateAircraftService>();
+            e.MapGrpcService<EditAircraftService>();
+            return e;
         }
     }
 }

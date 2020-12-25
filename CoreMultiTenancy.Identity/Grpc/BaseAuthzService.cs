@@ -6,7 +6,7 @@ using Cmt.Protobuf;
 
 namespace CoreMultiTenancy.Identity.Grpc
 {
-    public class BaseAuthzService : Authorize.AuthorizeBase
+    public class BaseAuthzService : BaseAuthorize.BaseAuthorizeBase
     {
         private readonly ILogger<BaseAuthzService> _logger;
         public BaseAuthzService(ILogger<BaseAuthzService> logger)

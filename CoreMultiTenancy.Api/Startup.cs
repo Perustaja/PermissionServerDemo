@@ -1,3 +1,4 @@
+using CoreMultiTenancy.Api.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,8 @@ namespace CoreMultiTenancy.Api
                     p.RequireClaim("scope", "testapi");
                 });
             });
+
+            services.AddSingleton<IAuthzChannelService, AuthzChannelService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
