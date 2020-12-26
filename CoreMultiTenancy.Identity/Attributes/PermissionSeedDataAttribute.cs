@@ -1,4 +1,5 @@
 using System;
+using CoreMultiTenancy.Identity.Authorization;
 
 namespace CoreMultiTenancy.Identity.Attributes
 {
@@ -7,20 +8,19 @@ namespace CoreMultiTenancy.Identity.Attributes
     /// along with its associated primary key.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public class SeedDataAttribute : Attribute
+    public class PermissionSeedDataAttribute : Attribute
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public PermissionCategoryEnum PermissionCategory { get; private set; }
 
         /// <summary>
-        /// Creates an enum mapping profile so that the primary key and description are mapped regardless
-        /// of internal changes to enum name or value.
+        /// Creates an enum mapping profile so the db and application definition stay in synch.
         /// </summary>
-        /// <param name="name">An end-user formatted name.</param>
-        /// <param name="description">An end-user formatted description.</param>
-        public SeedDataAttribute(string name, string description = "")
+        public PermissionSeedDataAttribute(string name, PermissionCategoryEnum cat, string description = "")
         {
             Name = name;
+            PermissionCategory = cat;
             Description = description;
         }
     }

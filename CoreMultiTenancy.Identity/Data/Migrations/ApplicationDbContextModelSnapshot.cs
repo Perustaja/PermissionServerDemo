@@ -45,11 +45,14 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<bool>("IsObsolete")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("PermCategoryId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<byte>("PermCategoryId")
+                        .HasColumnType("tinyint unsigned");
 
                     b.HasKey("Id");
 
@@ -60,12 +63,14 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.PermissionCategory", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<byte>("Id")
+                        .HasColumnType("tinyint unsigned");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                    b.Property<bool>("IsObsolete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -351,7 +356,9 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 {
                     b.HasOne("CoreMultiTenancy.Identity.Entities.PermissionCategory", "PermCategory")
                         .WithMany()
-                        .HasForeignKey("PermCategoryId");
+                        .HasForeignKey("PermCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Role", b =>

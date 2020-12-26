@@ -121,6 +121,7 @@ namespace CoreMultiTenancy.Identity
                 e.MapRazorPages();
                 e.MapGrpcAuthorizationServices();
             });
+            app.SynchronizePermissionsToDb();
         }
     }
     public static class StartupExtensions
@@ -147,6 +148,24 @@ namespace CoreMultiTenancy.Identity
             e.MapGrpcService<CreateAircraftService>();
             e.MapGrpcService<EditAircraftService>();
             return e;
+        }
+
+        /// <summary>
+        /// Synchronously seeds database with Permissions and PermissionCategories from enum values.
+        /// </summary>
+        public static IApplicationBuilder SynchronizePermissionsToDb(this IApplicationBuilder builder)
+        {
+            // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/visual-studio-publish-profiles?view=aspnetcore-5.0
+            // Use a publish profile so that this works with multiple instances
+            // https://github.com/dotnet/efcore/issues/3070 workaround for seeding on app start
+            using (var serviceScope = builder.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                context.SynchronizePermissions();
+            }
+            return builder;
         }
     }
 }

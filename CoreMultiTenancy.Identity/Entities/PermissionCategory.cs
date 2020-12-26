@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CoreMultiTenancy.Identity.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities
 {
@@ -8,15 +9,10 @@ namespace CoreMultiTenancy.Identity.Entities
     public class PermissionCategory
     {
         [Key]
-        public string Id { get; private set; }
-        [StringLength(50)]
-        public string Description { get; private set; }
+        public PermissionCategoryEnum Id { get; set; }
+        public string Name { get; set; }
+        public bool IsObsolete { get; set; }
         public PermissionCategory() { }
-
-        public PermissionCategory(string id, string desc)
-        {
-            Id = id;
-            Description = desc;
-        }
+        public PermissionCategory(PermissionCategoryEnum pcEnum) => Id = pcEnum;
     }
 }

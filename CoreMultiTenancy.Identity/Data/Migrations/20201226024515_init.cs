@@ -53,8 +53,9 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                 name: "PermissionCategories",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(maxLength: 50, nullable: true)
+                    Id = table.Column<byte>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    IsObsolete = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,7 +183,8 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     Id = table.Column<byte>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    PermCategoryId = table.Column<string>(nullable: true)
+                    IsObsolete = table.Column<bool>(nullable: false),
+                    PermCategoryId = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,7 +194,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                         column: x => x.PermCategoryId,
                         principalTable: "PermissionCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
