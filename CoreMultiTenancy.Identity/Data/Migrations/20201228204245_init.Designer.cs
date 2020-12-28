@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreMultiTenancy.Identity.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201226024515_init")]
+    [Migration("20201228204245_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,9 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
 
                     b.Property<byte>("PermCategoryId")
                         .HasColumnType("tinyint unsigned");
+
+                    b.Property<bool>("VisibleToUser")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -116,6 +119,35 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.HasIndex("OrgId");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("2301d884-221a-4e7d-b509-0113dcc043e1"),
+                            ConcurrencyStamp = "fba4f3f6-43a8-4756-b8cc-4d6c0323015f",
+                            Description = "",
+                            IsGlobal = true,
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("7d9b7113-a8f8-4035-99a7-a20dd400f6a3"),
+                            ConcurrencyStamp = "345c1ae0-470a-43b4-ac43-0db77143753e",
+                            Description = "",
+                            IsGlobal = true,
+                            Name = "Mechanic",
+                            NormalizedName = "MECHANIC"
+                        },
+                        new
+                        {
+                            Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
+                            ConcurrencyStamp = "801a3b1e-6df7-4905-aa3e-e11bfe86789f",
+                            Description = "",
+                            IsGlobal = true,
+                            Name = "Pilot",
+                            NormalizedName = "PILOT"
+                        });
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.RolePermission", b =>
@@ -131,6 +163,33 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     b.HasIndex("PermissionId");
 
                     b.ToTable("RolePermissions");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = new Guid("2301d884-221a-4e7d-b509-0113dcc043e1"),
+                            PermissionId = (byte)1
+                        },
+                        new
+                        {
+                            RoleId = new Guid("7d9b7113-a8f8-4035-99a7-a20dd400f6a3"),
+                            PermissionId = (byte)2
+                        },
+                        new
+                        {
+                            RoleId = new Guid("7d9b7113-a8f8-4035-99a7-a20dd400f6a3"),
+                            PermissionId = (byte)3
+                        },
+                        new
+                        {
+                            RoleId = new Guid("7d9b7113-a8f8-4035-99a7-a20dd400f6a3"),
+                            PermissionId = (byte)4
+                        },
+                        new
+                        {
+                            RoleId = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
+                            PermissionId = (byte)3
+                        });
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.User", b =>

@@ -25,10 +25,10 @@ namespace CoreMultiTenancy.Identity.Data
             : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // Join tables
-            builder.ApplyConfiguration(new UserOrganizationEntityTypeConfiguration());
-            builder.ApplyConfiguration(new RolePermissionEntityTypeConfiguration());
-            builder.ApplyConfiguration(new UserOrganizationRoleEntityTypeConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new RolePermissionConfiguration());
+            builder.ApplyConfiguration(new UserOrganizationConfiguration());
+            builder.ApplyConfiguration(new UserOrganizationRoleConfiguration());
 
             base.OnModelCreating(builder);
         }

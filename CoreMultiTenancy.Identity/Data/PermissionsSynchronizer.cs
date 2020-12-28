@@ -50,6 +50,7 @@ namespace CoreMultiTenancy.Identity.Data
                     p.Name = seedData.Name;
                     p.Description = seedData.Description;
                     p.PermCategoryId = seedData.PermissionCategory;
+                    p.VisibleToUser = seedData.VisibleToUser;
                 }
                 catch
                 {

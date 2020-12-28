@@ -25,20 +25,24 @@ namespace CoreMultiTenancy.Identity.Entities
         /// <summary>
         /// Creates a new role specific to a tenant.
         /// </summary>
-        public Role(Guid orgId, string desc)
+        public Role(Guid orgId, string name, string desc)
         {
-            IsGlobal = false;
             OrgId = orgId;
+            Name = name;
+            IsGlobal = false;
             Description = desc;
         }
 
         /// <summary>
-        /// Creates a global role accessible by all tenants.
+        /// Creates a global role accessible by all tenants (Guid specified for seeding).
         /// </summary>
-        public Role(string desc)
+        public Role(Guid id, string name)
         {
+            Id = id;
+            Name = name;
+            NormalizedName = name.ToUpper();
             IsGlobal = true;
-            Description = desc;
+            Description = String.Empty;
         }
     }
 }

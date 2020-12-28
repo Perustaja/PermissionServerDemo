@@ -184,6 +184,7 @@ namespace CoreMultiTenancy.Identity.Data.Migrations
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     IsObsolete = table.Column<bool>(nullable: false),
+                    VisibleToUser = table.Column<bool>(nullable: false),
                     PermCategoryId = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>

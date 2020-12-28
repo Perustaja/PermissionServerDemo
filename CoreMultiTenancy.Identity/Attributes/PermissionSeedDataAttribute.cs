@@ -10,14 +10,19 @@ namespace CoreMultiTenancy.Identity.Attributes
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public class PermissionSeedDataAttribute : Attribute
     {
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public PermissionCategoryEnum PermissionCategory { get; private set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool VisibleToUser { get; set; }
+        public PermissionCategoryEnum PermissionCategory { get; set; }
 
         /// <summary>
         /// Creates an enum mapping profile so the db and application definition stay in synch.
         /// </summary>
-        public PermissionSeedDataAttribute(string name, PermissionCategoryEnum cat, string description = "")
+        /// <param name="visibleToUser">
+        /// Whether the user is allowed to select this as a permission when creating roles
+        /// </param>
+        public PermissionSeedDataAttribute(string name, PermissionCategoryEnum cat, string description = "", 
+            bool visibleToUser = true)
         {
             Name = name;
             PermissionCategory = cat;

@@ -155,9 +155,7 @@ namespace CoreMultiTenancy.Identity
         /// </summary>
         public static IApplicationBuilder SynchronizePermissionsToDb(this IApplicationBuilder builder)
         {
-            // TODO: https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/visual-studio-publish-profiles?view=aspnetcore-5.0
-            // Use a publish profile so that this works with multiple instances
-            // https://github.com/dotnet/efcore/issues/3070 workaround for seeding on app start
+            // TODO: Push this out to a script, migration code, or publish profile
             using (var serviceScope = builder.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())

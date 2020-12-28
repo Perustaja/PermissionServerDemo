@@ -9,13 +9,15 @@ namespace CoreMultiTenancy.Identity.Authorization
     /// </summary>
     public enum PermissionEnum : byte
     {
-        [PermissionSeedData("Default", PermissionCategoryEnum.Default)]
+        [PermissionSeedData("Default", PermissionCategoryEnum.Default, VisibleToUser = false)]
         Default = 0,
-
+        [PermissionSeedData("All", PermissionCategoryEnum.Default, VisibleToUser = false)]
+        All = 1,
         [PermissionSeedData("Create Aircraft", PermissionCategoryEnum.Resource)]
-        AircraftCreate = 1,
-
+        AircraftCreate = 2,
         [PermissionSeedData("Edit Aircraft", PermissionCategoryEnum.Resource, "Users with this role can edit and ground aircraft.")]
-        AircraftEdit = 2,
+        AircraftEdit = 3,
+        [PermissionSeedData("Delete Aircraft", PermissionCategoryEnum.Resource)]
+        AircraftDelete = 4,
     }
 }
