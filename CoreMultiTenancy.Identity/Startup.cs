@@ -38,7 +38,8 @@ namespace CoreMultiTenancy.Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
-
+                
+            services.AddApiVersioning();
             services.AddAuthentication();
 
             var builder = services.AddIdentityServer()
@@ -55,7 +56,7 @@ namespace CoreMultiTenancy.Identity
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
             services.Configure<OidcAccountOptions>(Configuration.GetSection("OidcAccountOptions"));
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
+            services.AddScoped<IOrganizationManager, OrganizationManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
 
@@ -69,6 +70,7 @@ namespace CoreMultiTenancy.Identity
                     o.Conventions.AddPageRoute("/home/index", "");
                 })
                 .AddRazorRuntimeCompilation();
+
 
             // Identity config
             services.Configure<IdentityOptions>(options =>
@@ -100,6 +102,7 @@ namespace CoreMultiTenancy.Identity
         {
             if (env.IsDevelopment())
             {
+                app.SynchronizePermissionsToDb();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -121,7 +124,6 @@ namespace CoreMultiTenancy.Identity
                 e.MapRazorPages();
                 e.MapGrpcAuthorizationServices();
             });
-            app.SynchronizePermissionsToDb();
         }
     }
     public static class StartupExtensions

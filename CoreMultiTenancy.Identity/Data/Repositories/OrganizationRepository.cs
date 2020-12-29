@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
-using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
