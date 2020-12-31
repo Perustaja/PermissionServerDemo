@@ -3,55 +3,54 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Results.Errors;
+using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
     /// <summary>
-    /// Repository for dealing with roles and permissions including join tables.
+    /// Overarching repository for dealing with UserOrganizationRoles, Roles, and RolePermissions.
     /// </summary>
     public interface IRoleRepository
     {
         /// <summary>
-        /// Returns all roles of the given organization.
+        /// Returns all roles of the given organization without related permissions.
         /// </summary>
-        /// <returns></returns>
-        Task<List<Role>> GetRolesAsync(Guid orgId);
+        Task<List<Role>> GetAllByOrgIdAsync(Guid orgId);
+        
+        /// <summary>
+        /// Returns a single role with related permissions.
+        /// </summary>
+        Task<Option<Role>> GetByIdAsync(Guid roleId);
 
         /// <summary>
         /// Creates a new role with the permissions within the scope of the associated organization.
         /// </summary>
-        Task<bool> AddRoleAsync(Guid orgId, string desc, params PermissionEnum[] perms);
+        /// <returns>The added role.</returns>
+        Task<Option<Role>> AddRoleAsync(Role role);
 
         /// <summary>
         /// Deletes the role associated with the given id if found. Will not delete global roles.
         /// </summary>
-        Task<bool> DeleteRoleAsync(Guid roleId);
+        Task<Option<Error>> DeleteRoleAsync(Role role);
 
-        /// <summary>
-        /// Adds the role associated with the id to the user if both exist.
-        /// </summary>
-        Task<bool> AddRoleToUserAsync(Guid roleId, Guid userId);
+        Task<Option<Error>> AddUserOrganizationRole(UserOrganizationRole uor);
 
-        /// <summary>
-        /// Removes the role associated with the id from the user if both exist.
-        /// </summary>
-        Task<bool> RemoveRoleFromUserAsync(Guid roleId, Guid userId);
+        Task<Option<Error>> RemoveUserOrganizationRole(UserOrganizationRole uor);
 
         /// <summary>
         /// Returns a list of permissions that the user has based on the user and organization ids.
-        /// If user does not have access or has no permissions, returns empty list.
         /// </summary>
-        Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
+        Task<List<Permission>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
 
         /// <summary>
         /// Returns a list of roles that the user has based on the user and organization ids.
-        /// If user does not have access or has no roles, returns empty list.
         /// </summary>
         Task<List<Role>> GetUsersRolesAsync(Guid userId, Guid orgId);
 
         /// <summary>
         /// Returns whether the given user has the permission within the scope of the organization.
         /// </summary>
-        Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId);
+        Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm);
     }
 }

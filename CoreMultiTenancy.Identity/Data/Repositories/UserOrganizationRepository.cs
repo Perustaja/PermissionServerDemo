@@ -37,9 +37,9 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM UserOrganizations
-                    WHERE UserId = @userId
-                    AND OrganizationId = @orgId",
-                    new { userId, orgId }
+                    WHERE UserId = @UserId
+                    AND OrganizationId = @OrgId",
+                    new { UserId = userId, OrgId = orgId }
                 );
                 return res > 0;
             }
@@ -50,11 +50,11 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM UserOrganizations
-                    WHERE UserId = @userId
-                    AND OrganizationId = @orgId
+                    WHERE UserId = @UserId
+                    AND OrganizationId = @OrgId
                     AND AwaitingApproval = false
                     AND Blacklisted = false",
-                    new { userId, orgId }
+                    new { UserId = userId, OrgId = orgId }
                 );
                 return res > 0;
             }

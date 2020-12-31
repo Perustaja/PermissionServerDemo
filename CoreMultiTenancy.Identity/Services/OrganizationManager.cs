@@ -31,22 +31,6 @@ namespace CoreMultiTenancy.Identity.Services
             _inviteSvc = inviteSvc ?? throw new ArgumentNullException(nameof(inviteSvc));
         }
 
-        public async Task<Organization> GetByIdAsync(Guid orgId) => await _orgRepo.GetByIdAsync(orgId);
-
-        public async Task<List<Organization>> GetUsersOrgsAsync(Guid userId) =>
-            await _orgRepo.GetUsersOrgsById(userId);
-
-        public async Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId) =>
-            await _roleRepo.GetUsersPermissionsAsync(userId, orgId);
-
-        public async Task<List<Role>> GetUsersRolesAsync(Guid userId, Guid orgId) =>
-            await _roleRepo.GetUsersRolesAsync(userId, orgId);
-
-        public async Task<List<Role>> GetRolesAsync(Guid orgId) => await _roleRepo.GetRolesAsync(orgId);
-
-        public async Task AddRoleAsync(Guid orgId, string desc, params PermissionEnum[] perms) =>
-            await _roleRepo.AddRoleAsync(orgId, desc, perms);
-
         public async Task<string> CreatePermanentInvitationLinkAsync(Guid orgId)
             => await _inviteSvc.CreatePermanentInviteLinkAsync(orgId);
 
