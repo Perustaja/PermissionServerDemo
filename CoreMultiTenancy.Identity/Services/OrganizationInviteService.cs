@@ -4,6 +4,10 @@ using CoreMultiTenancy.Identity.Interfaces;
 
 namespace CoreMultiTenancy.Identity.Services
 {
+    /// <summary>
+    /// This is a substitution based invite service which serves as a naive implementation. It should
+    /// not be used in production as it poses a security risk.
+    /// </summary>
     public class OrganizationInviteService : IOrganizationInviteService
     {
         public Task<string> CreatePermanentInviteLinkAsync(Guid orgId) => 

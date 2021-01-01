@@ -6,6 +6,9 @@ using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using Perustaja.Polyglot.Option;
+using CoreMultiTenancy.Identity.Results.Errors;
+using Microsoft.EntityFrameworkCore;
 using CoreMultiTenancy.Identity.Authorization;
 
 namespace CoreMultiTenancy.Identity.Services
@@ -30,6 +33,70 @@ namespace CoreMultiTenancy.Identity.Services
             _roleRepo = roleRepo ?? throw new ArgumentNullException(nameof(roleRepo));
             _inviteSvc = inviteSvc ?? throw new ArgumentNullException(nameof(inviteSvc));
         }
+        /// <summary>
+        /// Returns an organization associated with the given id.
+        /// </summary>
+        public async Task<Option<Organization>> GetByIdAsync(Guid orgId);
+
+        /// <summary>
+        /// Returns all organizations.
+        /// </summary>
+        public async Task<List<Organization>> GetAllAsync();
+
+        /// <summary>
+        /// Updates the given tenant.
+        /// </summary>
+        /// <returns>The updated organization.</returns>
+        public async Task<Option<Organization>> UpdateAsync(Organization org);
+
+        /// <summary>
+        /// Returns the role with its permissions navigation property populated.
+        /// </summary>
+        public async Task<Option<Role>> GetRoleWithPermsByIdAsync(Guid orgId);
+
+        /// <summary>
+        /// Returns all roles that the accompanied organization has, including global roles.
+        /// If list is empty, it can be assumed that the organization does not exist.
+        /// </summary>
+        public async Task<List<Role>> GetAllRolesAsync(Guid orgId);
+
+        /// <summary>
+        /// Adds a role to be used by the specified organization.
+        /// </summary>
+        /// <returns>The added role.</returns>
+        public async Task<Option<Role>> AddRoleAsync(Role role);
+
+        /// <summary>
+        /// Adds a role to be used by the specified organization.
+        /// </summary>
+        /// <returns>The updated role.</returns>
+        public async Task<Option<Role>> UpdateRoleAsync(Role role);
+
+        /// <summary>
+        /// Attempts to delete the role, removing all traces of it. This will fail if any user has
+        /// this role as their only role or if the role is global.
+        /// </summary>
+        public async Task<Option<Error>> DeleteRoleAsync(Role role);
+
+        /// <summary>
+        /// Returns a list of all organizations that the specified user has access to, or null.
+        /// </summary>
+        public async Task<List<Organization>> GetUsersOrgsAsync(Guid userId);
+
+        /// <summary>
+        /// Returns a list of users with their roles.
+        /// </summary>
+        public async Task<List<User>> GetUsersWithRolesAsync(Guid userId);
+
+        /// <summary>
+        /// Returns all users awaiting approval.
+        /// </summary>
+        public async Task<List<User>> GetUsersAwaitingApprovalAsync(Guid orgId);
+
+        /// <summary>
+        /// Returns all users awaiting approval.
+        /// </summary>
+        public async Task<List<User>> GetBlacklistedUsersAsync(Guid orgId);
 
         public async Task<string> CreatePermanentInvitationLinkAsync(Guid orgId)
             => await _inviteSvc.CreatePermanentInviteLinkAsync(orgId);
@@ -55,7 +122,7 @@ namespace CoreMultiTenancy.Identity.Services
             return InviteResult.LinkInvalid();
         }
 
-        public async Task<AccessModifiedResult> GrantAccessAsync(User user, Organization org)
+        public async Task<AccessModifiedResult> GrantAccessAsync(Organization org, params User[] users)
         {
             var record = await _userOrgRepo.GetByIdsAsync(user.Id, org.Id);
             // Check existing record to see its status
@@ -84,25 +151,24 @@ namespace CoreMultiTenancy.Identity.Services
             return AccessModifiedResult.SuccessfulResult(org.RequiresConfirmation);
         }
 
-        public async Task<bool> RevokeAccessAsync(Guid userId, Guid orgId)
+        public async Task<Option<Error>> RevokeAccessAsync(Guid userId, Guid orgId)
         {
             var uo = await _userOrgRepo.GetByIdsAsync(userId, orgId);
-            if (uo != null)
+            if (uo.IsSome())
             {
-                try
-                {
-                    await _userOrgRepo.DeleteAsync(uo);
-                }
-                catch
-                {
-                    _logger.LogError($"Exception while trying to delete UserOrganization. UserID: {uo.UserId} OrgId: {uo.OrganizationId}.");
-                    return false;
-                }
+                await _userOrgRepo.DeleteAsync(uo.Unwrap());                
+                return Option<Error>.None();
             }
-            return true;
+            return Option<Error>.Some(new Error($"User {userId} or Org {orgId} doesn't exist.", ErrorType.NotFound));
         }
 
         public async Task<bool> UserHasAccessAsync(Guid userId, Guid orgId)
             => await _userOrgRepo.ExistsWithAccessAsync(userId, orgId);
+
+        /// <summary>
+        /// Returns whether the user has permission within the scope of the organization.
+        /// Returns false if either doesn't exist or the user does not have access.
+        /// </summary>
+        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms);
     }
 }

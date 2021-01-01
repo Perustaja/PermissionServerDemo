@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Microsoft.EntityFrameworkCore;
@@ -53,44 +54,84 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             }
         }
 
-        public async Task<Option<Error>> DeleteRoleAsync(Guid roleId)
+        public async Task<Option<Role>> UpdateRoleAsync(Role role)
         {
-            var role = await _applicationContext.Set<Role>().SingleOrDefaultAsync(r => r.Id == roleId);
-            if (role == null)
-                return Option<Error>.Some(new Error($"Role with id {roleId} doesn't exist.", ErrorType.NotFound));
-            if (role.IsGlobal)
-                return Option<Error>.Some(new Error("Cannot delete global role.", ErrorType.DomainLogic));
+            try
+            {
+                _applicationContext.Update(role);
+                await _applicationContext.SaveChangesAsync();
+                return Option<Role>.Some(role);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e.ToString());
+                return Option<Role>.None();
+            }
+        }
+
+        public async Task DeleteRoleAsync(Role role)
+        {
             _applicationContext.Remove(role);
             await _applicationContext.SaveChangesAsync();
-            return Option<Error>.None();
         }
 
-        public Task<Option<Error>> AddRoleToUserAsync(Guid roleId, Guid userId, Guid orgId)
+        public async Task<Option<Error>> AddUserOrganizationRoleAsync(UserOrganizationRole uor)
         {
-            // Add userorganizationrole
-            // role doesn't exist
-            // user doesn't exist
-            // org doesn't exist
+            try
+            {
+                await _applicationContext.Set<UserOrganizationRole>().AddAsync(uor);
+                await _applicationContext.SaveChangesAsync();
+                return Option<Error>.None();
+            }
+            catch (DbUpdateException e)
+            {
+                _logger.LogInformation(e.ToString());
+                return Option<Error>.Some(new Error(String.Empty, ErrorType.Unspecified));
+            }
         }
 
-        /// <summary>
-        /// Removes the role associated with the id from the user if both exist.
-        /// </summary>
-        public Task<Option<Error>> RemoveRoleFromUserAsync(Guid roleId, Guid userId, Guid orgId);
+        public async Task DeleteUserOrganizationRoleAsync(UserOrganizationRole uor)
+        {
+            _applicationContext.Remove(uor);
+            await _applicationContext.SaveChangesAsync();
+        }
 
-        /// <summary>
-        /// Returns a list of permissions that the user has based on the user and organization ids.
-        /// </summary>
-        public Task<List<Permission>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
+        public async Task<List<Role>> GetUserOrganizationRolesByIdsAsync(Guid userId, Guid orgId)
+        {
+            // research better ways to do this with LINQ
+            return await _applicationContext.Set<UserOrganizationRole>()
+                .Where(uor => uor.UserId == userId && uor.OrgId == orgId)
+                .Include(uor => uor.Role)
+                .Select(uor => uor.Role)
+                .ToListAsync();
+        }
 
-        /// <summary>
-        /// Returns a list of roles that the user has based on the user and organization ids.
-        /// </summary>
-        public Task<List<Role>> GetUsersRolesAsync(Guid userId, Guid orgId);
+        public async Task<IReadOnlyList<Permission>> GetUsersPermissionsAsync(Guid userId, Guid orgId)
+        {
+            // this is outrageously inefficient, need to redo with dapper query
+            var perms = await _applicationContext.Set<UserOrganizationRole>()
+                .Where(uor => uor.UserId == userId && uor.OrgId == orgId)
+                .Include(uor => uor.Role)
+                .ThenInclude(r => r.RolePermissions)
+                .ThenInclude(rp => rp.Permission)
+                .SelectMany(uor => uor.Role.RolePermissions)
+                .Select(rp => rp.Permission)
+                .AsNoTracking().Distinct().ToListAsync();
+            return perms.AsReadOnly();
+        }
 
-        /// <summary>
-        /// Returns whether the given user has the permission within the scope of the organization.
-        /// </summary>
-        public Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm);
+        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms)
+        {
+            // also needs to be redone with plain sql, checking if id matches
+            var rps =  await _applicationContext.Set<UserOrganizationRole>()
+                .Where(uor => uor.UserId == userId && uor.OrgId == orgId)
+                .Include(uor => uor.Role)
+                .ThenInclude(r => r.RolePermissions)
+                .SelectMany(uor => uor.Role.RolePermissions)
+                .Select(rp => rp.PermissionId)
+                .ToArrayAsync();
+            var set = rps.ToHashSet();
+            return perms.Any(p => set.Contains(p));
+        }
     }
 }
