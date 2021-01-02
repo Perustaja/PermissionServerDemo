@@ -44,5 +44,14 @@ namespace CoreMultiTenancy.Identity.Entities
             IsGlobal = true;
             Description = String.Empty;
         }
+
+        /// <summary>
+        /// Sets this Role as belonging to the given Organization. Silently fails if this Role is global.
+        /// </summary>
+        public void SetOrganization(Guid orgId)
+        {
+            if (!IsGlobal)
+                OrgId = orgId;
+        }
     }
 }

@@ -5,10 +5,10 @@ namespace CoreMultiTenancy.Identity.Results.Errors
     /// </summary>
     public enum ErrorType
     {
+        // Use for general purpose errors to return a BadRequest
         Unspecified,
         DomainLogic,
         NotFound,
         KeyExists,
-        BadRequest,
     }
 }

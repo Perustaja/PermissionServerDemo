@@ -74,10 +74,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
                 if (!String.IsNullOrEmpty(Input.NewEmail))
                 {
                     var res = await _acctEmailService.SendEmailChangeEmail(user.Email, Input.NewEmail);
-                    if (res.Approved)
-                        SuccessMessage = res.Message;
-                    else
-                        ModelState.AddModelError("", res.Message);
+                    res.Match(
+                        e => ModelState.AddModelError("", e),
+                        () => SuccessMessage = $"An email containing a link to confirm your email change has been sent to {Input.NewEmail}."
+                    );
                     SetPrepopulatedFormData(user);
                     return Page();
                 }
@@ -96,10 +96,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account.Settings
             if (user != null)
             {
                 var res = await _acctEmailService.SendConfToAuthUserAsync(user);
-                if (res.Approved)
-                    SuccessMessage = res.Message;
-                else
-                    ModelState.AddModelError("", res.Message);
+                res.Match(
+                    e => ModelState.AddModelError("", e),
+                    () => SuccessMessage = $"A confirmation link has been sent to {Input.NewEmail}. You may need to check your spam folder."
+                );
                 SetPrepopulatedFormData(user);
                 return Page();
             }

@@ -30,7 +30,7 @@ namespace CoreMultiTenancy.Identity.Controllers
         {
             // Get userid from token
             var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
-            return Ok(await _orgManager.GetUsersPermissionsAsync(new Guid(userId), new Guid(orgId)));
+            return Ok();
         }
     }
 }

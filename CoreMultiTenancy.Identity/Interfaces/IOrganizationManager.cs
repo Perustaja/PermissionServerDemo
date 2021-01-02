@@ -10,75 +10,74 @@ using Perustaja.Polyglot.Option;
 namespace CoreMultiTenancy.Identity.Interfaces
 {
     /// <summary>
-    /// Handles role management, tenant access, and tenant management.
+    /// Handles role management, tenant access, and tenant management. To reduce db calls
+    /// some methods take ids as the context of the request means the existence of both the user and
+    /// organization as well as the fact that the user has access to the organization have been
+    /// verified via authorization. In these contexts, objects do not need to be instantiated to verify existence.
     /// </summary>
     public interface IOrganizationManager
     {
-        /// <summary>
-        /// Returns an organization associated with the given id.
-        /// </summary>
+        #region OrganizationManagement
+        /// <returns>An Option containing an Organization if found.</returns>
         Task<Option<Organization>> GetByIdAsync(Guid orgId);
 
         /// <summary>
-        /// Returns all organizations.
+        /// Adds the given tenant.
         /// </summary>
-        Task<List<Organization>> GetAllAsync();
+        /// <returns>An Option containing the new Organization if sucessful.</returns>
+        Task<Option<Organization>> AddAsync(Organization o);
 
         /// <summary>
         /// Updates the given tenant.
         /// </summary>
-        /// <returns>The updated organization.</returns>
-        Task<Option<Organization>> UpdateAsync(Organization org);
+        /// <returns>An Option containing the updated Organization if sucessful.</returns>
+        Task<Option<Organization>> UpdateAsync(Organization o);
+        #endregion
+
+        #region  UserManagement
+        /// <returns>A list of UserOrganizations with populated User NPs who have access to the Organization.</returns>
+        Task<List<UserOrganization>> GetUsersOfOrgAsync(Guid orgId);
+
+        /// <returns>A list of UserOrganizations with populated User NPs awaiting access approval.</returns>
+        Task<List<UserOrganization>> GetUsersOfOrgAwaitingApprovalAsync(Guid orgId);
+
+        /// <returns>An Option containing a UserOrganization with populated User NP if found. Only returns approved.</returns>
+        Task<Option<UserOrganization>> GetUserOfOrgByIdsAsync(Guid orgId, Guid userId);
 
         /// <summary>
-        /// Returns the role with its permissions navigation property populated.
+        /// Updates the roles and tenant-specific profile information of the UserOrganization. Assumes
+        /// User and 
         /// </summary>
-        Task<Option<Role>> GetRoleWithPermsByIdAsync(Guid orgId);
+        Task UpdateUserOfOrgAsync(UserOrganization uo);
+        #endregion
+
+        #region RoleManagement
+        /// <returns>A list of Roles including tenant-specific and global roles.</returns>
+        Task<List<Role>> GetRolesOfOrgAsync(Guid orgId);
+
+        /// <returns>An Option containing the Role if found.</returns>
+        Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId);
 
         /// <summary>
-        /// Returns all roles that the accompanied organization has, including global roles.
-        /// If list is empty, it can be assumed that the organization does not exist.
+        /// Adds a Role to be used by the specified organization.
         /// </summary>
-        Task<List<Role>> GetAllRolesAsync(Guid orgId);
+        /// <returns>An Option containing the new Role if successful.</returns>
+        Task<Option<Role>> AddRoleToOrgAsync(Guid orgId, Role role);
 
         /// <summary>
-        /// Adds a role to be used by the specified organization.
+        /// Updates the Role.
         /// </summary>
-        /// <returns>The added role.</returns>
-        Task<Option<Role>> AddRoleAsync(Role role);
+        Task UpdateRoleOfOrgAsync(Guid orgId, Role role);
 
         /// <summary>
-        /// Adds a role to be used by the specified organization.
+        /// Attempts to delete the role. This will fail if any user has
+        /// this role as their only role, and will not delete global roles.
         /// </summary>
-        /// <returns>The updated role.</returns>
-        Task<Option<Role>> UpdateRoleAsync(Role role);
+        /// <returns>An Option containing an Error on failure.</returns>
+        Task<Option<Error>> DeleteRoleOfOrgAsync(Role role);
+        #endregion
 
-        /// <summary>
-        /// Attempts to delete the role, removing all traces of it. This will fail if any user has
-        /// this role as their only role or if the role is global.
-        /// </summary>
-        Task<Option<Error>> DeleteRoleAsync(Role role);
-
-        /// <summary>
-        /// Returns a list of all organizations that the specified user has access to, or null.
-        /// </summary>
-        Task<List<Organization>> GetUsersOrgsAsync(Guid userId);
-
-        /// <summary>
-        /// Returns a list of users with their roles.
-        /// </summary>
-        Task<List<User>> GetUsersWithRolesAsync(Guid userId);
-
-        /// <summary>
-        /// Returns all users awaiting approval.
-        /// </summary>
-        Task<List<User>> GetUsersAwaitingApprovalAsync(Guid orgId);
-
-        /// <summary>
-        /// Returns all users awaiting approval.
-        /// </summary>
-        Task<List<User>> GetBlacklistedUsersAsync(Guid orgId);
-
+        #region InvitationManagement
         /// <summary>
         /// Returns a code that can be reused to grant a user access to the organization.
         /// </summary>
@@ -88,29 +87,23 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// Uses the specified permanent invitation code to attempt to grant the user access to the organization.
         /// </summary>
         Task<InviteResult> UsePermanentInvitationAsync(User user, string link);
+        #endregion
 
-        /// <summary>
-        /// Attempts to grant the user(s) access to the organization. This is for users who have used
-        /// an invitation, but need to be manually verified.
-        /// </summary>
-        Task<AccessModifiedResult> GrantAccessAsync(Organization org, params User[] users);
-
-        /// <summary>
-        /// Attempts to revoke the corresponding user's access to the corresponding organization based on
-        /// id values.
-        /// </summary>
-        Task<Option<Error>> RevokeAccessAsync(Guid userId, Guid orgId);
-
-        /// <summary>
-        /// Returns whether the corresponding user has access to the corresponding organization.
-        /// Returns false if either doesn't exist.
-        /// </summary>
+        #region PermissionAndAccessChecks
+        /// <returns>Whether the User has access to the Organization, or false if either doesn't exist.</returns>
         Task<bool> UserHasAccessAsync(Guid userId, Guid orgId);
 
-        /// <summary>
-        /// Returns whether the user has permission within the scope of the organization.
-        /// Returns false if either doesn't exist or the user does not have access.
-        /// </summary>
-        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms);
+        /// <summary>Use instead of the plural form if checking a single Permission for performance.</summary>
+        /// <returns>
+        /// Whether the User has the given Permission, or false if either doesn't exist or the User has no access.
+        /// </returns>
+        Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm);
+
+        /// <returns>
+        /// Whether the User has all of the given Permissions, 
+        /// or false if either doesn't exist or the User has no access.
+        /// </returns>
+        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms);
+        #endregion
     }
 }

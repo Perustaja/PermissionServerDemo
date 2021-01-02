@@ -10,60 +10,31 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 {
     /// <summary>
     /// Overarching repository for dealing with UserOrganizationRoles, Roles, and RolePermissions.
-    /// This repository is made to handle instantiated objects and be as simple as possible, while
-    /// IOrganizationManager coordinates, instantiates, and checks for existing data beforehand to return
-    /// more precise errors.
     /// </summary>
     public interface IRoleRepository
     {
-        /// <summary>
-        /// Returns all roles of the given organization without related permissions.
-        /// </summary>
-        Task<List<Role>> GetAllByOrgIdAsync(Guid orgId);
+        /// <returns>A list of Roles including tenant-specific and global roles.</returns>
+        Task<List<Role>> GetRolesOfOrgAsync(Guid orgId);
+
+        /// <returns>An Option containing the Role if found.</returns>
+        Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId);
 
         /// <summary>
-        /// Returns a single role with related permissions.
+        /// Adds a Role to be used by the specified organization.
         /// </summary>
-        Task<Option<Role>> GetByIdAsync(Guid roleId);
+        /// <returns>An Option containing the new Role if successful.</returns>
+        Task<Option<Role>> AddRoleToOrgAsync(Guid orgId, Role role);
 
         /// <summary>
-        /// Creates a new role with the permissions within the scope of the associated organization.
+        /// Updates the Role.
         /// </summary>
-        /// <returns>The added role.</returns>
-        Task<Option<Role>> AddRoleAsync(Role role);
+        Task UpdateRoleOfOrgAsync(Role role);
 
         /// <summary>
-        /// Updates the specified role.
+        /// Attempts to delete the role. This will fail if any user has
+        /// this role as their only role, and will not delete global roles.
         /// </summary>
-        /// <returns>The updated role.</returns>
-        Task<Option<Role>> UpdateRoleAsync(Role role);
-
-        /// <summary>
-        /// Deletes the role associated with the given id if found. Will not delete global roles.
-        /// </summary>
-        Task DeleteRoleAsync(Role role);
-
-        /// <summary>
-        /// Returns a list of roles that the user has based on the user and organization ids.
-        /// This list of UserOrganizationRoles represents the roles a user has for the given org.
-        /// </summary>
-        Task<List<Role>> GetUserOrganizationRolesByIdsAsync(Guid userId, Guid orgId);
-
-        Task<Option<Error>> AddUserOrganizationRoleAsync(UserOrganizationRole uor);
-
-        Task DeleteUserOrganizationRoleAsync(UserOrganizationRole uor);
-
-        /// <summary>
-        /// Returns a readonly list of permissions that the user has based on the user and organization ids.
-        /// If not meant to be displayed to user as a list, prefer to use UserHasPermissionAsync if checking
-        /// for authorization purposes.
-        /// </summary>
-        Task<IReadOnlyList<Permission>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
-
-        /// <summary>
-        /// Returns whether the given user has the permission within the scope of the organization.
-        /// Optimized for authorization checks.
-        /// </summary>
-        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perm);
+        /// <returns>An Option containing an Error on failure.</returns>
+        Task<Option<Error>> DeleteRoleOfOrgAsync(Role role);
     }
 }

@@ -9,7 +9,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<UserOrganization> builder)
         {
-            builder.HasKey(uo => new { uo.UserId, uo.OrganizationId });
+            builder.HasKey(uo => new { uo.UserId, uo.OrgId });
             builder
                 .HasOne(uo => uo.User)
                 .WithMany(u => u.UserOrganizations)
@@ -17,7 +17,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
             builder
                 .HasOne(uo => uo.Organization)
                 .WithMany(o => o.UserOrganizations)
-                .HasForeignKey(uo => uo.OrganizationId);
+                .HasForeignKey(uo => uo.OrgId);
         }
     }
 }

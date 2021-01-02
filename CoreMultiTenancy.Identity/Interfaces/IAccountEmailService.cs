@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
+using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Interfaces
 {
@@ -12,17 +13,20 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// <summary>
         /// Attempts to send a confirmation email to the currently authenticated user.
         /// </summary>
-        Task<AccountEmailResult> SendConfToAuthUserAsync(User user);
+        /// <returns>An Option containing a descriptive string on error.</returns>
+        Task<Option<string>> SendConfToAuthUserAsync(User user);
 
         /// <summary>
         /// Attempts to send a confirmation email from some form entry accessible by anyone.
         /// </summary>
-        Task<AccountEmailResult> SendConfToUnauthUserAsync(string email);
+        /// <returns>An Option containing a descriptive string on error.</returns>
+        Task<Option<string>> SendConfToUnauthUserAsync(string email);
 
         /// <summary>
         /// Sends an email with a link to change the user's current email.
         /// </summary>
-        Task<AccountEmailResult> SendEmailChangeEmail(string currEmail, string newEmail);
+        /// <returns>An Option containing a descriptive string on error.</returns>
+        Task<Option<string>> SendEmailChangeEmail(string currEmail, string newEmail);
         
         /// <summary>
         /// Sends a password reset email to the user's email if the email is verified. If not, sends

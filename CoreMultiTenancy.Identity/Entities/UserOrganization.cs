@@ -9,7 +9,7 @@ namespace CoreMultiTenancy.Identity.Entities
     public class UserOrganization
     {
         public Guid UserId { get; private set; }
-        public Guid OrganizationId { get; private set; }
+        public Guid OrgId { get; private set; }
         public bool AwaitingApproval { get; private set; } = true;
         public bool Blacklisted { get; private set; }
         public string InternalNotes { get; private set; }
@@ -23,7 +23,7 @@ namespace CoreMultiTenancy.Identity.Entities
         public UserOrganization(Guid userId, Guid orgId)
         {
             UserId = userId;
-            OrganizationId = orgId;
+            OrgId = orgId;
             DateSubmitted = DateTime.Today;
         }
 

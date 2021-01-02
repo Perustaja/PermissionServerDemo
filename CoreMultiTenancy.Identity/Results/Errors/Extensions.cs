@@ -16,7 +16,6 @@ namespace CoreMultiTenancy.Identity.Results.Errors
             {
                 case ErrorType.NotFound : return new NotFoundObjectResult(e.Description);
                 case ErrorType.DomainLogic :
-                case ErrorType.BadRequest :
                 case ErrorType.KeyExists : return new BadRequestObjectResult(e.Description);
                 default : return new BadRequestObjectResult(string.Empty);
             }
