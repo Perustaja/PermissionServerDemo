@@ -3,9 +3,11 @@ using System.Data;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Data.Configuration;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 
 namespace CoreMultiTenancy.Identity.Data
 {
@@ -19,16 +21,21 @@ namespace CoreMultiTenancy.Identity.Data
         public DbSet<UserOrganizationRole> UserOrganizationRoles { get; set; }
 
         private IDbContextTransaction _currentTransaction;
+        private readonly Guid _defaultRoleId;
 
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
 
         public bool HasActiveTransaction => _currentTransaction != null;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
+        public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+            _defaultRoleId = config.GetDefaultRoleId();
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new RoleConfiguration());
+            // Pass default role id for seed data
+            builder.ApplyConfiguration(new RoleConfiguration(_defaultRoleId));
             builder.ApplyConfiguration(new RolePermissionConfiguration());
             builder.ApplyConfiguration(new UserOrganizationConfiguration());
             builder.ApplyConfiguration(new UserOrganizationRoleConfiguration());

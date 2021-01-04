@@ -52,16 +52,18 @@ namespace CoreMultiTenancy.Identity
             services.AddGrpc();
             services.AddHttpContextAccessor();
 
-            // Custom
+            // Services
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
             services.Configure<OidcAccountOptions>(Configuration.GetSection("OidcAccountOptions"));
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<IOrganizationManager, OrganizationManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
-
+            // Repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
+            services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
 
             services.AddRazorPages()
                 .AddRazorPagesOptions(o =>

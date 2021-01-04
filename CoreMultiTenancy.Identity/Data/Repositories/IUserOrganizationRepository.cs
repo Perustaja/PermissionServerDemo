@@ -12,13 +12,13 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     /// </summary>
     public interface IUserOrganizationRepository
     {
-        /// <returns>All UserOrganization records with populated User NPs.</returns>
+        /// <returns>All UserOrganization records with populated User, UserOrgRole, and Role NPs.</returns>
         Task<List<UserOrganization>> GetAllByOrgId(Guid orgId);
 
-        /// <returns>All UserOrganization records awaiting access with populated User NPs.</returns>
+        /// <returns>All UserOrganization records awaiting access with populated User, UserOrgRole, and Role NPs.</returns>
         Task<List<UserOrganization>> GetAwaitingAccessByOrgId(Guid orgId);
 
-        /// <returns>An Option containing a UserOrganization with populated User NP if found.</returns>
+        /// <returns>An Option containing a UserOrganization with populated User, UserOrgRole, and Role NPs if found.</returns>
         Task<Option<UserOrganization>> GetByIdsAsync(Guid orgId, Guid userId);
 
         /// <summary>

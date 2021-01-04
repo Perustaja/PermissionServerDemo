@@ -28,8 +28,6 @@ namespace CoreMultiTenancy.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string orgId)
         {
-            // Get userid from token
-            var userId = User.FindFirst(JwtClaimTypes.Subject)?.Value;
             return Ok();
         }
     }

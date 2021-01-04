@@ -53,7 +53,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             .FirstOrDefaultAsync(o => o.Id == id);
             return res != null
                 ? Option<Organization>.Some(res)
-                : Option<Organization>.None();
+                : Option<Organization>.None;
         }
 
         public async Task<Option<Organization>> AddAsync(Organization o)
@@ -67,7 +67,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             catch (DbUpdateException e)
             {
                 _logger.LogInformation(e.ToString());
-                return Option<Organization>.None();
+                return Option<Organization>.None;
             }
         }
 
@@ -82,7 +82,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             catch (DbUpdateException e)
             {
                 _logger.LogInformation(e.ToString());
-                return Option<Organization>.None();
+                return Option<Organization>.None;
             }
         }
     }

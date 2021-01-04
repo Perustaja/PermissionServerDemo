@@ -9,7 +9,8 @@ using Perustaja.Polyglot.Option;
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
     /// <summary>
-    /// Overarching repository for dealing with UserOrganizationRoles, Roles, and RolePermissions.
+    /// Handles Role management for Organizations, use IUserOrganizationRoleRepository for management of
+    /// which Users have which Role within an Organization.
     /// </summary>
     public interface IRoleRepository
     {
@@ -31,8 +32,8 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         Task UpdateRoleOfOrgAsync(Role role);
 
         /// <summary>
-        /// Attempts to delete the role. This will fail if any user has
-        /// this role as their only role, and will not delete global roles.
+        /// Attempts to delete the Role. This will fail if any User has
+        /// this Role as their only Role, and will not delete global Roles.
         /// </summary>
         /// <returns>An Option containing an Error on failure.</returns>
         Task<Option<Error>> DeleteRoleOfOrgAsync(Role role);

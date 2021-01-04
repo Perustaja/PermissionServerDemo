@@ -46,7 +46,8 @@ namespace CoreMultiTenancy.Identity.Interfaces
 
         /// <summary>
         /// Updates the roles and tenant-specific profile information of the UserOrganization. Assumes
-        /// User and 
+        /// User, UserOrganizationRoles, and Roles NPs are populated, and only saves changes to the 
+        /// UserOrganization and UserOrganizationRoles
         /// </summary>
         Task UpdateUserOfOrgAsync(UserOrganization uo);
         #endregion

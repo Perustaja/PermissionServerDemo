@@ -32,6 +32,8 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             return await _applicationContext.Set<UserOrganization>()
                 .Where(uo => uo.OrgId == orgId && uo.AwaitingApproval == false)
                 .Include(uo => uo.User)
+                .ThenInclude(u => u.UserOrganizationRoles)
+                .ThenInclude(uor => uor.Role)
                 .ToListAsync();
         }
 
@@ -50,7 +52,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 .FirstOrDefaultAsync();
             return res != null
                 ? Option<UserOrganization>.Some(res)
-                : Option<UserOrganization>.None();
+                : Option<UserOrganization>.None;
         }
 
         public async Task<Option<Error>> AddAsync(UserOrganization uo)
@@ -59,7 +61,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 await _applicationContext.AddAsync(uo);
                 await _applicationContext.SaveChangesAsync();
-                return Option<Error>.None();
+                return Option<Error>.None;
             }
             catch (DbUpdateException e)
             {
@@ -73,7 +75,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             // Verify this will change Roles as well as the main uo record
             try
             {
-                _applicationContext.Update(uo);
+                _applicationContext.Set<UserOrganization>().Update(uo);
                 await _applicationContext.SaveChangesAsync();
             }
             catch (DbUpdateException e)

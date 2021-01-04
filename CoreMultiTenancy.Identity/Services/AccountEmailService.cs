@@ -34,7 +34,7 @@ namespace CoreMultiTenancy.Identity.Services
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = _linkGen.ConfirmEmailPageLink(_httpContext, user.Id.ToString(), token);
             await _emailSender.SendAccountConfirmationEmail(user.Email, callbackUrl);
-            return Option<string>.None();
+            return Option<string>.None;
         }
 
         public async Task<Option<string>> SendConfToUnauthUserAsync(string email)
@@ -50,7 +50,7 @@ namespace CoreMultiTenancy.Identity.Services
                     var callbackUrl = _linkGen.ConfirmEmailPageLink(_httpContext, user.Id.ToString(), token);
                     await _emailSender.SendAccountConfirmationEmail(user.Email, callbackUrl);
                 }
-                return Option<string>.None();
+                return Option<string>.None;
             }
             // The user can easily figure out if an email is registered by attempting to make an
             // account under it, so exposing this detail here is not a security concern.
@@ -68,7 +68,7 @@ namespace CoreMultiTenancy.Identity.Services
                 var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
                 var callbackUrl = _linkGen.ChangeEmailPageLink(_httpContext, user.Id.ToString(), token, newEmail);
                 await _emailSender.SendEmailChangeEmail(newEmail, callbackUrl);
-                return Option<string>.None();
+                return Option<string>.None;
             }
             return Option<string>.Some("New email cannot equal old email.");
         }

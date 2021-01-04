@@ -7,6 +7,9 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
 {
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
+        private readonly Guid _defaultRoleId;
+
+        public RoleConfiguration(Guid defaultRoleId) => _defaultRoleId = defaultRoleId;
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             SeedGlobalRoles(builder);
@@ -19,12 +22,12 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
         {
             const string adminRoleId = "2301D884-221A-4E7D-B509-0113DCC043E1";
             const string mechRoleId = "7D9B7113-A8F8-4035-99A7-A20DD400F6A3";
-            const string pilotRoleId = "78A7570F-3CE5-48BA-9461-80283ED1D94D";
+            Guid pilotRoleId = _defaultRoleId;
 
             builder.HasData(
                 new Role(new Guid(adminRoleId), "Admin"),
                 new Role(new Guid(mechRoleId), "Mechanic"),
-                new Role(new Guid(pilotRoleId), "Pilot")
+                new Role(pilotRoleId, "Pilot")
             );
             return builder;
         }

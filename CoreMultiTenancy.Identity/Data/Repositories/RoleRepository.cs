@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Dapper;
@@ -46,7 +45,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 .FirstOrDefaultAsync();
             return res != null
                 ? Option<Role>.Some(res)
-                : Option<Role>.None();
+                : Option<Role>.None;
         }
 
         public async Task<Option<Role>> AddRoleToOrgAsync(Guid orgId, Role role)
@@ -61,7 +60,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             catch (DbUpdateException e)
             {
                 _logger.LogInformation(e.ToString());
-                return Option<Role>.None();
+                return Option<Role>.None;
             }
         }
 
@@ -88,7 +87,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 _applicationContext.Remove(role);
                 await _applicationContext.SaveChangesAsync();
-                return Option<Error>.None();
+                return Option<Error>.None;
             }   
             catch (DbUpdateException e)
             {
