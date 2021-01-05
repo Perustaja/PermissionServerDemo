@@ -26,7 +26,7 @@ namespace CoreMultiTenancy.Identity.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(string orgId)
+        public IActionResult Get(string orgId)
         {
             return Ok();
         }

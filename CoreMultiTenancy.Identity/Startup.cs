@@ -104,7 +104,6 @@ namespace CoreMultiTenancy.Identity
         {
             if (env.IsDevelopment())
             {
-                app.SynchronizePermissionsToDb();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -154,22 +153,6 @@ namespace CoreMultiTenancy.Identity
             e.MapGrpcService<CreateAircraftService>();
             e.MapGrpcService<EditAircraftService>();
             return e;
-        }
-
-        /// <summary>
-        /// Synchronously seeds database with Permissions and PermissionCategories from enum values.
-        /// </summary>
-        public static IApplicationBuilder SynchronizePermissionsToDb(this IApplicationBuilder builder)
-        {
-            // TODO: Push this out to a script, migration code, or publish profile
-            using (var serviceScope = builder.ApplicationServices
-                .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-                context.SynchronizePermissions();
-            }
-            return builder;
         }
     }
 }

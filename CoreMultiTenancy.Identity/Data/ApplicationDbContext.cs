@@ -28,6 +28,9 @@ namespace CoreMultiTenancy.Identity.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Permissions seeding MUST be done before others, and in this order to seed properly
+            builder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
+            builder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
             // Pass default role id for seed data
             builder.ApplyConfiguration(new RoleConfiguration(_defaultRoleId));
             builder.ApplyConfiguration(new RolePermissionConfiguration());
