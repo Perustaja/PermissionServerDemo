@@ -109,7 +109,7 @@ namespace CoreMultiTenancy.Identity
             }
             else
             {
-                app.UseExceptionHandler("/error");
+                app.UseExceptionHandler("/api/error");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -136,7 +136,9 @@ namespace CoreMultiTenancy.Identity
             {
                 await next();
 
-                if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+                // Hacky check at the end for differentiating between api NotFound and razor 404
+                if (context.Response.StatusCode == 404 && !context.Response.HasStarted
+                    && context.Response.ContentType != "application/json")
                 {
                     // If 404 response, re-execute with notfound path request,
                     // this proliferates the existing url in the user's browser.

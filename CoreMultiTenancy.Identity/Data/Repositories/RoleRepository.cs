@@ -98,14 +98,13 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         private async Task<bool> RoleIsOnlyRoleForAnyUser(Role role)
         {
-            // This probably won't work, need to read up on SQL
             using (var conn = new MySqlConnection(_connectionString))
             {
                 int c = await conn.QueryFirstOrDefaultAsync<int>(
-                    @"SELECT * FROM UserOrganizationRoles
-                    WHERE OrgId = @OrgId AND RoleId = @RoleId
+                    @"SELECT COUNT(*) FROM UserOrganizationRoles
+                    WHERE OrgId = @OrgId
                     GROUP BY UserId
-                    HAVING COUNT(*) = 1",
+                    HAVING COUNT(*) = 1 AND RoleId = @RoleId",
                     new { RoleId = role.Id, OrgId = role.OrgId}
                 );
                 return c > 0;
