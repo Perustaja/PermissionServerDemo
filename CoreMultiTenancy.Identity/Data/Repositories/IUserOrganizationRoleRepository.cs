@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Entities;
-using CoreMultiTenancy.Identity.Results.Errors;
-using Perustaja.Polyglot.Option;
+using CoreMultiTenancy.Identity.Interfaces;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
@@ -11,15 +7,13 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     /// Handles User Role management for Organizations. This updates and deletes Roles of User's within an
     /// Organization, which are loaded as related data from UserOrganizationRepository.
     /// </summary>
-    public interface IUserOrganizationRoleRepository
+    public interface IUserOrganizationRoleRepository : IRepository
     {
-        /// <returns>An Option containing an Error on failure.</returns>
-        Task<Option<Error>> AddAsync(UserOrganizationRole uor);
+        /// <returns>The UserOrganizationRole entity being tracked after add.</returns>
+        UserOrganizationRole Add(UserOrganizationRole uor);
 
-        /// <returns>An Option containing an Error on failure.</returns>
-        Task<Option<Error>> UpdateBulkAsync(List<UserOrganizationRole> uors);
+        void UpdateBulk(List<UserOrganizationRole> uors);
 
-        /// <returns>An Option containing an Error on failure.</returns>
-        Task<Option<Error>> DeleteBulkAsync(List<UserOrganizationRole> uors); 
+        void DeleteBulk(List<UserOrganizationRole> uors); 
     }
 }

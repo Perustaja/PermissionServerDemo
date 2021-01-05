@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using Dapper;
 using CoreMultiTenancy.Identity.Extensions;
+using System.Linq;
 
 namespace CoreMultiTenancy.Identity.Services
 {
@@ -49,12 +50,19 @@ namespace CoreMultiTenancy.Identity.Services
         public async Task<Option<Organization>> GetByIdAsync(Guid orgId)
             => await _orgRepo.GetByIdAsync(orgId);
 
-        public async Task<Option<Organization>> AddAsync(Organization o)
-            => await _orgRepo.AddAsync(o);
+        public async Task<Organization> AddAsync(Organization o)
+        {
+            o = _orgRepo.Add(o);
+            await _orgRepo.UnitOfWork.Commit();
+            return o;
+        }
 
-
-        public async Task<Option<Organization>> UpdateAsync(Organization o)
-            => await _orgRepo.UpdateAsync(o);
+        public async Task<Organization> UpdateAsync(Organization o)
+        {
+            o = _orgRepo.Update(o);
+            await _orgRepo.UnitOfWork.Commit();
+            return o;
+        }
         #endregion
 
         #region  UserManagement
@@ -67,11 +75,19 @@ namespace CoreMultiTenancy.Identity.Services
         public async Task<Option<UserOrganization>> GetUserOfOrgByIdsAsync(Guid orgId, Guid userId)
             => await _userOrgRepo.GetByIdsAsync(orgId, userId);
 
-        public async Task UpdateUserOfOrgAsync(UserOrganization uo)
+        public async Task<Option<Error>> UpdateUserOfOrgAsync(UserOrganization uo, List<UserOrganizationRole> uors)
         {
-            // Save changes to the UserOrganizationRepository and UserOrganizationRoles
-            await _userOrgRepo.UpdateAsync(uo);
-            await _userOrgRoleRepo.UpdateBulkAsync(uo.User.UserOrganizationRoles);
+            // Verify not empty, should be performed at an earlier point but this is a final check
+            if (uors.Count == 0)
+                return Option<Error>.Some(new Error("A User must have at least one Role.", ErrorType.DomainLogic));
+            // Roles passed must have existing ids in database
+            if (uors.Any(uor => (uor.Role == null) || (!uor.Role.IsGlobal && uor.Role.OrgId != uo.OrgId)))
+                return Option<Error>.Some(new Error("One of the passed Roles was not valid for this Organization.", ErrorType.DomainLogic));
+
+            _userOrgRepo.Update(uo);
+            _userOrgRoleRepo.UpdateBulk(uors);
+            await _userOrgRepo.UnitOfWork.Commit();
+            return Option<Error>.None;
         }
         #endregion
 
@@ -82,14 +98,31 @@ namespace CoreMultiTenancy.Identity.Services
         public async Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId)
             => await _roleRepo.GetRoleOfOrgByIdsAsync(orgId, roleId);
 
-        public async Task<Option<Role>> AddRoleToOrgAsync(Guid orgId, Role role)
-            => await _roleRepo.AddRoleToOrgAsync(orgId, role);
+        public async Task<Role> AddRoleToOrgAsync(Guid orgId, Role role)
+        {
+            role.SetOrganization(orgId); // Assign OrgId to Role
+            role = _roleRepo.AddRoleToOrg(orgId, role);
+            await _roleRepo.UnitOfWork.Commit();
+            return role;
+        }
 
         public async Task UpdateRoleOfOrgAsync(Guid orgId, Role role)
-            => await _roleRepo.UpdateRoleOfOrgAsync(role);
+        {
+            _roleRepo.UpdateRoleOfOrg(role);
+            await _roleRepo.UnitOfWork.Commit();
+        }
 
         public async Task<Option<Error>> DeleteRoleOfOrgAsync(Role role)
-            => await _roleRepo.DeleteRoleOfOrgAsync(role);
+        {
+            // verify role is not global or only role for any user before deletion
+            if (role.IsGlobal)
+                return Option<Error>.Some(new Error("Cannot delete a global role.", ErrorType.DomainLogic));
+            if (await _roleRepo.RoleIsOnlyRoleForAnyUser(role))
+                return Option<Error>.Some(new Error("This Role cannot be deleted because it is the last Role for at least one User.", ErrorType.DomainLogic));
+            _roleRepo.DeleteRoleOfOrg(role);
+            await _roleRepo.UnitOfWork.Commit();
+            return Option<Error>.None;
+        }
         #endregion
 
         #region InvitationManagement
@@ -149,27 +182,24 @@ namespace CoreMultiTenancy.Identity.Services
         private async Task<InviteResult> GrantAccessAsync(User user, Organization org)
         {
             var record = await _userOrgRepo.GetByIdsAsync(user.Id, org.Id);
-            // Check existing record to see its status
+            // Check existing record to see its status if one exists
             if (record.IsSome())
                 return InviteResult.FromExistingAccess(record.Unwrap(), org.Title);
 
-            // Save new record
+            // Save new record representing User's access to Organization, assign default role
             var accessGrant = new UserOrganization(user.Id, org.Id);
-            var accessResult = await _userOrgRepo.AddAsync(accessGrant);
-            var defaultRoleResult = await AddDefaultRoleToUserAsync(user.Id, org.Id);
-            if (accessResult.IsNone() && defaultRoleResult.IsNone())
-            {
-                return org.RequiresConfirmation
-                    ? InviteResult.RequiresConfirmation(org.Title)
-                    : InviteResult.ImmediateSuccess(org.Title);
-            }
-            return InviteResult.LinkInvalid();
+            _userOrgRepo.Add(accessGrant);
+            AddDefaultRoleToUserAsync(user.Id, org.Id);
+            await _userOrgRepo.UnitOfWork.Commit();
+            return org.RequiresConfirmation
+                ? InviteResult.RequiresConfirmation(org.Title)
+                : InviteResult.ImmediateSuccess(org.Title);
         }
 
-        private async Task<Option<Error>> AddDefaultRoleToUserAsync(Guid userId, Guid orgId)
+        private void AddDefaultRoleToUserAsync(Guid userId, Guid orgId)
         {
             var defaultRole = new UserOrganizationRole(userId, orgId, _defaultRoleId);
-            return await _userOrgRoleRepo.AddAsync(defaultRole);
+            _userOrgRoleRepo.Add(defaultRole);
         }
     }
 }

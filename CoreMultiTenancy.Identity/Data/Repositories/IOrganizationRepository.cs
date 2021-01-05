@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Interfaces;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
-    public interface IOrganizationRepository
+    public interface IOrganizationRepository : IRepository
     {
         /// <returns>All valid Organizations that a User has access to.</returns>
         Task<List<Organization>> GetUsersOrgsById(Guid userId);
@@ -17,10 +18,10 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         /// <returns>An Option with the Organization if found.</returns>
         Task<Option<Organization>> GetByIdAsync(Guid id);
 
-        /// <returns>An Option containing the Organization if successful.</returns>
-        Task<Option<Organization>> AddAsync(Organization o);
+        /// <returns>The Organization entity being tracked upon add.</returns>
+        Organization Add(Organization o);
 
-        /// <returns>An Option containing the Organization if successful.</returns>
-        Task<Option<Organization>> UpdateAsync(Organization o);
+        /// <returns>The Organization entity being tracked upon update.</returns>
+        Organization Update(Organization o);
     }
 }

@@ -24,14 +24,15 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// <summary>
         /// Adds the given tenant.
         /// </summary>
-        /// <returns>An Option containing the new Organization if sucessful.</returns>
-        Task<Option<Organization>> AddAsync(Organization o);
+        /// <returns>The Organization entity being tracked on add.</returns>
+        Task<Organization> AddAsync(Organization o);
 
         /// <summary>
         /// Updates the given tenant.
         /// </summary>
-        /// <returns>An Option containing the updated Organization if sucessful.</returns>
-        Task<Option<Organization>> UpdateAsync(Organization o);
+        /// <returns>The Organization entity being tracked on update.</returns>
+        Task<Organization> UpdateAsync(Organization o);
+
         #endregion
 
         #region  UserManagement
@@ -45,11 +46,12 @@ namespace CoreMultiTenancy.Identity.Interfaces
         Task<Option<UserOrganization>> GetUserOfOrgByIdsAsync(Guid orgId, Guid userId);
 
         /// <summary>
-        /// Updates the roles and tenant-specific profile information of the UserOrganization. Assumes
-        /// User, UserOrganizationRoles, and Roles NPs are populated, and only saves changes to the 
-        /// UserOrganization and UserOrganizationRoles
+        /// Updates the UserOrganization (tenant-specific information assigned to the user), 
+        /// and the UserOrganizationRoles (the roles the user has in the Organization).
+        /// UserOrganizationRoles must have populated Role NP.
         /// </summary>
-        Task UpdateUserOfOrgAsync(UserOrganization uo);
+        /// <returns>An Option containing an Error on failure.</returns>
+        Task<Option<Error>> UpdateUserOfOrgAsync(UserOrganization uo, List<UserOrganizationRole> uors);
         #endregion
 
         #region RoleManagement
@@ -62,8 +64,8 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// <summary>
         /// Adds a Role to be used by the specified organization.
         /// </summary>
-        /// <returns>An Option containing the new Role if successful.</returns>
-        Task<Option<Role>> AddRoleToOrgAsync(Guid orgId, Role role);
+        /// <returns>The Role entity being tracked after add.</returns>
+        Task<Role> AddRoleToOrgAsync(Guid orgId, Role role);
 
         /// <summary>
         /// Updates the Role.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,8 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     {
         private readonly string _connectionString;
         private readonly ILogger<RoleRepository> _logger;
-        private ApplicationDbContext _applicationContext;
+        private readonly ApplicationDbContext _applicationContext;
+        public IUnitOfWork UnitOfWork { get => _applicationContext; }
 
         public RoleRepository(IConfiguration config,
             ILogger<RoleRepository> logger, ApplicationDbContext context)
@@ -48,55 +50,16 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<Role>.None;
         }
 
-        public async Task<Option<Role>> AddRoleToOrgAsync(Guid orgId, Role role)
-        {
-            role.SetOrganization(orgId);
-            try
-            {
-                await _applicationContext.Set<Role>().AddAsync(role);
-                await _applicationContext.SaveChangesAsync();
-                return Option<Role>.Some(role);
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-                return Option<Role>.None;
-            }
-        }
+        public Role AddRoleToOrg(Guid orgId, Role role)
+            => _applicationContext.Set<Role>().Add(role).Entity;
 
-        public async Task UpdateRoleOfOrgAsync(Role role)
-        {
-            try
-            {
-                _applicationContext.Set<Role>().Update(role);
-                await _applicationContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-            }
-        }
+        public Role UpdateRoleOfOrg(Role role)
+            => _applicationContext.Set<Role>().Update(role).Entity;
 
-        public async Task<Option<Error>> DeleteRoleOfOrgAsync(Role role)
-        {
-            if (role.IsGlobal)
-                return Option<Error>.Some(new Error("Cannot delete a global role.", ErrorType.DomainLogic));
-            if (await RoleIsOnlyRoleForAnyUser(role))
-                return Option<Error>.Some(new Error("This Role cannot be deleted because it is the last Role for at least one User.", ErrorType.DomainLogic));
-            try
-            {
-                _applicationContext.Remove(role);
-                await _applicationContext.SaveChangesAsync();
-                return Option<Error>.None;
-            }   
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-                return Option<Error>.Some(new Error("", ErrorType.Unspecified));
-            } 
-        }
+        public void DeleteRoleOfOrg(Role role)
+            => _applicationContext.Remove(role);
 
-        private async Task<bool> RoleIsOnlyRoleForAnyUser(Role role)
+        public async Task<bool> RoleIsOnlyRoleForAnyUser(Role role)
         {
             using (var conn = new MySqlConnection(_connectionString))
             {
@@ -105,7 +68,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                     WHERE OrgId = @OrgId
                     GROUP BY UserId
                     HAVING COUNT(*) = 1 AND RoleId = @RoleId",
-                    new { RoleId = role.Id, OrgId = role.OrgId}
+                    new { RoleId = role.Id, OrgId = role.OrgId }
                 );
                 return c > 0;
             }

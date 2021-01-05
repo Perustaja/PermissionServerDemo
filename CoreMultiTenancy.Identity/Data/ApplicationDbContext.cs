@@ -1,17 +1,17 @@
 using System;
-using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Data.Configuration;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Extensions;
+using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreMultiTenancy.Identity.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
+    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
     {
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Permission> Permissions { get; set; }
@@ -19,13 +19,7 @@ namespace CoreMultiTenancy.Identity.Data
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserOrganization> UserOrganizations { get; set; }
         public DbSet<UserOrganizationRole> UserOrganizationRoles { get; set; }
-
-        private IDbContextTransaction _currentTransaction;
         private readonly Guid _defaultRoleId;
-
-        public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
-
-        public bool HasActiveTransaction => _currentTransaction != null;
 
         public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -43,55 +37,11 @@ namespace CoreMultiTenancy.Identity.Data
             base.OnModelCreating(builder);
         }
 
-
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            if (_currentTransaction != null) return null;
-
-            _currentTransaction = await Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
-
-            return _currentTransaction;
-        }
-
-        public async Task CommitTransactionAsync(IDbContextTransaction transaction)
-        {
-            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
-            if (transaction != _currentTransaction) throw new InvalidOperationException($"Transaction {transaction.TransactionId} is not current");
-
-            try
-            {
-                await SaveChangesAsync();
-                transaction.Commit();
-            }
-            catch
-            {
-                RollbackTransaction();
-                throw;
-            }
-            finally
-            {
-                if (_currentTransaction != null)
-                {
-                    _currentTransaction.Dispose();
-                    _currentTransaction = null;
-                }
-            }
-        }
-
-        public void RollbackTransaction()
-        {
-            try
-            {
-                _currentTransaction?.Rollback();
-            }
-            finally
-            {
-                if (_currentTransaction != null)
-                {
-                    _currentTransaction.Dispose();
-                    _currentTransaction = null;
-                }
-            }
-        }
+        // Note that SaveChangesAsync() works with most providers to rollback by default 
+        // on failure. In other words, it's only being exposed so that multiple operations
+        // may be performed in a commit by services. No complicated methods are required for this basic
+        // transactional behavior.
+        public async Task<int> Commit(CancellationToken cancellationToken = default)
+            => await SaveChangesAsync();
     }
 }

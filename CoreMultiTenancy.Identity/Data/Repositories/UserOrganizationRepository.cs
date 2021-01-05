@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
-using CoreMultiTenancy.Identity.Results.Errors;
+using CoreMultiTenancy.Identity.Interfaces;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +18,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         private readonly string _connectionString;
         private readonly ILogger<UserOrganizationRepository> _logger;
         private readonly ApplicationDbContext _applicationContext;
+        public IUnitOfWork UnitOfWork { get => _applicationContext; }
         public UserOrganizationRepository(IConfiguration config,
             ILogger<UserOrganizationRepository> logger,
             ApplicationDbContext applicationContext)
@@ -55,34 +56,11 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<UserOrganization>.None;
         }
 
-        public async Task<Option<Error>> AddAsync(UserOrganization uo)
-        {
-            try
-            {
-                await _applicationContext.AddAsync(uo);
-                await _applicationContext.SaveChangesAsync();
-                return Option<Error>.None;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-                return Option<Error>.Some(new Error("", ErrorType.Unspecified));
-            }
-        }
+        public UserOrganization Add(UserOrganization uo)
+            => _applicationContext.Add(uo).Entity;
 
-        public async Task UpdateAsync(UserOrganization uo)
-        {
-            // Verify this will change Roles as well as the main uo record
-            try
-            {
-                _applicationContext.Set<UserOrganization>().Update(uo);
-                await _applicationContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-            }
-        }
+        public UserOrganization Update(UserOrganization uo)
+            => _applicationContext.Set<UserOrganization>().Update(uo).Entity;
 
         public async Task<bool> ExistsAsync(Guid userId, Guid orgId)
         {

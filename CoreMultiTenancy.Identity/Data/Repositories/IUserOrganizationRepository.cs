@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
-using CoreMultiTenancy.Identity.Results.Errors;
+using CoreMultiTenancy.Identity.Interfaces;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -10,7 +10,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     /// <summary>
     /// Handles User management for Organizations.
     /// </summary>
-    public interface IUserOrganizationRepository
+    public interface IUserOrganizationRepository : IRepository
     {
         /// <returns>All UserOrganization records with populated User, UserOrgRole, and Role NPs.</returns>
         Task<List<UserOrganization>> GetAllByOrgId(Guid orgId);
@@ -21,20 +21,15 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         /// <returns>An Option containing a UserOrganization with populated User, UserOrgRole, and Role NPs if found.</returns>
         Task<Option<UserOrganization>> GetByIdsAsync(Guid orgId, Guid userId);
 
-        /// <summary>
-        /// Adds the UserOrganization.
-        /// </summary>
-        /// <returns>An Option containing an Error on failure.</returns>
-        Task<Option<Error>> AddAsync(UserOrganization uo);
+        /// <returns>The UserOrganization entity being tracked on add.</returns>
+        UserOrganization Add(UserOrganization uo);
 
-        /// <summary>
-        /// Attempts to update the UserOrganization entity.
-        /// </summary>
-        Task UpdateAsync(UserOrganization uo);
+        /// <returns>The UserOrganization entity being tracked upon add.</returns>
+        UserOrganization Update(UserOrganization uo);
 
         /// <returns>Whether the Organization has a record of the User, even if awaiting approval or blacklisted.</returns>
         Task<bool> ExistsAsync(Guid userId, Guid orgId);
-        
+
         /// <returns>Whether the User has active access to the Organization.</returns>
         Task<bool> ExistsWithAccessAsync(Guid userId, Guid orgId);
     }

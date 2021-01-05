@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Interfaces;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,8 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         private readonly string _connectionString;
         private readonly ILogger<OrganizationRepository> _logger;
         private readonly ApplicationDbContext _applicationContext;
+        public IUnitOfWork UnitOfWork { get => _applicationContext; }
+
         public OrganizationRepository(IConfiguration config, ILogger<OrganizationRepository> logger,
             ApplicationDbContext applicationContext)
         {
@@ -56,34 +59,14 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<Organization>.None;
         }
 
-        public async Task<Option<Organization>> AddAsync(Organization o)
+        public Organization Add(Organization o)
         {
-            try
-            {
-                await _applicationContext.Set<Organization>().AddAsync(o);
-                await _applicationContext.SaveChangesAsync();
-                return Option<Organization>.Some(o);
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-                return Option<Organization>.None;
-            }
+            return _applicationContext.Set<Organization>().Add(o).Entity;
         }
 
-        public async Task<Option<Organization>> UpdateAsync(Organization o)
+        public Organization Update(Organization o)
         {
-            try
-            {
-                _applicationContext.Set<Organization>().Update(o);
-                await _applicationContext.SaveChangesAsync();
-                return Option<Organization>.Some(o);
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogInformation(e.ToString());
-                return Option<Organization>.None;
-            }
+            return _applicationContext.Set<Organization>().Update(o).Entity;
         }
     }
 }
