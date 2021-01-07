@@ -1,12 +1,13 @@
-using CoreMultiTenancy.Api.Grpc;
+using System;
+using Cmt.Protobuf;
+using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-[assembly: ApiConventionType(typeof(DefaultApiConventions))]
+
 
 namespace CoreMultiTenancy.Api
 {
@@ -42,7 +43,11 @@ namespace CoreMultiTenancy.Api
                 });
             });
 
-            services.AddSingleton<IAuthzChannelService, AuthzChannelService>();
+            services.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:5100");
+            });
+            services.AddScoped<ITenantContext, TenantContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoreMultiTenancy.Identity.Controllers
 {
     [ApiVersion("0.1")]
-    [ApiController]
     [Authorize]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class PermissionsController : ControllerBase

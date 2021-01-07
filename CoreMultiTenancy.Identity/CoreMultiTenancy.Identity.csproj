@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Proto\base.proto" GrpcServices="Server" Link="Protos\base.proto" />
-    <Protobuf Include="..\Proto\aircraft.proto" GrpcServices="Server" Link="Protos\aircraft.proto" />
+    <Protobuf Include="..\Proto\perm.proto" GrpcServices="Server" ProtoRoot="..\Proto\" />
   </ItemGroup>
 </Project>

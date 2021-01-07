@@ -1,4 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
@@ -11,16 +14,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.2.0" />
+    <PackageReference Include="Perustaja.Polyglot" Version="0.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\Proto\base.proto" GrpcServices="Client" Link="Protos\base.proto" />
-    <Protobuf Include="..\Proto\aircraft.proto" GrpcServices="Client" Link="Protos\aircraft.proto" />
+    <Protobuf Include="..\Proto\perm.proto" GrpcServices="Channel" ProtoRoot="..\Proto\" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-
-
 </Project>

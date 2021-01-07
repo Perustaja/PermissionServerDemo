@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+package cmt.protobuf;
+
+/*
+    A standard authorization request authorizing based on both tenant id and some permission(s).
+    Permissions may be null if none are specified.
+*/
+service PermissionAuthorize {
+    rpc Authorize(PermissionAuthorizeRequest) returns(AuthorizeDecision);
+}
+
+message PermissionAuthorizeRequest {
+    string tenantId = 1;
+    repeated google.protobuf.StringValue perms = 2; // Optional array of strings representing permissions
+}
+
+message AuthorizeDecision {
+    bool allowed = 1;
+    google.protobuf.UInt32Value statusCode = 2; // Optional status code
+    google.protobuf.StringValue failureMessage = 3; // Optional message
+}
