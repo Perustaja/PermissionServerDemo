@@ -13,6 +13,7 @@ namespace CoreMultiTenancy.Api.Controllers
         {
             _httpContext = context ?? throw new ArgumentNullException(nameof(context));
         }
+        
         [HttpGet]
         public IActionResult Get()
         {
