@@ -1,5 +1,6 @@
 using System;
 using Cmt.Protobuf;
+using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,6 +23,8 @@ namespace CoreMultiTenancy.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TenantedDbContext>();
+
             services.AddControllers();
             services.AddApiVersioning();
             services.AddHttpContextAccessor();
@@ -47,7 +50,7 @@ namespace CoreMultiTenancy.Api
             {
                 o.Address = new Uri("https://localhost:5100");
             });
-            services.AddScoped<ITenantContext, TenantContext>();
+            services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

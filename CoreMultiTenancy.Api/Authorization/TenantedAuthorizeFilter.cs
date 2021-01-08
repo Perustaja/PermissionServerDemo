@@ -30,17 +30,14 @@ namespace CoreMultiTenancy.Api.Authorization
             if (context.HttpContext.User?.Identity.IsAuthenticated == false)
                 context.Result = new ChallengeResult();
 
-            // Retrieve client from DI
+            // Retrieve client and tenantId from DI
             var client = GetGrpcClient(context.HttpContext);
-
-            var tidOpt = context.HttpContext.GetTenantIdFromRouteData();
-            if (tidOpt.IsNone())
-                throw new Exception("Action marked with TenantedAuthorizeAttribute did not have necessary RouteData.");
+            var tenantId = GetTenantProvider(context.HttpContext).GetCurrentRequestTenant().Id;
 
             var request = new PermissionAuthorizeRequest()
             {
                 UserId = context.HttpContext.User.FindFirst(JwtClaimTypes.Subject)?.Value,
-                TenantId = tidOpt.Unwrap(),
+                TenantId = tenantId,
             };
             request.Perms.AddRange(Permissions);
 
@@ -75,6 +72,14 @@ namespace CoreMultiTenancy.Api.Authorization
                 .GetService(typeof(PermissionAuthorize.PermissionAuthorizeClient))
                 as PermissionAuthorize.PermissionAuthorizeClient
                 ?? throw new ArgumentNullException("Unable to source gRPC client.");
+        }
+
+        private ITenantProvider GetTenantProvider(HttpContext context)
+        {
+            return context.RequestServices
+                .GetService(typeof(ITenantProvider))
+                as ITenantProvider
+                ?? throw new ArgumentNullException("Unable to source ITenantProvider.");
         }
 
         private ILogger<TenantedAuthorizeFilter> GetLogger(HttpContext context)
