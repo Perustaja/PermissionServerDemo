@@ -1,7 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Models;
-using CoreMultiTenancy.Identity.Results;
 
 namespace CoreMultiTenancy.Identity.Interfaces
 {
@@ -10,11 +8,14 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// <summary>
         /// Returns a permanent invitation link based on the id passed.
         /// <summary>
-        string CreatePermInvitationLink(Guid orgId);
+        Task<string> CreatePermanentInviteLinkAsync(Guid orgId);
+
         /// <summary>
-        /// Attempts to use the activation link and grant the User access to the corresponding
-        /// Organization.
-        /// <summary>
-        Task<InviteResult> UsePermInvitationLink(User user, string link);
+        /// Attempts to decode a permanent invitation link, returning true if the invitation code was valid.
+        /// </summary>
+        /// <param name="code">The code created by this service's CreatePermanentInviteLink method.</param>
+        /// <param name="guid">A guid variable that will be set with the accompanying organization id if successful.</param>
+        /// <returns></returns>
+        Task<bool> TryDecodePermanentInviteLinkAsync(string code, out Guid guid);
     }
 }

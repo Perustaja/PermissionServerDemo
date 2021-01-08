@@ -1,14 +1,13 @@
 using System;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Cmt.Protobuf;
+using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+
 
 namespace CoreMultiTenancy.Api
 {
@@ -24,6 +23,7 @@ namespace CoreMultiTenancy.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddApiVersioning();
             services.AddHttpContextAccessor();
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", o =>
@@ -42,6 +42,12 @@ namespace CoreMultiTenancy.Api
                     p.RequireClaim("scope", "testapi");
                 });
             });
+
+            services.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:5100");
+            });
+            services.AddScoped<ITenantContext, TenantContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -54,7 +60,6 @@ namespace CoreMultiTenancy.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

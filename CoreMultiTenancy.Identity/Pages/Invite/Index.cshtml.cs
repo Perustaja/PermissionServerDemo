@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +12,12 @@ namespace CoreMultiTenancy.Identity.Pages.Invite
     public class IndexModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly IOrganizationInviteService _inviteService;
+        private readonly IOrganizationManager _orgManager;
         public IndexModel(UserManager<User> userManager,
-            IOrganizationInviteService inviteService)
+            IOrganizationManager orgManager)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _inviteService = inviteService ?? throw new ArgumentNullException(nameof(inviteService));
+            _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
         }
 
         [TempData]
@@ -38,7 +38,7 @@ namespace CoreMultiTenancy.Identity.Pages.Invite
             {
                 var userId = User.GetSubjectId();
                 var user = await _userManager.FindByIdAsync(userId);
-                var invResult = await _inviteService.UsePermInvitationLink(user, inviteCode);
+                var invResult = await _orgManager.UsePermanentInvitationAsync(user, inviteCode);
                 // Display view with appropriate message and status
                 Success = invResult.Success;
                 ResultMessage = invResult.Success ? invResult.SuccessMessage : invResult.ErrorMessage;

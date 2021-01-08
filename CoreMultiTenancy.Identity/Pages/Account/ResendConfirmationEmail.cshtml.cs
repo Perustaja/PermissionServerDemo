@@ -48,11 +48,10 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             {
                 var result = await _acctEmailService.SendConfToUnauthUserAsync(Input.Email);
                 // Update viewdata, redisplay form
-                if (result.Approved)
-                    SuccessMessage = result.Message;
-                else
-                    ModelState.AddModelError("", result.Message);
-
+                result.Match(
+                    e => ModelState.AddModelError("", e),
+                    () => SuccessMessage = $"A confirmation link has been sent to {Input.Email} if applicable. You may need to check your spam folder."
+                );
             }
             return Page();
         }

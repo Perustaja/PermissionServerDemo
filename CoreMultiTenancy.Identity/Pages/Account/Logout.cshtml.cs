@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Options;
 using IdentityModel;
 using IdentityServer4.Events;

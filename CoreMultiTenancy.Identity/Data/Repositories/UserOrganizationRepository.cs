@@ -1,35 +1,66 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Interfaces;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
+using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
     public class UserOrganizationRepository : IUserOrganizationRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<UserOrganizationRepository> _logger;
         private readonly ApplicationDbContext _applicationContext;
+        public IUnitOfWork UnitOfWork { get => _applicationContext; }
         public UserOrganizationRepository(IConfiguration config,
+            ILogger<UserOrganizationRepository> logger,
             ApplicationDbContext applicationContext)
         {
-          _connectionString = config.GetConnectionString("IdentityDb"); 
-          _applicationContext = applicationContext ?? throw new ArgumentNullException(nameof(applicationContext));
-        }
-        public async Task AddAsync(UserOrganization uo)
-        {
-            await _applicationContext.Set<UserOrganization>().AddAsync(uo);
-            await _applicationContext.SaveChangesAsync();          
+            _connectionString = config.GetConnectionString("IdentityDb");
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _applicationContext = applicationContext ?? throw new ArgumentNullException(nameof(applicationContext));
         }
 
-        public async Task DeleteAsync(UserOrganization uo)
+        public async Task<List<UserOrganization>> GetAllByOrgId(Guid orgId)
         {
-            _applicationContext.Set<UserOrganization>().Remove(uo);
-            await _applicationContext.SaveChangesAsync();   
+            return await _applicationContext.Set<UserOrganization>()
+                .Where(uo => uo.OrgId == orgId && uo.AwaitingApproval == false)
+                .Include(uo => uo.User)
+                .ThenInclude(u => u.UserOrganizationRoles)
+                .ThenInclude(uor => uor.Role)
+                .ToListAsync();
         }
+
+        public async Task<List<UserOrganization>> GetAwaitingAccessByOrgId(Guid orgId)
+        {
+            return await _applicationContext.Set<UserOrganization>()
+                .Where(uo => uo.OrgId == orgId && uo.AwaitingApproval == true)
+                .Include(uo => uo.User)
+                .ToListAsync();
+        }
+
+        public async Task<Option<UserOrganization>> GetByIdsAsync(Guid orgId, Guid userId)
+        {
+            var res = await _applicationContext.Set<UserOrganization>()
+                .Where(uo => uo.OrgId == orgId && uo.UserId == userId)
+                .FirstOrDefaultAsync();
+            return res != null
+                ? Option<UserOrganization>.Some(res)
+                : Option<UserOrganization>.None;
+        }
+
+        public UserOrganization Add(UserOrganization uo)
+            => _applicationContext.Add(uo).Entity;
+
+        public UserOrganization Update(UserOrganization uo)
+            => _applicationContext.Set<UserOrganization>().Update(uo).Entity;
 
         public async Task<bool> ExistsAsync(Guid userId, Guid orgId)
         {
@@ -37,9 +68,9 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM UserOrganizations
-                    WHERE UserId = @userId
-                    AND OrganizationId = @orgId",
-                    new { userId, orgId }
+                    WHERE UserId = @UserId
+                    AND OrganizationId = @OrgId",
+                    new { UserId = userId, OrgId = orgId }
                 );
                 return res > 0;
             }
@@ -50,19 +81,14 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM UserOrganizations
-                    WHERE UserId = @userId
-                    AND OrganizationId = @orgId
+                    WHERE UserId = @UserId
+                    AND OrganizationId = @OrgId
                     AND AwaitingApproval = false
                     AND Blacklisted = false",
-                    new { userId, orgId }
+                    new { UserId = userId, OrgId = orgId }
                 );
                 return res > 0;
             }
-        }
-        public async Task<UserOrganization> GetByIdsAsync(Guid userId, Guid orgId)
-        {
-            return await _applicationContext.Set<UserOrganization>()
-                .FirstOrDefaultAsync(uo => uo.UserId == userId && uo.OrganizationId == orgId);
         }
     }
 }

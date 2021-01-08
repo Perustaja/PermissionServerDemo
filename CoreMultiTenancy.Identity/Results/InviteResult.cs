@@ -1,3 +1,5 @@
+using CoreMultiTenancy.Identity.Entities;
+
 namespace CoreMultiTenancy.Identity.Results
 {
     /// <summary>
@@ -8,6 +10,16 @@ namespace CoreMultiTenancy.Identity.Results
         public bool Success { get; set; }
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
+        public static InviteResult FromExistingAccess(UserOrganization uo, string title)
+        {
+            // User can either be blacklisted, awaiting approval, or already has full access
+            if (uo.Blacklisted)
+                return Blacklisted();
+            else if (uo.AwaitingApproval)
+                return AwaitingConfirmation(title);
+            else
+                return ExistingAccess(title);
+        }
         public static InviteResult ImmediateSuccess(string orgName)
             => Succeeded($"You have successfully been granted access to {orgName}. Changes should be reflected in your portal immediately.");
         public static InviteResult RequiresConfirmation(string orgName)

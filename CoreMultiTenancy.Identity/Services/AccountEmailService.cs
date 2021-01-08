@@ -2,11 +2,11 @@ using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Models;
-using CoreMultiTenancy.Identity.Results;
+using CoreMultiTenancy.Identity.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
+using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Services
 {
@@ -26,22 +26,18 @@ namespace CoreMultiTenancy.Identity.Services
             _linkGen = linkGen ?? throw new ArgumentNullException(nameof(linkGen));
         }
 
-        public async Task<AccountEmailResult> SendConfToAuthUserAsync(User user)
+        public async Task<Option<string>> SendConfToAuthUserAsync(User user)
         {
-            if (user != null)
-            {
-                if (user.EmailConfirmed)
-                    return new AccountEmailResult(false, "Your account's email is already confirmed.");
+            if (user.EmailConfirmed)
+                return Option<string>.Some("Your account's email is already confirmed.");
 
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = _linkGen.ConfirmEmailPageLink(_httpContext, user.Id.ToString(), token);
-                await _emailSender.SendAccountConfirmationEmail(user.Email, callbackUrl);
-                return new AccountEmailResult(true, $"A confirmation link has been sent to {user.Email}. You may need to check your spam folder.");
-            }
-            return new AccountEmailResult(false, "Unable to find user.");
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = _linkGen.ConfirmEmailPageLink(_httpContext, user.Id.ToString(), token);
+            await _emailSender.SendAccountConfirmationEmail(user.Email, callbackUrl);
+            return Option<string>.None;
         }
 
-        public async Task<AccountEmailResult> SendConfToUnauthUserAsync(string email)
+        public async Task<Option<string>> SendConfToUnauthUserAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
@@ -54,27 +50,27 @@ namespace CoreMultiTenancy.Identity.Services
                     var callbackUrl = _linkGen.ConfirmEmailPageLink(_httpContext, user.Id.ToString(), token);
                     await _emailSender.SendAccountConfirmationEmail(user.Email, callbackUrl);
                 }
-                return new AccountEmailResult(true, $"A confirmation link has been sent to {user.Email} if applicable. You may need to check your spam folder.");
+                return Option<string>.None;
             }
             // The user can easily figure out if an email is registered by attempting to make an
             // account under it, so exposing this detail here is not a security concern.
-            return new AccountEmailResult(false, "No account associated with the entered email exists.");
+            return Option<string>.Some("No account associated with the entered email exists.");
         }
 
-        public async Task<AccountEmailResult> SendEmailChangeEmail(string currEmail, string newEmail)
+        public async Task<Option<string>> SendEmailChangeEmail(string currEmail, string newEmail)
         {
             var user = await _userManager.FindByEmailAsync(currEmail);
             if (user == null)
-                return new AccountEmailResult(false, "Unable to find user.");
-            
+                return Option<string>.Some("No account associated with the entered email exists.");
+
             if (currEmail != newEmail)
             {
                 var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
                 var callbackUrl = _linkGen.ChangeEmailPageLink(_httpContext, user.Id.ToString(), token, newEmail);
                 await _emailSender.SendEmailChangeEmail(newEmail, callbackUrl);
-                return new AccountEmailResult(true, $"An email containing a link to confirm your email change has been sent to {newEmail}.");
+                return Option<string>.None;
             }
-            return new AccountEmailResult(false, "New email cannot equal old email.");
+            return Option<string>.Some("New email cannot equal old email.");
         }
 
         public async Task SendPassResetEmail(string email)

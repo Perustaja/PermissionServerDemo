@@ -1,9 +1,8 @@
 ﻿using System;
-using AutoMapper;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Models;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using CoreMultiTenancy.Identity.Grpc;
+using Microsoft.AspNetCore.Routing;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -36,7 +37,8 @@ namespace CoreMultiTenancy.Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
-
+                
+            services.AddApiVersioning();
             services.AddAuthentication();
 
             var builder = services.AddIdentityServer()
@@ -46,23 +48,22 @@ namespace CoreMultiTenancy.Identity
                 .AddAspNetIdentity<User>();
             builder.AddDeveloperSigningCredential();
 
-            // AutoMapper
-            services.AddAutoMapper(config =>
-            {
-                config.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
-            },
-            AppDomain.CurrentDomain.GetAssemblies());
+            services.AddGrpc();
+            services.AddHttpContextAccessor();
 
-            // Custom
+            // Services
             services.Configure<EmailSenderOptions>(Configuration.GetSection("Email"));
             services.Configure<OidcAccountOptions>(Configuration.GetSection("OidcAccountOptions"));
             services.AddScoped<IEmailSender, EmailSender>();
-            services.AddScoped<IOrganizationAccessManager, OrganizationAccessManager>();
+            services.AddScoped<IOrganizationManager, OrganizationManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
-
+            services.AddScoped<IRemoteAuthorizationEvaluator, RemoteAuthorizationEvaluator>();
+            // Repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
+            services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
 
             services.AddRazorPages()
                 .AddRazorPagesOptions(o =>
@@ -71,6 +72,8 @@ namespace CoreMultiTenancy.Identity
                     o.Conventions.AddPageRoute("/home/index", "");
                 })
                 .AddRazorRuntimeCompilation();
+
+
             // Identity config
             services.Configure<IdentityOptions>(options =>
             {
@@ -105,13 +108,13 @@ namespace CoreMultiTenancy.Identity
             }
             else
             {
-                app.UseExceptionHandler("/error");
+                app.UseExceptionHandler("/api/error");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseNotFoundFilter("/error/notfound");
+            app.UseRazorPagesNotFoundFilter("/error/notfound");
             app.UseRouting();
 
             app.UseIdentityServer();
@@ -120,18 +123,21 @@ namespace CoreMultiTenancy.Identity
             app.UseEndpoints(e =>
             {
                 e.MapRazorPages();
+                e.MapGrpcAuthorizationServices();
             });
         }
     }
     public static class StartupExtensions
     {
-        public static IApplicationBuilder UseNotFoundFilter(this IApplicationBuilder app, string path)
+        public static IApplicationBuilder UseRazorPagesNotFoundFilter(this IApplicationBuilder app, string path)
         {
             return app.Use(async (context, next) =>
             {
                 await next();
 
-                if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+                // Hacky check at the end for differentiating between api NotFound and razor 404
+                if (context.Response.StatusCode == 404 && !context.Response.HasStarted
+                    && context.Response.ContentType != "application/json")
                 {
                     // If 404 response, re-execute with notfound path request,
                     // this proliferates the existing url in the user's browser.
@@ -139,6 +145,12 @@ namespace CoreMultiTenancy.Identity
                     await next();
                 }
             });
+        }
+
+        public static IEndpointRouteBuilder MapGrpcAuthorizationServices(this IEndpointRouteBuilder e)
+        {
+            e.MapGrpcService<PermissionAuthorizeService>();
+            return e;
         }
     }
 }
