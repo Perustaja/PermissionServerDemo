@@ -47,6 +47,20 @@ namespace CoreMultiTenancy.Identity.Services
         }
 
         #region OrganizationManagement
+        public async Task<bool> ExistsAsync(Guid orgId)
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                var res = await conn.QuerySingleAsync<int>(
+                    @"SELECT COUNT(*)
+                    FROM Organizations
+                    WHERE Id = @OrgId",
+                    new { OrgId = orgId}
+                );
+                return res > 0;
+            }
+        }
+
         public async Task<Option<Organization>> GetByIdAsync(Guid orgId)
             => await _orgRepo.GetByIdAsync(orgId);
 

@@ -8,16 +8,12 @@
             "name": ".NET Core Launch (Api)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildApi",
             "program": "${workspaceFolder}/CoreMultiTenancy.Api/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Api.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CoreMultiTenancy.Api",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
@@ -35,7 +31,7 @@
             "name": ".NET Core Launch (Identity)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildIdentity",
             "program": "${workspaceFolder}/CoreMultiTenancy.Identity/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Identity.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CoreMultiTenancy.Identity",
@@ -62,7 +58,7 @@
             "name": ".NET Core Launch (Mvc)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildMvc",
             "program": "${workspaceFolder}/CoreMultiTenancy.Mvc/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Mvc.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CoreMultiTenancy.Mvc",

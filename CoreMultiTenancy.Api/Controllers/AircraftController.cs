@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Api.Authorization;
 using CoreMultiTenancy.Api.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +6,8 @@ using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Api.Controllers
 {
-    [ApiVersion("0.1")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     public class AircraftController : ControllerBase
     {
         private readonly ILogger<AircraftController> _logger;
@@ -18,16 +18,15 @@ namespace CoreMultiTenancy.Api.Controllers
 
         [HttpGet]
         [TenantedAuthorize]
-        [Route("api/v{version:apiVersion}/org/{tid}/[controller]")]
-        public IActionResult Get(string tid)
+        public IActionResult Get(string tenantId)
         {
             return Ok(new Aircraft("N12345"));
         }
 
         [HttpPost]
         [TenantedAuthorize("AircraftCreate")]
-        [Route("api/v{version:apiVersion}/org/{tid}/[controller]")]
-        public IActionResult Post(string tid, Aircraft aircraft)
+        [Route("{tenantId}/[controller]")]
+        public IActionResult Post(string tenantId, Aircraft aircraft)
         {
             // Validate aircraft
             // Save to db, return errors if necessary
@@ -36,8 +35,8 @@ namespace CoreMultiTenancy.Api.Controllers
 
         [HttpPut]
         [TenantedAuthorize("AircraftEdit")]
-        [Route("api/v{version:apiVersion}/org/{tid}/[controller]")]
-        public IActionResult Put(string tid, Aircraft aircraft)
+        [Route("{tenantId}/[controller]")]
+        public IActionResult Put(string tenantId, Aircraft aircraft)
         {
             // Todo:
             // Validate aircraft

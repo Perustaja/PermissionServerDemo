@@ -58,6 +58,7 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IOrganizationManager, OrganizationManager>();
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
+            services.AddScoped<IRemoteAuthorizationEvaluator, RemoteAuthorizationEvaluator>();
             // Repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
@@ -113,7 +114,7 @@ namespace CoreMultiTenancy.Identity
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseNotFoundFilter("/error/notfound");
+            app.UseRazorPagesNotFoundFilter("/error/notfound");
             app.UseRouting();
 
             app.UseIdentityServer();
@@ -128,7 +129,7 @@ namespace CoreMultiTenancy.Identity
     }
     public static class StartupExtensions
     {
-        public static IApplicationBuilder UseNotFoundFilter(this IApplicationBuilder app, string path)
+        public static IApplicationBuilder UseRazorPagesNotFoundFilter(this IApplicationBuilder app, string path)
         {
             return app.Use(async (context, next) =>
             {

@@ -18,6 +18,10 @@ namespace CoreMultiTenancy.Identity.Interfaces
     public interface IOrganizationManager
     {
         #region OrganizationManagement
+
+        /// <returns>Whether an Organization exists with the given id.</returns>
+        Task<bool> ExistsAsync(Guid orgId);
+
         /// <returns>An Option containing an Organization if found.</returns>
         Task<Option<Organization>> GetByIdAsync(Guid orgId);
 

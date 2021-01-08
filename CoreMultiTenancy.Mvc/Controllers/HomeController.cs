@@ -29,7 +29,7 @@ namespace CoreMultiTenancy.Mvc.Controllers
             
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var result  = await client.GetFromJsonAsync<string>("https://localhost:6100/identity"); // Call API
+            var result  = await client.GetFromJsonAsync<string>("https://localhost:6100/api/v1/identity"); // Call API
 
             ViewBag.Json = result;
             return View("Json");
@@ -47,7 +47,7 @@ namespace CoreMultiTenancy.Mvc.Controllers
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var url = HtmlEncoder.Default.Encode($"https://localhost:6100/api/v0.1/org/{tid}/aircraft");
+            var url = HtmlEncoder.Default.Encode($"https://localhost:6100/api/v1/{tid}/aircraft");
             var result = await client.GetFromJsonAsync<object>(url);
 
             ViewBag.Json = result;

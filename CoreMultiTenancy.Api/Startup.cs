@@ -60,7 +60,6 @@ namespace CoreMultiTenancy.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -4,20 +4,30 @@ import "google/protobuf/wrappers.proto";
 package cmt.protobuf;
 
 /*
-    A standard authorization request authorizing based on both tenant id and some permission(s).
-    Permissions may be null if none are specified.
+    A standard authorization request authorizing based on both tenant id and some optional permission(s).
 */
 service PermissionAuthorize {
     rpc Authorize(PermissionAuthorizeRequest) returns(AuthorizeDecision);
 }
 
+enum failureReason {
+    UNAUTHORIZED = 0; // The tenant exists, but the user does not have access or the required permissions
+    TENANTNOTFOUND = 1; // No tenant was found based on the tenant id
+    PERMISSIONFORMAT = 2; // The permissions passed were unsuccessfully parsed
+};
+
 message PermissionAuthorizeRequest {
-    string tenantId = 1;
-    repeated google.protobuf.StringValue perms = 2; // Optional array of strings representing permissions
+    string userId = 1;
+    string tenantId = 2;
+    repeated google.protobuf.StringValue perms = 3; // Optional collection of strings representing permissions
 }
 
+/*
+    Contains whether the specified user is authorized to perform or access the action associated
+    with the given permissions.
+*/
 message AuthorizeDecision {
     bool allowed = 1;
-    google.protobuf.UInt32Value statusCode = 2; // Optional status code
-    google.protobuf.StringValue failureMessage = 3; // Optional message
+    failureReason failureReason = 2;
+    google.protobuf.StringValue failureMessage = 3; // Optional error message
 }

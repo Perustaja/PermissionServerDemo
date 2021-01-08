@@ -5,21 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 namespace CoreMultiTenancy.Api.Controllers
 {
-    [Route("identity")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class IdentityController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContext;
-        public IdentityController(IHttpContextAccessor context)
-        {
-            _httpContext = context ?? throw new ArgumentNullException(nameof(context));
-        }
-        
         [HttpGet]
         public IActionResult Get()
         {
             // Todo: update to show tenant-specific stuff
             var claims = JsonConvert.SerializeObject(from c in User.Claims select new { c.Type, c.Value });
-            var cookies = JsonConvert.SerializeObject(from c in _httpContext.HttpContext.Request.Cookies select new { c.Key, c.Value });
+            var cookies = JsonConvert.SerializeObject(from c in HttpContext.Request.Cookies select new { c.Key, c.Value });
             return new JsonResult(claims + cookies);
         }
     }
