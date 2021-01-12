@@ -59,11 +59,13 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
             services.AddScoped<IAccountEmailService, AccountEmailService>();
             services.AddScoped<IRemoteAuthorizationEvaluator, RemoteAuthorizationEvaluator>();
+            services.AddScoped<IPermissionService, PermissionService>();
             // Repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
             services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
 
             services.AddRazorPages()
                 .AddRazorPagesOptions(o =>

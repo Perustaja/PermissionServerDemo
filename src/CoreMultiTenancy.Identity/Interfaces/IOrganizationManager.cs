@@ -94,23 +94,9 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// Uses the specified permanent invitation code to attempt to grant the user access to the organization.
         /// </summary>
         Task<InviteResult> UsePermanentInvitationAsync(User user, string link);
-        #endregion
 
-        #region PermissionAndAccessChecks
         /// <returns>Whether the User has access to the Organization, or false if either doesn't exist.</returns>
         Task<bool> UserHasAccessAsync(Guid userId, Guid orgId);
-
-        /// <summary>Use instead of the plural form if checking a single Permission for performance.</summary>
-        /// <returns>
-        /// Whether the User has the given Permission, or false if either doesn't exist or the User has no access.
-        /// </returns>
-        Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm);
-
-        /// <returns>
-        /// Whether the User has all of the given Permissions, 
-        /// or false if either doesn't exist or the User has no access.
-        /// </returns>
-        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms);
         #endregion
     }
 }

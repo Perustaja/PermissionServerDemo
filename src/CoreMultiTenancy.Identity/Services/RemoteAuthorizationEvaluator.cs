@@ -9,10 +9,13 @@ namespace CoreMultiTenancy.Identity.Interfaces
     public class RemoteAuthorizationEvaluator : IRemoteAuthorizationEvaluator
     {
         private readonly IOrganizationManager _orgManager;
+        private readonly IPermissionService _permSvc;
 
-        public RemoteAuthorizationEvaluator(IOrganizationManager orgManager)
+        public RemoteAuthorizationEvaluator(IOrganizationManager orgManager,
+            IPermissionService permSvc)
         {
             _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
+            _permSvc = permSvc ?? throw new ArgumentNullException(nameof(permSvc));
         }
         public async Task<AuthorizeDecision> EvaluateAsync(string userId, string orgId, params string[] perms)
         {
@@ -39,7 +42,7 @@ namespace CoreMultiTenancy.Identity.Interfaces
             // If permissions specified, ensure user has all and access in one query
             if (parsedPerms.Count == 0 && await _orgManager.UserHasAccessAsync(userIdGuid, orgIdGuid))
                 return Ok();
-            else if (await _orgManager.UserHasPermissionsAsync(userIdGuid, orgIdGuid, parsedPerms))
+            else if (await _permSvc.UserHasPermissionsAsync(userIdGuid, orgIdGuid, parsedPerms))
                 return Ok();
             return UnAuthorized();
         }

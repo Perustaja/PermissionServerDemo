@@ -4,7 +4,6 @@ using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Perustaja.Polyglot.Option;
 using CoreMultiTenancy.Identity.Results.Errors;
@@ -21,7 +20,6 @@ namespace CoreMultiTenancy.Identity.Services
     {
         private readonly string _connectionString;
         private readonly Guid _defaultRoleId;
-        private readonly ILogger<OrganizationManager> _logger;
         private readonly IUserOrganizationRepository _userOrgRepo;
         private readonly IOrganizationRepository _orgRepo;
         private readonly IRoleRepository _roleRepo;
@@ -29,7 +27,6 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IOrganizationInviteService _inviteSvc;
 
         public OrganizationManager(IConfiguration config,
-            ILogger<OrganizationManager> logger,
             IUserOrganizationRepository userOrgRepo,
             IOrganizationRepository orgRepo,
             IRoleRepository roleRepo,
@@ -38,7 +35,6 @@ namespace CoreMultiTenancy.Identity.Services
         {
             _connectionString = config.GetConnectionString("IdentityDb");
             _defaultRoleId = config.GetDefaultRoleId();
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userOrgRepo = userOrgRepo ?? throw new ArgumentNullException(nameof(userOrgRepo));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
             _roleRepo = roleRepo ?? throw new ArgumentNullException(nameof(roleRepo));
@@ -48,19 +44,8 @@ namespace CoreMultiTenancy.Identity.Services
 
         #region OrganizationManagement
         public async Task<bool> ExistsAsync(Guid orgId)
-        {
-            using (var conn = new MySqlConnection(_connectionString))
-            {
-                var res = await conn.QuerySingleAsync<int>(
-                    @"SELECT COUNT(*)
-                    FROM Organizations
-                    WHERE Id = @OrgId",
-                    new { OrgId = orgId}
-                );
-                return res > 0;
-            }
-        }
-
+            => await _orgRepo.ExistsByIdAsync(orgId);
+            
         public async Task<Option<Organization>> GetByIdAsync(Guid orgId)
             => await _orgRepo.GetByIdAsync(orgId);
 
@@ -154,43 +139,10 @@ namespace CoreMultiTenancy.Identity.Services
             }
             return InviteResult.LinkInvalid();
         }
-        #endregion
 
-        #region PermissionAndAccessChecks
         public async Task<bool> UserHasAccessAsync(Guid userId, Guid orgId)
             => await _userOrgRepo.ExistsWithAccessAsync(userId, orgId);
 
-        public async Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm)
-        {
-            using (var conn = new MySqlConnection(_connectionString))
-            {
-                var res = await conn.QuerySingleOrDefaultAsync(
-                    @"SELECT COUNT(*) 
-                    FROM UserOrganizationRoles uor
-                    WHERE UserId = @UserId AND OrgId = @OrgId
-                    JOIN RolePermissions rp ON uor.RoleId = rp.RoleId
-                    JOIN Permissions p ON p.Id = rp.PermissionId AND p.Id = @PermId",
-                    new { UserId = userId, OrgId = orgId, PermId = perm }
-                );
-                return res > 0;
-            }
-        }
-
-        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms)
-        {
-            using (var conn = new MySqlConnection(_connectionString))
-            {
-                var res = await conn.QuerySingleOrDefaultAsync(
-                    @"SELECT COUNT(*) 
-                    FROM UserOrganizationRoles uor
-                    WHERE UserId = @UserId AND OrgId = @OrgId
-                    JOIN RolePermissions rp ON uor.RoleId = rp.RoleId
-                    JOIN Permissions p ON p.Id = rp.PermissionId AND p.Id IN @PermIds",
-                    new { UserId = userId, OrgId = orgId, PermIds = perms }
-                );
-                return res > 0;
-            }
-        }
         #endregion
 
         private async Task<InviteResult> GrantAccessAsync(User user, Organization org)
