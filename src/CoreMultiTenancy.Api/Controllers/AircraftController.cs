@@ -18,6 +18,7 @@ namespace CoreMultiTenancy.Api.Controllers
 
         [HttpGet]
         [TenantedAuthorize]
+        [Route("{tenantId}/[controller]")]
         public IActionResult Get(string tenantId)
         {
             return Ok(new Aircraft("N12345"));
