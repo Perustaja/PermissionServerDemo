@@ -5,6 +5,7 @@ namespace CoreMultiTenancy.Api.Tenancy
     /// </summary>
     public interface ITenantedDbContext
     {
+        string TenantId { get; }
         string TenantModelCacheKey { get; }
     }
 }

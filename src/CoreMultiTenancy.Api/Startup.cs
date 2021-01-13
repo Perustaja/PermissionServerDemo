@@ -4,6 +4,7 @@ using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +24,9 @@ namespace CoreMultiTenancy.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TenantedDbContext>();
+            // Design time connection string for migrations, connection string is overriden later if necessary
+            services.AddRuntimeDbContextFactory<TenantedDbContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DesignTimeString")));
 
             services.AddControllers();
             services.AddApiVersioning();

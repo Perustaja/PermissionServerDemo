@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Tenancy;
-using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -58,7 +57,7 @@ namespace CoreMultiTenancy.Api.Authorization
                 switch (reply.FailureReason)
                 {
                     case (failureReason.Permissionformat):
-                        logger.LogError($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {Permissions}");
+                        logger.LogCritical($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {Permissions}");
                         context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                         break;
                     case (failureReason.Tenantnotfound):
