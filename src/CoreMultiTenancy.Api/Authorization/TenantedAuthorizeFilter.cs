@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Tenancy;
-using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -26,9 +26,12 @@ namespace CoreMultiTenancy.Api.Authorization
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            // All endpoints require authentication, however ensure User is logged in.
+            // If user is somehow is an invalid state, challenge
             if (context.HttpContext.User?.Identity.IsAuthenticated == false)
+            {
                 context.Result = new ChallengeResult();
+                return;
+            }
 
             // Retrieve client and tenantId from DI
             var client = GetGrpcClient(context.HttpContext);
@@ -36,7 +39,7 @@ namespace CoreMultiTenancy.Api.Authorization
 
             var request = new PermissionAuthorizeRequest()
             {
-                UserId = context.HttpContext.User.FindFirst(JwtClaimTypes.Subject)?.Value,
+                UserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
                 TenantId = tenantId,
             };
             request.Perms.AddRange(Permissions);
@@ -54,7 +57,7 @@ namespace CoreMultiTenancy.Api.Authorization
                 switch (reply.FailureReason)
                 {
                     case (failureReason.Permissionformat):
-                        logger.LogError($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {Permissions}");
+                        logger.LogCritical($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {Permissions}");
                         context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                         break;
                     case (failureReason.Tenantnotfound):

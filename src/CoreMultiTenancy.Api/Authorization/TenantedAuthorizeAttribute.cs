@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoreMultiTenancy.Api.Authorization
 {
     /// <summary>
-    /// Actions marked with this attribute must have route data with key "tenantId" containing the id
-    /// of the tenant.
+    /// Actions marked with this attribute must have a kvp in RouteData that has a key matching
+    /// the identifier specified in appsettings.json
     /// </summary>
     public class TenantedAuthorizeAttribute : TypeFilterAttribute
     {

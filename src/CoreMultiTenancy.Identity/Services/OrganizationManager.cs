@@ -130,7 +130,7 @@ namespace CoreMultiTenancy.Identity.Services
 
         public async Task<InviteResult> UsePermanentInvitationAsync(User user, string link)
         {
-            if (!await _inviteSvc.TryDecodePermanentInviteLinkAsync(link, out var guid))
+            if (await _inviteSvc.TryDecodePermanentInviteLinkAsync(link, out var guid))
             {
                 // org exists
                 var orgResult = await _orgRepo.GetByIdAsync(guid);

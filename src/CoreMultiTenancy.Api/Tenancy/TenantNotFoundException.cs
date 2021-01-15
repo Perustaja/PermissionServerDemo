@@ -15,9 +15,9 @@ namespace CoreMultiTenancy.Api.Tenancy
         public TenantNotFoundException(HttpContext requestContext, string expectedKey)
         {
             string temp =
-            $"Unable to source tenant id from RouteData: Expected key: {expectedKey} Actual kvps: ";
+            $"Unable to source tenant id from RouteData {requestContext.TraceIdentifier}: Expected key: {expectedKey} Actual kvps: ";
             foreach (var kvp in requestContext?.Request.RouteValues)
-                temp += (kvp.Key + ":" + kvp.Value);
+                temp += (kvp.Key + ":" + kvp.Value + "\n");
             _customMessage = temp; 
         }
     }

@@ -16,7 +16,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
             builder
                 .HasOne(uor => uor.Organization)
                 .WithMany(o => o.UserOrganizationRoles)
-                .HasForeignKey(uor => uor.UserId);
+                .HasForeignKey(uor => uor.OrgId);
             builder
                 .HasOne(uor => uor.Role)
                 .WithMany(r => r.UserOrganizationRoles)

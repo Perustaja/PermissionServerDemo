@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,7 @@ namespace CoreMultiTenancy.Api.Data
     /// Provides design-time context so that migrations can be applied without making the actual context
     /// handle potential null tenant data.
     /// </summary>
-    public class TenantedDbContextFactory : IDesignTimeDbContextFactory<TenantedDbContext>
+    public class DesignTimeTenantedDbContextFactory : IDesignTimeDbContextFactory<TenantedDbContext>
     {
         public TenantedDbContext CreateDbContext(string[] args)
         {
@@ -23,10 +24,8 @@ namespace CoreMultiTenancy.Api.Data
             
             // make dummy database
             var o = new DbContextOptionsBuilder<TenantedDbContext>();
-            string connStr = config.GetConnectionString("DesignTimeString") 
-                ?? throw new ArgumentNullException("Unable to source design time connection string from json file.");
-            o.UseMySql(connStr);
-            return new TenantedDbContext(o.Options);
+            var dummyProvider = new DummyTenantProvider(config);
+            return new TenantedDbContext(o.Options, config, dummyProvider);
         }
     }
 }

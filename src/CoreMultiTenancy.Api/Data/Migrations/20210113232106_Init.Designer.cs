@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreMultiTenancy.Api.Data.Migrations
 {
     [DbContext(typeof(TenantedDbContext))]
-    [Migration("20210112180911_init")]
-    partial class init
+    [Migration("20210113232106_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
