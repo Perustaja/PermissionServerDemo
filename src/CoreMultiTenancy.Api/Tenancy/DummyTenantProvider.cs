@@ -13,7 +13,7 @@ namespace CoreMultiTenancy.Api.Tenancy
 
         public DummyTenantProvider(IConfiguration config)
         {
-            _dummyId = config.GetConnectionString("DummyTenantId") ?? throw new ArgumentNullException("Unable to source dummy tenant id from config.");
+            _dummyId = config["DummyTenantId"] ?? throw new ArgumentNullException("Unable to source dummy tenant id from config.");
         }
 
         public Tenant GetCurrentRequestTenant() => new Tenant(_dummyId);
