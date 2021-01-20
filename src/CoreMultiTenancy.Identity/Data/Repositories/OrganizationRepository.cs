@@ -43,7 +43,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM Organizations 
-                    WHERE Id = @Id",
+                    WHERE Id = @Id AND SuccessfullyCreated = true",
                     new { Id = id }
                 );
                 return res > 0;

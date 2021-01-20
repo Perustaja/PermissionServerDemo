@@ -1,9 +1,12 @@
 using System;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Data;
+using CoreMultiTenancy.Api.Grpc;
+using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +28,7 @@ namespace CoreMultiTenancy.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Design time connection string for migrations, connection string is overriden later if necessary
-            services.AddRuntimeDbContextFactory<TenantedDbContext>(options =>
+            services.AddDbContext<TenantedDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DesignTimeString")));
 
             services.AddControllers();
@@ -49,11 +52,9 @@ namespace CoreMultiTenancy.Api
                 });
             });
 
-            services.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeClient>(o =>
-            {
-                o.Address = new Uri("https://localhost:5100");
-            });
             services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
+            services.AddScoped<ITenantInfrastructureManager<TenantedDbContext>, TenantInfrastructureManager<TenantedDbContext>>();
+            services.AddGrpcClients();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,6 +79,24 @@ namespace CoreMultiTenancy.Api
             {
                 endpoints.MapControllers()
                     .RequireAuthorization("ApiScope");
+                endpoints.MapGrpcInfrastructureServices();
+            });
+        }
+    }
+    public static class StartupExtensions
+    {
+        public static IEndpointRouteBuilder MapGrpcInfrastructureServices(this IEndpointRouteBuilder e)
+        {
+            e.MapGrpcService<TenantCreationService>();
+            e.MapGrpcService<TenantDeletionService>();
+            return e;
+        }
+
+        public static void AddGrpcClients(this IServiceCollection sc)
+        {
+            sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:5100");
             });
         }
     }

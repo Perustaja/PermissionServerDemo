@@ -1,4 +1,4 @@
-using CoreMultiTenancy.Api.Tenancy;
+using CoreMultiTenancy.Api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 

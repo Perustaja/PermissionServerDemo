@@ -1,4 +1,4 @@
-namespace CoreMultiTenancy.Api.Tenancy
+namespace CoreMultiTenancy.Api.Interfaces
 {
     /// <summary>
     /// Represents a DbContext that provides a unique, per-tenant identifier used for caching the model.

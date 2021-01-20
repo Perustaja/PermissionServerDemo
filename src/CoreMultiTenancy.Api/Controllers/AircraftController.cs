@@ -14,44 +14,44 @@ namespace CoreMultiTenancy.Api.Controllers
     [Route("api/v{version:apiVersion}")]
     public class AircraftController : ControllerBase
     {
-        private readonly IRuntimeDbContextFactory<TenantedDbContext> _dbContextFactory;
+        private readonly TenantedDbContext _dbContext;
 
-        public AircraftController(IRuntimeDbContextFactory<TenantedDbContext> dbContextFactory)
+        public AircraftController(TenantedDbContext dbContext)
         {
-            _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException(nameof(dbContextFactory));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         [HttpGet]
         [TenantedAuthorize]
         [Route("{tenantId}/[controller]")]
         public async Task<IActionResult> Get(string tenantId)
-            => Ok(await _dbContextFactory.CreateContext().Set<Aircraft>().ToListAsync());
+            => Ok(await _dbContext.Set<Aircraft>().ToListAsync());
 
-        // [HttpPost]
-        // [TenantedAuthorize("AircraftCreate")]
-        // [Route("{tenantId}/[controller]")]
-        // public async Task<IActionResult> Post(string tenantId, Aircraft aircraft)
-        // {
-        //     if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == aircraft.RegNumber))
-        //         return Conflict($"Aircraft already exists with registration number: {aircraft.RegNumber}");
+        [HttpPost]
+        [TenantedAuthorize("AircraftCreate")]
+        [Route("{tenantId}/[controller]")]
+        public async Task<IActionResult> Post(string tenantId, Aircraft aircraft)
+        {
+            if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == aircraft.RegNumber))
+                return Conflict($"Aircraft already exists with registration number: {aircraft.RegNumber}");
 
-        //     _dbContext.Set<Aircraft>().Add(aircraft);
-        //     await _dbContext.SaveChangesAsync();
-        //     return CreatedAtAction(nameof(aircraft), new { RegNumber = aircraft.RegNumber }, aircraft);
-        // }
+            _dbContext.Set<Aircraft>().Add(aircraft);
+            await _dbContext.SaveChangesAsync();
+            return CreatedAtAction(nameof(aircraft), new { RegNumber = aircraft.RegNumber }, aircraft);
+        }
 
-        // [HttpPut]
-        // [TenantedAuthorize("AircraftEdit")]
-        // [Route("{tenantId}/[controller]/{id}")]
-        // public async Task<IActionResult> Put(string tenantId, string id, Aircraft aircraft)
-        // {
-        //     var a = await _dbContext.Set<Aircraft>().Where(a => a.RegNumber == id).FirstOrDefaultAsync();
-        //     if (a == null)
-        //         return NotFound();
-        //     if (aircraft.IsGrounded)
-        //         a.Ground();
-        //     await _dbContext.SaveChangesAsync();
-        //     return Ok();
-        // }
+        [HttpPut]
+        [TenantedAuthorize("AircraftEdit")]
+        [Route("{tenantId}/[controller]/{id}")]
+        public async Task<IActionResult> Put(string tenantId, string id, Aircraft aircraft)
+        {
+            var a = await _dbContext.Set<Aircraft>().Where(a => a.RegNumber == id).FirstOrDefaultAsync();
+            if (a == null)
+                return NotFound();
+            if (aircraft.IsGrounded)
+                a.Ground();
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

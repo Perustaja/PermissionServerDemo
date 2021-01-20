@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CoreMultiTenancy.Identity.Grpc;
 using Microsoft.AspNetCore.Routing;
+using Cmt.Protobuf;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -37,7 +38,7 @@ namespace CoreMultiTenancy.Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
-                
+
             services.AddApiVersioning();
             services.AddAuthentication();
 
@@ -100,6 +101,8 @@ namespace CoreMultiTenancy.Identity
                 options.Cookie.Name = "CMTApp";
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddGrpcClients();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -153,6 +156,18 @@ namespace CoreMultiTenancy.Identity
         {
             e.MapGrpcService<PermissionAuthorizeService>();
             return e;
+        }
+
+        public static void AddGrpcClients(this IServiceCollection sc)
+        {
+            sc.AddGrpcClient<CreateTenant.CreateTenantClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:6100");
+            });
+            sc.AddGrpcClient<DeleteTenant.DeleteTenantClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:6100");
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using CoreMultiTenancy.Api.Entities;
 using CoreMultiTenancy.Api.Extensions;
+using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

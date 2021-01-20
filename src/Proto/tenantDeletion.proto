@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package cmt.protobuf;
+
+/*
+    A request to be sent to the API if the transaction of registering a new tenant does not complete
+    successfully. The API then ensures that any infrastructure that could have been created is deleted,
+    and returns success once done.
+*/
+service DeleteTenant {
+    rpc Delete(TenantDeletionRequest) returns(TenantDeletionOutcome);
+}
+
+message TenantDeletionRequest {
+    string tenantId = 1; // The GUID of the tenant being deleted
+}
+
+message TenantDeletionOutcome {
+    bool success = 1; // Whether the tenant's necessary infrastructure was deleted
+}

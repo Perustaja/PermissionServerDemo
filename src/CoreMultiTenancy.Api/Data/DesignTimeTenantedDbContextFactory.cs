@@ -4,6 +4,7 @@ using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreMultiTenancy.Api.Data
 {
@@ -13,6 +14,12 @@ namespace CoreMultiTenancy.Api.Data
     /// </summary>
     public class DesignTimeTenantedDbContextFactory : IDesignTimeDbContextFactory<TenantedDbContext>
     {
+        private readonly IServiceProvider _svcProvider;
+
+        public DesignTimeTenantedDbContextFactory(IServiceProvider svcProvider)
+        {
+            _svcProvider = svcProvider ?? throw new ArgumentNullException(nameof(svcProvider));
+        }
         public TenantedDbContext CreateDbContext(string[] args)
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -23,9 +30,10 @@ namespace CoreMultiTenancy.Api.Data
                 .Build();
             
             // make dummy database
+            var dummyId = config["DummyTenantId"] ?? throw new ArgumentNullException("Unable to source dummy tenant id from config.");
             var o = new DbContextOptionsBuilder<TenantedDbContext>();
-            var dummyProvider = new DummyTenantProvider(config);
-            return new TenantedDbContext(o.Options, config, dummyProvider);
+            var dummyProvider = new ManualTenantProvider(dummyId);
+            return ActivatorUtilities.CreateInstance<TenantedDbContext>(_svcProvider, dummyProvider);
         }
     }
 }

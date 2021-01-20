@@ -1,4 +1,5 @@
 using System;
+using CoreMultiTenancy.Api.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
