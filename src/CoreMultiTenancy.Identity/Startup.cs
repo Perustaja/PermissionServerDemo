@@ -17,6 +17,8 @@ using Microsoft.Extensions.Hosting;
 using CoreMultiTenancy.Identity.Grpc;
 using Microsoft.AspNetCore.Routing;
 using Cmt.Protobuf;
+using Hangfire;
+using Hangfire.Storage.SQLite;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -102,6 +104,10 @@ namespace CoreMultiTenancy.Identity
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddHangfire(config => 
+                config.UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSQLiteStorage(Configuration.GetConnectionString("HangfireDb")));
             services.AddGrpcClients();
         }
 
