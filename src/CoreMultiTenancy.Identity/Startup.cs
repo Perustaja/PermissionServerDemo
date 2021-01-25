@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Routing;
 using Cmt.Protobuf;
 using Hangfire;
 using Hangfire.Storage.SQLite;
+using CoreMultiTenancy.Identity.Jobs;
+using System.Threading;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -104,7 +106,7 @@ namespace CoreMultiTenancy.Identity
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddHangfire(config => 
+            services.AddHangfire(config =>
                 config.UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
                 .UseSQLiteStorage(Configuration.GetConnectionString("HangfireDb")));
@@ -136,8 +138,16 @@ namespace CoreMultiTenancy.Identity
                 e.MapRazorPages();
                 e.MapGrpcAuthorizationServices();
             });
+            ScheduleHangfireJobs();
+        }
+
+        public void ScheduleHangfireJobs()
+        {
+            // Setup tenant cleanup jobs to be queued every monday at 3 am
+            RecurringJob.AddOrUpdate<TenantCleanupBatcher>(tcb => tcb.EnqueueJobs(CancellationToken.None), "0 0 3 ? * MON");
         }
     }
+
     public static class StartupExtensions
     {
         public static IApplicationBuilder UseRazorPagesNotFoundFilter(this IApplicationBuilder app, string path)

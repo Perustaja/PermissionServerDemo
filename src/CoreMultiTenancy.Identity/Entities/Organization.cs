@@ -25,7 +25,7 @@ namespace CoreMultiTenancy.Identity.Entities
             IsActive = true;
             RequiresConfirmation = requiresConf;
             SuccessfullyCreated = false;
-            CreationDate = DateTime.Today;
+            CreationDate = DateTime.UtcNow;
         }
         
         public void SuccessfullyActivated() => SuccessfullyCreated = true;
