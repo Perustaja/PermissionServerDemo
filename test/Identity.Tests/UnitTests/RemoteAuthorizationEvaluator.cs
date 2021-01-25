@@ -19,7 +19,6 @@ namespace UnitTests
             // Enum is not a valid enum, it should be parsed prior and cause an error
             var expected = new AuthorizeDecision() { Allowed = false, FailureReason = failureReason.Permissionformat };
 
-            // Arrange
             // OrganizationManager says that the user has access and the org exists
             var orgManMock = new Mock<IOrganizationManager>();
             orgManMock.Setup(m => m.UserHasAccessAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
@@ -27,7 +26,6 @@ namespace UnitTests
             // PermissionService says that the user has permission(s)
             var permSvcMock = AlwaysXPermissionService(true);
 
-            // Act
             var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), invalidPerm);
 
@@ -39,7 +37,6 @@ namespace UnitTests
         {
             var expected = new AuthorizeDecision() { Allowed = false, FailureReason = failureReason.Unauthorized };
 
-            // Arrange
             // OrganizationManager says the user has access and the org exists
             var orgManMock = new Mock<IOrganizationManager>();
             orgManMock.Setup(m => m.UserHasAccessAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
@@ -47,7 +44,6 @@ namespace UnitTests
             // but the Permission Service says it does not have permission
             var permSvcMock = AlwaysXPermissionService(false);
 
-            // Act
             var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.All.ToString());
 
@@ -59,7 +55,6 @@ namespace UnitTests
         {
             var expected = new AuthorizeDecision() { Allowed = true };
 
-            // Arrange
             // OrganizationManager says the user has access and the org exists
             var orgManMock = new Mock<IOrganizationManager>();
             orgManMock.Setup(m => m.UserHasAccessAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
@@ -67,7 +62,6 @@ namespace UnitTests
             // And the PermissionService says it has the given permission
             var permSvcMock = AlwaysXPermissionService(true);
 
-            // Act
             var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.All.ToString());
 
@@ -79,7 +73,6 @@ namespace UnitTests
         {
             var expected = new AuthorizeDecision() { Allowed = true };
 
-            // Arrange
             // OrganizationManager says the user has access and the org exists
             var orgManMock = new Mock<IOrganizationManager>();
             orgManMock.Setup(m => m.UserHasAccessAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(true);
@@ -87,7 +80,6 @@ namespace UnitTests
             // And the PermissionService says it has the given permission
             var permSvcMock = AlwaysXPermissionService(true);
 
-            // Act
             var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr());
 
