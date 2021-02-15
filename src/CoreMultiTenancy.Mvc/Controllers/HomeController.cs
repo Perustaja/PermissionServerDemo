@@ -26,10 +26,10 @@ namespace CoreMultiTenancy.Mvc.Controllers
             // Get access token and display information
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             _logger.LogInformation(accessToken);
-            
+
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var result  = await client.GetFromJsonAsync<string>("https://localhost:6100/api/v1/identity"); // Call API
+            var result = await client.GetFromJsonAsync<string>("https://localhost:6100/api/v1/identity"); // Call API
 
             ViewBag.Json = result;
             return View("Json");

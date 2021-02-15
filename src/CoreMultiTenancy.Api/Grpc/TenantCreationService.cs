@@ -21,9 +21,9 @@ namespace CoreMultiTenancy.Api.Grpc
         }
 
         public override async Task<TenantCreationOutcome> Create(TenantCreationRequest request, ServerCallContext ctx)
-            => new TenantCreationOutcome()
-            {
-                Success = await _tenantInfraManager.InitializeTenantAsync(request.TenantId)
-            };
+        => new TenantCreationOutcome()
+        {
+            Success = await _tenantInfraManager.InitializeTenantAsync(request.TenantId)
+        };
     }
 }

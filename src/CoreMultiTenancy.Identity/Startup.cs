@@ -110,6 +110,8 @@ namespace CoreMultiTenancy.Identity
                 config.UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
                 .UseSQLiteStorage(Configuration.GetConnectionString("HangfireDb")));
+            JobStorage.Current = new SQLiteStorage(Configuration.GetConnectionString("HangfireDb"));
+            
             services.AddGrpcClients();
         }
 
@@ -136,6 +138,7 @@ namespace CoreMultiTenancy.Identity
             app.UseEndpoints(e =>
             {
                 e.MapRazorPages();
+                e.MapControllers();
                 e.MapGrpcAuthorizationServices();
             });
             ScheduleHangfireJobs();

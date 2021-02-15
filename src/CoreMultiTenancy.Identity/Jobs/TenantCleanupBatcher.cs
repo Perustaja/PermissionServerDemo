@@ -9,10 +9,13 @@ namespace CoreMultiTenancy.Identity.Jobs
     public class TenantCleanupBatcher
     {
         private readonly IOrganizationRepository _orgRepo;
+        private readonly IBackgroundJobClient _jobClient;
 
-        public TenantCleanupBatcher(IOrganizationRepository orgRepo)
+        public TenantCleanupBatcher(IOrganizationRepository orgRepo,
+            IBackgroundJobClient jobClient)
         {
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
+            _jobClient = jobClient ?? throw new ArgumentNullException(nameof(jobClient));
         }
 
         /// <summary>
@@ -23,7 +26,7 @@ namespace CoreMultiTenancy.Identity.Jobs
         {
             var orgs = await _orgRepo.GetUnsuccessfullyCreatedAsync();
             foreach (var o in orgs)
-                BackgroundJob.Enqueue<TenantCleanupJob>(tcj => tcj.RunAsync(o.Id, CancellationToken.None));
+                _jobClient.Enqueue<TenantCleanupJob>(tcj => tcj.RunAsync(o.Id, CancellationToken.None));
         }
     }
 }

@@ -9,9 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Api.Tenancy
 {
-    // HttpContext at the gRPC may possibly reflect changes, so one way would be to modify some value
-    // and access it via an ITenantProvider. This would make this easier to test as opposed to using 
-    // ActivatorUtilities here, but since full integration tests are necessary I don't think it's a big deal.
+    // I've consistently been stumped trying to solve this without the locator antipattern. The tenant id is
+    // sourced from the grpc request yet the dbcontext needs it via injection. There's no way the tenant
+    // id is known at construction time. I could stick the tenant id in the httpcontext request but
+    // then it kind of defeats the purpose of a grpc contract. However, as it stands testing
+    // this class is kind of tricky to go about. For now, it works but a more DI friendly way would be
+    // ideal.
     public class TenantInfrastructureManager<TContext> : ITenantInfrastructureManager<TContext>
         where TContext : DbContext, ITenantedDbContext
     {
@@ -24,6 +27,7 @@ namespace CoreMultiTenancy.Api.Tenancy
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _svcProvider = svcProvider ?? throw new ArgumentNullException(nameof(svcProvider));
         }
+
         public async Task<bool> InitializeTenantAsync(string tenantId)
         {
             var manualProvider = new ManualTenantProvider(tenantId);

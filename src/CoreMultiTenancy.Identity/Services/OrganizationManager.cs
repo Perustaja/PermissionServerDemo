@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using CoreMultiTenancy.Identity.Extensions;
 using System.Linq;
 using Cmt.Protobuf;
+using Grpc.Core;
 
 namespace CoreMultiTenancy.Identity.Services
 {

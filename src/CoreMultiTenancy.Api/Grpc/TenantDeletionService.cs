@@ -21,9 +21,9 @@ namespace CoreMultiTenancy.Api.Grpc
         }
 
         public override async Task<TenantDeletionOutcome> Delete(TenantDeletionRequest request, ServerCallContext ctx)
-            => new TenantDeletionOutcome()
-            {
-                Success = await _tenantInfraManager.DeleteTenantAsync(request.TenantId)
-            };
+        => new TenantDeletionOutcome()
+        {
+            Success = await _tenantInfraManager.DeleteTenantAsync(request.TenantId)
+        };
     }
 }

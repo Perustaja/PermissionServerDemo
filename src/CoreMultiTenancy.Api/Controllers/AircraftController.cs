@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CoreMultiTenancy.Api.Authorization;
 using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Entities;
-using CoreMultiTenancy.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

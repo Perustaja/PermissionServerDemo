@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreMultiTenancy.Api.Interfaces
 {
     /// <summary>
-    /// Handles tenant infrastructure creation and deletion.
+    /// Handles tenant infrastructure creation and deletion. Tenant information is sourced
+    /// from the current HttpContext based on the protocol.
     /// </summary>
     public interface ITenantInfrastructureManager<TContext> where TContext : DbContext, ITenantedDbContext
     {

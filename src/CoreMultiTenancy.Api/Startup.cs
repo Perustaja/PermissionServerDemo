@@ -54,6 +54,7 @@ namespace CoreMultiTenancy.Api
 
             services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
             services.AddScoped<ITenantInfrastructureManager<TenantedDbContext>, TenantInfrastructureManager<TenantedDbContext>>();
+            services.AddGrpc();
             services.AddGrpcClients();
         }
 

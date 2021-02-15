@@ -3,8 +3,8 @@ using CoreMultiTenancy.Api.Interfaces;
 namespace CoreMultiTenancy.Api.Tenancy
 {
     /// <summary>
-    /// Provides a way to handle design-time migrations or times where a specific tenant needs
-    /// to be injected. This should not be registered in DI, it should be passed into ActivatorUtilities.
+    /// Provides a way to handle design-time migrations.
+    /// This should not be registered in DI, it should be passed into ActivatorUtilities.
     /// </summary>
     public class ManualTenantProvider : ITenantProvider
     {
