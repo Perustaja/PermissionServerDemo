@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Cmt.Protobuf;
-using CoreMultiTenancy.Api.Tenancy;
+using CoreMultiTenancy.Api.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Api.Authorization
@@ -72,25 +73,22 @@ namespace CoreMultiTenancy.Api.Authorization
         private PermissionAuthorize.PermissionAuthorizeClient GetGrpcClient(HttpContext context)
         {
             return context.RequestServices
-                .GetService(typeof(PermissionAuthorize.PermissionAuthorizeClient))
-                as PermissionAuthorize.PermissionAuthorizeClient
-                ?? throw new ArgumentNullException("Unable to source gRPC client.");
+                .GetRequiredService(typeof(PermissionAuthorize.PermissionAuthorizeClient))
+                as PermissionAuthorize.PermissionAuthorizeClient;
         }
 
         private ITenantProvider GetTenantProvider(HttpContext context)
         {
             return context.RequestServices
-                .GetService(typeof(ITenantProvider))
-                as ITenantProvider
-                ?? throw new ArgumentNullException("Unable to source ITenantProvider.");
+                .GetRequiredService(typeof(ITenantProvider))
+                as ITenantProvider;
         }
 
         private ILogger<TenantedAuthorizeFilter> GetLogger(HttpContext context)
         {
             return context.RequestServices
-                .GetService(typeof(ILogger<TenantedAuthorizeFilter>))
-                as ILogger<TenantedAuthorizeFilter>
-                ?? throw new ArgumentNullException("Unable to source logger.");
+                .GetRequiredService(typeof(ILogger<TenantedAuthorizeFilter>))
+                as ILogger<TenantedAuthorizeFilter>;
         }
     }
 }

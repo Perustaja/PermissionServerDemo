@@ -43,7 +43,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM Organizations 
-                    WHERE Id = @Id",
+                    WHERE Id = @Id AND SuccessfullyCreated = true",
                     new { Id = id }
                 );
                 return res > 0;
@@ -59,14 +59,20 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<Organization>.None;
         }
 
+        public Task<List<Organization>> GetUnsuccessfullyCreatedAsync()
+            => _applicationContext.Set<Organization>()
+                .Where(o => !o.SuccessfullyCreated && (DateTime.UtcNow - o.CreationDate).Hours > 24)
+                .ToListAsync();
+
         public Organization Add(Organization o)
-        {
-            return _applicationContext.Set<Organization>().Add(o).Entity;
-        }
+            => _applicationContext.Set<Organization>().Add(o).Entity;
 
         public Organization Update(Organization o)
-        {
-            return _applicationContext.Set<Organization>().Update(o).Entity;
-        }
+            => _applicationContext.Set<Organization>().Update(o).Entity;
+
+        public void Delete(Organization o)
+            => _applicationContext.Set<Organization>().Remove(o);
+
+
     }
 }

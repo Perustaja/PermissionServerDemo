@@ -18,10 +18,15 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         /// <returns>An Option with the Organization if found.</returns>
         Task<Option<Organization>> GetByIdAsync(Guid id);
 
+        /// <returns>Returns all unsuccessfully created Organizations that are at least 24 hours old.</returns>
+        Task<List<Organization>> GetUnsuccessfullyCreatedAsync();
+
         /// <returns>The Organization entity being tracked upon add.</returns>
         Organization Add(Organization o);
 
         /// <returns>The Organization entity being tracked upon update.</returns>
         Organization Update(Organization o);
+
+        void Delete(Organization o);
     }
 }

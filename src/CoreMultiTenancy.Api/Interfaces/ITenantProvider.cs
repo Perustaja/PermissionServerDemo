@@ -1,4 +1,6 @@
-namespace CoreMultiTenancy.Api.Tenancy
+using CoreMultiTenancy.Api.Tenancy;
+
+namespace CoreMultiTenancy.Api.Interfaces
 {
     /// <summary>
     /// Provides access to the information of the tenant for a request.
@@ -6,7 +8,7 @@ namespace CoreMultiTenancy.Api.Tenancy
     public interface ITenantProvider
     {
         /// <returns>A non-null Tenant for the request.</returns>
-        /// <exception cref="Tenancy.TenantNotFoundException">If Tenant is not found for current request and this is not a migrations run.</exception>
+        /// <exception cref="Tenancy.TenantNotFoundException">If Tenant is not found for current request.</exception>
         Tenant GetCurrentRequestTenant();
     }
 }

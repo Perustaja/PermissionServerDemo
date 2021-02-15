@@ -16,6 +16,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CoreMultiTenancy.Identity.Grpc;
 using Microsoft.AspNetCore.Routing;
+using Cmt.Protobuf;
+using Hangfire;
+using Hangfire.Storage.SQLite;
+using CoreMultiTenancy.Identity.Jobs;
+using System.Threading;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -37,7 +42,7 @@ namespace CoreMultiTenancy.Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager<UserSignInManager>()
                 .AddDefaultTokenProviders();
-                
+
             services.AddApiVersioning();
             services.AddAuthentication();
 
@@ -100,6 +105,14 @@ namespace CoreMultiTenancy.Identity
                 options.Cookie.Name = "CMTApp";
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddHangfire(config =>
+                config.UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSQLiteStorage(Configuration.GetConnectionString("HangfireDb")));
+            JobStorage.Current = new SQLiteStorage(Configuration.GetConnectionString("HangfireDb"));
+            
+            services.AddGrpcClients();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -125,10 +138,19 @@ namespace CoreMultiTenancy.Identity
             app.UseEndpoints(e =>
             {
                 e.MapRazorPages();
+                e.MapControllers();
                 e.MapGrpcAuthorizationServices();
             });
+            ScheduleHangfireJobs();
+        }
+
+        public void ScheduleHangfireJobs()
+        {
+            // Setup tenant cleanup jobs to be queued every monday at 3 am
+            RecurringJob.AddOrUpdate<TenantCleanupBatcher>(tcb => tcb.EnqueueJobs(CancellationToken.None), "0 0 3 ? * MON");
         }
     }
+
     public static class StartupExtensions
     {
         public static IApplicationBuilder UseRazorPagesNotFoundFilter(this IApplicationBuilder app, string path)
@@ -153,6 +175,18 @@ namespace CoreMultiTenancy.Identity
         {
             e.MapGrpcService<PermissionAuthorizeService>();
             return e;
+        }
+
+        public static void AddGrpcClients(this IServiceCollection sc)
+        {
+            sc.AddGrpcClient<CreateTenant.CreateTenantClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:6100");
+            });
+            sc.AddGrpcClient<DeleteTenant.DeleteTenantClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:6100");
+            });
         }
     }
 }

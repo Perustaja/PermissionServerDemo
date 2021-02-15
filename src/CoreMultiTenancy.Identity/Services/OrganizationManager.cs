@@ -7,12 +7,11 @@ using CoreMultiTenancy.Identity.Results;
 using System.Collections.Generic;
 using Perustaja.Polyglot.Option;
 using CoreMultiTenancy.Identity.Results.Errors;
-using CoreMultiTenancy.Identity.Authorization;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
-using Dapper;
 using CoreMultiTenancy.Identity.Extensions;
 using System.Linq;
+using Cmt.Protobuf;
+using Grpc.Core;
 
 namespace CoreMultiTenancy.Identity.Services
 {
@@ -25,13 +24,15 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IRoleRepository _roleRepo;
         private readonly IUserOrganizationRoleRepository _userOrgRoleRepo;
         private readonly IOrganizationInviteService _inviteSvc;
+        private readonly CreateTenant.CreateTenantClient _createTenantClient;
 
         public OrganizationManager(IConfiguration config,
             IUserOrganizationRepository userOrgRepo,
             IOrganizationRepository orgRepo,
             IRoleRepository roleRepo,
             IUserOrganizationRoleRepository userOrgRoleRepo,
-            IOrganizationInviteService inviteSvc)
+            IOrganizationInviteService inviteSvc,
+            CreateTenant.CreateTenantClient createTenantClient)
         {
             _connectionString = config.GetConnectionString("IdentityDb");
             _defaultRoleId = config.GetDefaultRoleId();
@@ -40,20 +41,33 @@ namespace CoreMultiTenancy.Identity.Services
             _roleRepo = roleRepo ?? throw new ArgumentNullException(nameof(roleRepo));
             _userOrgRoleRepo = userOrgRoleRepo ?? throw new ArgumentNullException(nameof(userOrgRoleRepo));
             _inviteSvc = inviteSvc ?? throw new ArgumentNullException(nameof(inviteSvc));
+            _createTenantClient = createTenantClient ?? throw new ArgumentNullException(nameof(createTenantClient));
         }
 
         #region OrganizationManagement
         public async Task<bool> ExistsAsync(Guid orgId)
             => await _orgRepo.ExistsByIdAsync(orgId);
-            
+
         public async Task<Option<Organization>> GetByIdAsync(Guid orgId)
             => await _orgRepo.GetByIdAsync(orgId);
 
-        public async Task<Organization> AddAsync(Organization o)
+        public async Task<Option<Organization>> AddAsync(Organization o)
         {
+            // Begin by adding the organization, this serves as a default rollback state
             o = _orgRepo.Add(o);
             await _orgRepo.UnitOfWork.Commit();
-            return o;
+
+            // Attempt to create all infrastructure at API necessary. If any step fails,
+            // the state will stay as not successfully created, and a separate job will clean it up later
+            var request = new TenantCreationRequest() { TenantId = o.Id.ToString() };
+            var outcome = await _createTenantClient.CreateAsync(request);
+            if (outcome.Success)
+            {
+                o.SuccessfullyActivated();
+                await _orgRepo.UnitOfWork.Commit();
+                return Option<Organization>.Some(o);
+            }
+            return Option<Organization>.None;
         }
 
         public async Task<Organization> UpdateAsync(Organization o)

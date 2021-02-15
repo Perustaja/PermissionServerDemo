@@ -26,10 +26,12 @@ namespace CoreMultiTenancy.Identity.Interfaces
         Task<Option<Organization>> GetByIdAsync(Guid orgId);
 
         /// <summary>
-        /// Adds the given tenant.
+        /// Initializes a new Organization, creating its necessary infrastructure and returning
+        /// the newly created tenant if successful. If None is returned, the organization will be cleaned up later
+        /// and no further action is required.
         /// </summary>
-        /// <returns>The Organization entity being tracked on add.</returns>
-        Task<Organization> AddAsync(Organization o);
+        /// <returns>The Organization entity being tracked on add, or None if any error occurs during creation.</returns>
+        Task<Option<Organization>> AddAsync(Organization o);
 
         /// <summary>
         /// Updates the given tenant.
