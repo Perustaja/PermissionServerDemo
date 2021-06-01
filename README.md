@@ -11,11 +11,13 @@ functionality to "soft-relog" a user currently, so while it would sound great to
 #### 2 - Force a token refresh
 This is how Auth0 does it. Regardless of the arguments against tracking jwts, many companies do it for revocation anyway. The downside is a lot of custom code server and client-side that goes against a standard that may have major security implications. Basically, a lot of work and kind of hacky (though pragmatic).
 #### 3 - Permissions server (policy server)
-This is how some companies do it, using services like OPA (basically json XACML that's very fast). Basically you have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this.
-Pros
+This is how some companies do it, using services like OPA (basically json XACML that's very fast). Basically you have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this.<br>
+Pros<br>
 1. Immediate updating of permissions.
-2. Easy for users to switch tenants quickly, since the client is storing the tenantId locally and sending it per-request.
-Cons
+2. Easy for users to switch tenants quickly, since the client is storing the tenantId locally and sending it per-request.<br>
+
+
+Cons<br>
 1. Network traffic/latency, partially mitigated by using gRPC calls.
 2. Coupling between the Idp and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers.
 
@@ -51,4 +53,4 @@ the tracked .vscode folder contains json files to launch all 3 projects at once.
 debug tab in vscode and select the "Api, Idp, and Mvc" selection, then click on the Run button.
   
 #### Things to be changed
-Currently a database-per-tenant approach is used. In hindsight a shared database is likely going to be easier to manage. Storing permissions in the JWT is an option many companies use including my current place of employment. Currently, there is a hacky cleanup job to remove tenants which aren't totally finalized. A proper queue with an API endpoint handling creation should be done. Synching permission enums to the database on migration introduces a possible way to break things as well, but personally I still think it is an easy way to handle this issue. It is likely a true microservice approach would be preferred and so the existing proto files would be unnecessary as well, replaced by something like RabbitMQ or similar. This is kind of a separate issue but nonetheless is a vital part of the end product desired. This can be used as a proof of concept that finely-grained permissions can be achieved with OIDC and standard ASP.NET Core (now .NET 5+).
+Currently a database-per-tenant approach is used. In hindsight a shared database is likely going to be easier to manage. Storing permissions in the JWT is an option many companies use including my current place of employment. Currently, there is a hacky cleanup job to remove tenants which aren't totally finalized. A proper queue with an API endpoint handling creation should be done. Syncing permission enums to the database on migration introduces a possible way to break things as well, but personally I still think it is an easy way to handle this issue. It is likely a true microservice approach would be preferred and so the existing gRPC calls would be unnecessary as well, replaced by something like RabbitMQ or another real messaging queue. This is kind of a separate issue but nonetheless is a vital part of the end product desired. This can be used as a proof of concept that finely-grained permissions can be achieved with OIDC and standard ASP.NET Core (now .NET 5+) with reasonable performance. 
