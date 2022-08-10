@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
+using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Api.Authorization
 {
@@ -9,7 +10,7 @@ namespace CoreMultiTenancy.Api.Authorization
     /// </summary>
     public class TenantedAuthorizeAttribute : TypeFilterAttribute
     {
-        public TenantedAuthorizeAttribute(string permissions = "") : base(typeof(TenantedAuthorizeFilter))
+        public TenantedAuthorizeAttribute(params PermissionEnum[] permissions) : base(typeof(TenantedAuthorizeFilter))
             => Arguments = new object[] { permissions };
     }
 }

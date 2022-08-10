@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoreMultiTenancy.Identity.Authorization;
+using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {

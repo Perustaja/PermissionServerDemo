@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CoreMultiTenancy.Api.Authorization;
 using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Entities;
+using CoreMultiTenancy.Core.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +28,7 @@ namespace CoreMultiTenancy.Api.Controllers
             => Ok(await _dbContext.Set<Aircraft>().ToListAsync());
 
         [HttpPost]
-        [TenantedAuthorize("AircraftCreate")]
+        [TenantedAuthorize(PermissionEnum.AircraftCreate)]
         [Route("{tenantId}/[controller]")]
         public async Task<IActionResult> Post(string tenantId, Aircraft aircraft)
         {
@@ -40,7 +41,7 @@ namespace CoreMultiTenancy.Api.Controllers
         }
 
         [HttpPut]
-        [TenantedAuthorize("AircraftEdit")]
+        [TenantedAuthorize(PermissionEnum.AircraftEdit)]
         [Route("{tenantId}/[controller]/{id}")]
         public async Task<IActionResult> Put(string tenantId, string id, Aircraft aircraft)
         {

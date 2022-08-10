@@ -1,7 +1,7 @@
 using System;
-using CoreMultiTenancy.Identity.Authorization;
+using CoreMultiTenancy.Core.Authorization;
 
-namespace CoreMultiTenancy.Identity.Attributes
+namespace CoreMultiTenancy.Core.Attributes
 {
     /// <summary>
     /// The enum field decorated with this attribute will have its name and description seeded into the db

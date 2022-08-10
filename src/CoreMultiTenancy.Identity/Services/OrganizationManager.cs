@@ -24,15 +24,13 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IRoleRepository _roleRepo;
         private readonly IUserOrganizationRoleRepository _userOrgRoleRepo;
         private readonly IOrganizationInviteService _inviteSvc;
-        private readonly CreateTenant.CreateTenantClient _createTenantClient;
 
         public OrganizationManager(IConfiguration config,
             IUserOrganizationRepository userOrgRepo,
             IOrganizationRepository orgRepo,
             IRoleRepository roleRepo,
             IUserOrganizationRoleRepository userOrgRoleRepo,
-            IOrganizationInviteService inviteSvc,
-            CreateTenant.CreateTenantClient createTenantClient)
+            IOrganizationInviteService inviteSvc)
         {
             _connectionString = config.GetConnectionString("IdentityDb");
             _defaultRoleId = config.GetDefaultRoleId();
@@ -41,7 +39,6 @@ namespace CoreMultiTenancy.Identity.Services
             _roleRepo = roleRepo ?? throw new ArgumentNullException(nameof(roleRepo));
             _userOrgRoleRepo = userOrgRoleRepo ?? throw new ArgumentNullException(nameof(userOrgRoleRepo));
             _inviteSvc = inviteSvc ?? throw new ArgumentNullException(nameof(inviteSvc));
-            _createTenantClient = createTenantClient ?? throw new ArgumentNullException(nameof(createTenantClient));
         }
 
         #region OrganizationManagement
@@ -53,20 +50,7 @@ namespace CoreMultiTenancy.Identity.Services
 
         public async Task<Option<Organization>> AddAsync(Organization o)
         {
-            // Begin by adding the organization, this serves as a default rollback state
-            o = _orgRepo.Add(o);
-            await _orgRepo.UnitOfWork.Commit();
-
-            // Attempt to create all infrastructure at API necessary. If any step fails,
-            // the state will stay as not successfully created, and a separate job will clean it up later
-            var request = new TenantCreationRequest() { TenantId = o.Id.ToString() };
-            var outcome = await _createTenantClient.CreateAsync(request);
-            if (outcome.Success)
-            {
-                o.SuccessfullyActivated();
-                await _orgRepo.UnitOfWork.Commit();
-                return Option<Organization>.Some(o);
-            }
+            // TODO: new logic without jobs
             return Option<Organization>.None;
         }
 

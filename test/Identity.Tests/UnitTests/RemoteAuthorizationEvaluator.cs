@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Cmt.Protobuf;
+using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Services;
 using Moq;
 using Xunit;
 

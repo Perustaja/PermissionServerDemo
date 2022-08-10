@@ -5,6 +5,7 @@ using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
+using CoreMultiTenancy.Identity.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +20,6 @@ using Microsoft.AspNetCore.Routing;
 using Cmt.Protobuf;
 using Hangfire;
 using Hangfire.Storage.SQLite;
-using CoreMultiTenancy.Identity.Jobs;
 using System.Threading;
 
 namespace CoreMultiTenancy.Identity
@@ -106,12 +106,6 @@ namespace CoreMultiTenancy.Identity
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddHangfire(config =>
-                config.UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSQLiteStorage(Configuration.GetConnectionString("HangfireDb")));
-            JobStorage.Current = new SQLiteStorage(Configuration.GetConnectionString("HangfireDb"));
-            
             services.AddGrpcClients();
         }
 
@@ -141,13 +135,6 @@ namespace CoreMultiTenancy.Identity
                 e.MapControllers();
                 e.MapGrpcAuthorizationServices();
             });
-            ScheduleHangfireJobs();
-        }
-
-        public void ScheduleHangfireJobs()
-        {
-            // Setup tenant cleanup jobs to be queued every monday at 3 am
-            RecurringJob.AddOrUpdate<TenantCleanupBatcher>(tcb => tcb.EnqueueJobs(CancellationToken.None), "0 0 3 ? * MON");
         }
     }
 
@@ -179,11 +166,7 @@ namespace CoreMultiTenancy.Identity
 
         public static void AddGrpcClients(this IServiceCollection sc)
         {
-            sc.AddGrpcClient<CreateTenant.CreateTenantClient>(o =>
-            {
-                o.Address = new Uri("https://localhost:6100");
-            });
-            sc.AddGrpcClient<DeleteTenant.DeleteTenantClient>(o =>
+            sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeBase>(o =>
             {
                 o.Address = new Uri("https://localhost:6100");
             });
