@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CoreMultiTenancy.Identity.Authorization
+namespace CoreMultiTenancy.Core.Authorization
 {
     /// <summary>
     /// Main application permission categories represented as an enum. Changing underlying byte 
@@ -12,7 +12,7 @@ namespace CoreMultiTenancy.Identity.Authorization
         [Display(Name = "Default")]
         Default = 0,
 
-        [Display(Name = "Resource Management (Aircraft, Simulators, etc.)")]
-        Resource = 1,
+        [Display(Name = "Aircraft")]
+        Aircraft = 1,
     }
 }

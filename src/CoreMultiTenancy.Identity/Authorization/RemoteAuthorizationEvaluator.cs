@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cmt.Protobuf;
-using CoreMultiTenancy.Identity.Authorization;
+using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Interfaces;
 
-namespace CoreMultiTenancy.Identity.Services
+namespace CoreMultiTenancy.Identity.Authorization
 {
     public class RemoteAuthorizationEvaluator : IRemoteAuthorizationEvaluator
     {

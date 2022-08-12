@@ -8,7 +8,6 @@ namespace CoreMultiTenancy.Api.Tenancy
     public class RouteDataTenantProvider : ITenantProvider
     {
         private readonly string _routeDataIdentifier;
-        private readonly string _grpcDataIdentifier;
         private readonly HttpContext _httpContext;
 
         public RouteDataTenantProvider(IConfiguration config, IHttpContextAccessor contextAccessor)

@@ -37,7 +37,9 @@
 
   <ItemGroup>
     <Protobuf Include="..\Proto\perm.proto" GrpcServices="Server" ProtoRoot="..\Proto\" />
-    <Protobuf Include="..\Proto\tenantCreation.proto" GrpcServices="Client" ProtoRoot="..\Proto\" />
-    <Protobuf Include="..\Proto\tenantDeletion.proto" GrpcServices="Client" ProtoRoot="..\Proto\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoreMultiTenancy.Core\CoreMultiTenancy.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,6 @@
 using System;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Data;
-using CoreMultiTenancy.Api.Grpc;
 using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
@@ -80,19 +79,11 @@ namespace CoreMultiTenancy.Api
             {
                 endpoints.MapControllers()
                     .RequireAuthorization("ApiScope");
-                endpoints.MapGrpcInfrastructureServices();
             });
         }
     }
     public static class StartupExtensions
     {
-        public static IEndpointRouteBuilder MapGrpcInfrastructureServices(this IEndpointRouteBuilder e)
-        {
-            e.MapGrpcService<TenantCreationService>();
-            e.MapGrpcService<TenantDeletionService>();
-            return e;
-        }
-
         public static void AddGrpcClients(this IServiceCollection sc)
         {
             sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeClient>(o =>

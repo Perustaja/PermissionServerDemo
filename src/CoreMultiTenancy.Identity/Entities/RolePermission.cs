@@ -1,5 +1,5 @@
 using System;
-using CoreMultiTenancy.Identity.Authorization;
+using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities
 {

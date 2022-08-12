@@ -1,5 +1,5 @@
 using System;
-using CoreMultiTenancy.Identity.Authorization;
+using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

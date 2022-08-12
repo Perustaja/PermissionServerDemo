@@ -9,20 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using CoreMultiTenancy.Core.Authorization;
+using System.Linq;
 
 namespace CoreMultiTenancy.Api.Authorization
 {
     public class TenantedAuthorizeFilter : IAsyncAuthorizationFilter
     {
-        private readonly List<string> Permissions;
-        public TenantedAuthorizeFilter(string permissions)
+        private readonly string[] _permissions;
+        public TenantedAuthorizeFilter(PermissionEnum[] permissions)
         {
-            Permissions = new List<string>();
-            if (!String.IsNullOrWhiteSpace(permissions))
-            {
-                foreach (string s in permissions?.Split(','))
-                    Permissions.Add(s.Trim());
-            }
+            _permissions = permissions.Select(p => p.ToString()).ToArray<string>();
         }
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
@@ -43,7 +40,8 @@ namespace CoreMultiTenancy.Api.Authorization
                 UserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
                 TenantId = tenantId,
             };
-            request.Perms.AddRange(Permissions);
+            if (_permissions != null)
+                request.Perms.AddRange(_permissions);
 
             // Send and set context.Result based on reply
             var reply = await client.AuthorizeAsync(request);
@@ -58,7 +56,7 @@ namespace CoreMultiTenancy.Api.Authorization
                 switch (reply.FailureReason)
                 {
                     case (failureReason.Permissionformat):
-                        logger.LogCritical($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {Permissions}");
+                        logger.LogCritical($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {_permissions}");
                         context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                         break;
                     case (failureReason.Tenantnotfound):
