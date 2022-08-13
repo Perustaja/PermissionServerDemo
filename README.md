@@ -29,12 +29,12 @@ This is how Auth0 does it. Regardless of the arguments against tracking jwts, ma
 This is how some companies do it, using services like OPA (basically json XACML that's very fast for those with prior knowledge). You have a remote server authorize requests that are protected. The API holds the application logic and when the user calls the api, if that endpoint is protected, a network request with the necessary information is sent over to an identity server that decides whether that user is able to do something or not. This is the approach I chose. It isn't for everyone but I wanted to try this. I chose to use gRPC to make authorization validation network calls for each protected endpoint using custom attributes.<br>
 Pros<br>
 1. Immediate updating of permissions.
-2. Easy for users to switch tenants quickly, since the client is storing the tenantId locally and sending it per-request.<br>
+2. The API needs to know nothing about users, tenants, or anything else. Just the main application logic.<br>
 
 
 Cons<br>
 1. Network traffic/latency, partially mitigated by using gRPC calls. There is simply no way around this and IMO it is worth it if you need security.
-2. Coupling between the Idp and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers and only one or two proto files are needed.
+2. Coupling between the identity provider and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers and only one or two proto files are needed.
 
 #### Permissions themselves
 There are tons of different ways to approach authorization whether it be claims, roles, or policies including both. I chose to map tables to two enum values representing Permissions and PermissionCategories (used for sorting on the front end). On migration, they are updated from the enums in code. There are many different approaches. Using an enum decorated with the [Flags] attribute is the most performant way if you want to model finely-grained permissions and you need less than 64 (the max if using long).
@@ -42,6 +42,9 @@ There are tons of different ways to approach authorization whether it be claims,
 Some people also go about making a CRUD-based system with these flags. Something like Aircraft - 0101 where each bit is a letter of CRUD. My problem with this is that realistically not all protected things are resources. Not all operations fall under CRUD. However, realistically this section is what needs to be customized most. As the creators of PolicyServer and IdentityServer have pointed out, authentication is easy to make for everyone, authorization is a very case-by-case basis where a custom system is needed and the requirements may widely vary. 
 
 Regardless, using the existing authorization within ASP.NET Core and gRPC leads to a fast, reusable and low-code solution.
+
+#### User-defined roles
+The last feature of this project is the ability for admins to make their own roles and assign them to their users. Global roles are provided as suggested defaults. This is likely overkill for most projects but is another interesting feature for more complicated designs.
 
 # Setup
 #### Email Configuration (Dummy values may be used if email activity undesired)
