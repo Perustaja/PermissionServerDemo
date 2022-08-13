@@ -1,9 +1,22 @@
 # Goals
-Firstly, this project is not finished but will be when I get more free time. As far as the main infrastructure, the overall outline is created and the only thing left to do is establish endpoints, create a client, and fully ensure the current SQL works as intended.
-The overall goal of this project is to establish a simple proof-of-concept for a larger planned project. A centralized identity provider (IdP) will serve to log users in and issue JWTs with the OpenIdConnect protocol. Clients will use this token to call a web API with the main data of the application. The identity server will handle deciding whether users have authorization to perform something. Clients will be able to receive and cache permissions information so they know how to display their dynamic forms and controls. Once the API call is made, the web API will verify that the user has access and, if they do, do what they need to do.
+This project has three main goals in order of least to greatest difficulty
+#### 1 - To showcase how a client, API, and identity provider can be distinct and work together
+#### 2 - To have a multi-tenant structure across this architecture with tenant management handled by the identity provider
+#### 3 - To have an authorization system built on permissions that have immediate affect on the users when changed (no refresh delay such as with JWT)
 
-The multitenancy aspect is handled almost entirely by the clients. They implement their own portal where a user selects from their lists of available tenants. Handling this in the client as opposed to setting this on the identity side means that it is easier and faster for the user to work with multiple tenants, accessing data in one and then quickly moving to another. The client will use the selected tenant's GUID when making calls to the API, although a shortened identifier could be used as well.
-## The main problem - Updating Permissions
+## 1 - To showcase how a client, API, and identity provider can be distinct and work together
+
+This is relatively straightforward. Using IdentityServer, the three projects are separated cleanly with JWTs issued by the identity provider. These JWTs are used solely as authentication and not authorization in the expected way authentication JWTs are used. 
+
+## 2 - To have a multi-tenant structure across this architecture with tenant management handled by the identity provider
+
+Initially I wanted to try a database-per-tenant approach as this is the more difficult method. I was able to get this working in this version of EF Core, however after further research and experimentation I decided this approach isn't worth it. Specifically, the management of tenant creation becomes unwieldy as asynchronous migration and database creation must take place and then users updated when this is done. Among other reasons, this was scrapped in favor of simpler data segregation via a tenant id in each record of the db. This is achieved very simply by EF Core QueryFilters and is not complex at all.
+
+The multitenancy aspect is handled almost entirely by the client. It implements its own portal where a user selects from their lists of available tenants. Handling this in the client as opposed to setting this on the identity side means that it is easier and faster for the user to work with multiple tenants, accessing data in one and then quickly moving to another. The client uses the selected tenant's GUID when making calls to the API. This means no state is held by the API and there is no conflict of refreshing when the tenant id is stored in the JWT.
+
+## 3 - To have an authorization system built on permissions that have immediate affect on the users when changed (no refresh delay such as with JWT)
+
+#### The largest problem - Updating Permissions
 Permissions is really the largest problem here. When it boils down to it, there are really three possible ways to handle updating of permissions.
 #### 1 - Eventual update via token refresh
 The easiest of the 3 methods, the basis of this is to put permissions information (or, at least, roles) into the JWT and have a very short refresh timer (< 10 minutes) so that when a user's access is changed, it will be updated *eventually*. The downside if storing the tenantId as a claim (like Azure or other companies do) is that you will have to log your user in and out if they switch tenants. I don't believe there is built-in
@@ -11,21 +24,22 @@ functionality to "soft-relog" a user currently, so while it would sound great to
 #### 2 - Force a token refresh
 This is how Auth0 does it. Regardless of the arguments against tracking jwts, many companies do it for revocation anyway. The downside is a lot of custom code server and client-side that goes against a standard that may have major security implications. Basically, a lot of work and kind of hacky (though pragmatic).
 #### 3 - Permissions server (policy server)
-This is how some companies do it, using services like OPA (basically json XACML that's very fast). Basically you have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this.<br>
+This is how some companies do it, using services like OPA (basically json XACML that's very fast). You have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this. I chose to use gRPC to make authorization validation network calls for each protected endpoint using custom attributes.<br>
 Pros<br>
 1. Immediate updating of permissions.
 2. Easy for users to switch tenants quickly, since the client is storing the tenantId locally and sending it per-request.<br>
 
 
 Cons<br>
-1. Network traffic/latency, partially mitigated by using gRPC calls.
-2. Coupling between the Idp and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers.
+1. Network traffic/latency, partially mitigated by using gRPC calls. There is simply no way around this and IMO it is worth it if you need security.
+2. Coupling between the Idp and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers and only one or two proto files are needed.
 
-## Permissions themselves
-There are tons of different ways to approach authorization whether it be claims, roles, or policies including both. I chose to map tables to two enum values representing Permissions and PermissionCategories. On migration, they are updated from the enums in code. There are many different approaches. Using an enum decorated with the [Flags] attribute is the most performant way if you want to model finely-grained permissions and you need less than 64 (the max if using long).
+#### Permissions themselves
+There are tons of different ways to approach authorization whether it be claims, roles, or policies including both. I chose to map tables to two enum values representing Permissions and PermissionCategories (used for sorting on the front end). On migration, they are updated from the enums in code. There are many different approaches. Using an enum decorated with the [Flags] attribute is the most performant way if you want to model finely-grained permissions and you need less than 64 (the max if using long).
 
-## Multitenancy (Database-per-tenant)
-This is another topic with tons of different ways to do it. As a naive approach, I am simply using the tenant id as the connection string and creating a database if it isn't already. As far as creating databases that are made from non-existing tenant ids or bogus values, each request is already guaranteed to have an existing user tenant combination so there is no possibility of a request getting to the database context with a non-real tenant id. There are obviously tons of approaches with their own pros and cons. It's all based off of what the business requirements are, and each has maintanability/scalability concerns. Applying migrations to each database via ef migrations actually is not as bad as it sounds, but nonetheless requires at least some form of script or dotnet tool.
+Some people also go about making a CRUD-based system with these flags. Something like Aircraft - 0101 where each bit is a letter of CRUD. My problem with this is that realistically not all protected things are resources. Not all operations fall under CRUD. However, realistically this section is what needs to be customized most. As the creators of PolicyServer and IdentityServer have pointed out, authentication is easy to make for everyone, authorization is a very case-by-case basis where a custom system is needed and the requirements may widely vary. 
+
+Regardless, using the existing authorization within ASP.NET Core and gRPC leads to a fast, reusable and low-code solution.
 
 # Setup
 #### Email Configuration (Dummy values may be used if email activity undesired)
@@ -39,18 +53,17 @@ $ dotnet user-secrets set "Email:SendGridKey" "<your_key>"
 #### Migrations and databases
 Migrations are tracked and do not need to be generated. Note that MySQL is currently used, so
 appsettings.json will need to be changed in the Identity and API projects to use either a trusted connection
-or a user/pass setup based on your local environment (In 5.0 SQLite supports migrations almost fully, but this is still pre 5.0).
+or a user/pass setup based on your local environment (In 5.0 SQLite supports migrations almost fully, but this is still pre 5.0). I plan on making a SQLite version when fully done.
+
+Each database needs to be updated prior to launch.
 ```
 $ cd src/CoreMultiTenancy.Identity
 $ dotnet ef database update
-```
 
-You do not need to specifically call ```database update``` for the API project, it creates tenant databases
-at runtime and uses a static design time factory for migrations.
+$ cd src/CoreMultiTenancy.Api
+$ dotnet ef database update
+```
 
 #### Startup
 the tracked .vscode folder contains json files to launch all 3 projects at once. Navigate to the
 debug tab in vscode and select the "Api, Idp, and Mvc" selection, then click on the Run button.
-  
-#### Things to be changed
-Currently a database-per-tenant approach is used. In hindsight a shared database is likely going to be easier to manage. Storing permissions in the JWT is an option many companies use including my current place of employment. Currently, there is a hacky cleanup job to remove tenants which aren't totally finalized. A proper queue with an API endpoint handling creation should be done. Syncing permission enums to the database on migration introduces a possible way to break things as well, but personally I still think it is an easy way to handle this issue. It is likely a true microservice approach would be preferred and so the existing gRPC calls would be unnecessary as well, replaced by something like RabbitMQ or another real messaging queue. This is kind of a separate issue but nonetheless is a vital part of the end product desired. This can be used as a proof of concept that finely-grained permissions can be achieved with OIDC and standard ASP.NET Core (now .NET 5+) with reasonable performance. 
