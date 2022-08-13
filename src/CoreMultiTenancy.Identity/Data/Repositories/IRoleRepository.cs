@@ -39,6 +39,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         void DeleteRoleOfOrg(Role role);
 
         /// <returns>Whether a User has this Role as their only Role, and deleting it would leave them without one.</returns>
-        Task<bool> RoleIsOnlyRoleForAnyUser(Role role);
+        Task<bool> RoleIsOnlyRoleForAnyUserAsync(Role role);
     }
 }

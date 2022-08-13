@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
+using CoreMultiTenancy.Identity.Results.Errors;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
 {
@@ -50,6 +55,20 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 );
                 return res > 0;
             }
+        }
+
+        public async Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId)
+        {
+            var res = from uor in _applicationContext.Set<UserOrganizationRole>()
+                      join rp in _applicationContext.Set<RolePermission>()
+                        on uor.RoleId equals rp.RoleId
+                      select rp.PermissionId;
+            return await res.ToListAsync<PermissionEnum>();
+        }
+
+        public Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

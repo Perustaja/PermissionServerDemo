@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Results.Errors;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -59,7 +58,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         public void DeleteRoleOfOrg(Role role)
             => _applicationContext.Remove(role);
 
-        public async Task<bool> RoleIsOnlyRoleForAnyUser(Role role)
+        public async Task<bool> RoleIsOnlyRoleForAnyUserAsync(Role role)
         {
             using (var conn = new MySqlConnection(_connectionString))
             {

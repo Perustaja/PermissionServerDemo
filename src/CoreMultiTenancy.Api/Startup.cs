@@ -5,7 +5,6 @@ using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +51,6 @@ namespace CoreMultiTenancy.Api
             });
 
             services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
-            services.AddScoped<ITenantInfrastructureManager<TenantedDbContext>, TenantInfrastructureManager<TenantedDbContext>>();
             services.AddGrpc();
             services.AddGrpcClients();
         }

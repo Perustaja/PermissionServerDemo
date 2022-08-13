@@ -19,12 +19,12 @@ namespace CoreMultiTenancy.Identity.Data
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserOrganization> UserOrganizations { get; set; }
         public DbSet<UserOrganizationRole> UserOrganizationRoles { get; set; }
-        private readonly Guid _defaultRoleId;
+        private readonly Guid _defaultAdminRoleId;
 
         public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            _defaultRoleId = config.GetDefaultRoleId();
+            _defaultAdminRoleId = config.GetDefaultAdminRoleId();
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,7 +32,7 @@ namespace CoreMultiTenancy.Identity.Data
             builder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
             builder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
             // Pass default role id for seed data
-            builder.ApplyConfiguration(new RoleConfiguration(_defaultRoleId));
+            builder.ApplyConfiguration(new RoleConfiguration(_defaultAdminRoleId));
             builder.ApplyConfiguration(new RolePermissionConfiguration());
             builder.ApplyConfiguration(new UserOrganizationConfiguration());
             builder.ApplyConfiguration(new UserOrganizationRoleConfiguration());
