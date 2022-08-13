@@ -26,7 +26,7 @@ functionality to "soft-relog" a user currently, so while it would sound great to
 This is how Auth0 does it. Regardless of the arguments against tracking jwts, many companies do it for revocation anyway. The downside is a lot of custom code server and client-side that goes against a standard that may have major security implications. Basically, a lot of work and kind of hacky (though pragmatic).
 
 #### 3 - Permissions server (My choice)
-This is how some companies do it, using services like OPA (basically json XACML that's very fast). You have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this. I chose to use gRPC to make authorization validation network calls for each protected endpoint using custom attributes.<br>
+This is how some companies do it, using services like OPA (basically json XACML that's very fast for those with prior knowledge). You have a remote server authorize requests that are protected. The API holds the application logic and when the user calls the api, if that endpoint is protected, a network request with the necessary information is sent over to an identity server that decides whether that user is able to do something or not. This is the approach I chose. It isn't for everyone but I wanted to try this. I chose to use gRPC to make authorization validation network calls for each protected endpoint using custom attributes.<br>
 Pros<br>
 1. Immediate updating of permissions.
 2. Easy for users to switch tenants quickly, since the client is storing the tenantId locally and sending it per-request.<br>
