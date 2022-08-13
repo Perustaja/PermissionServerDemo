@@ -19,10 +19,12 @@ The multitenancy aspect is handled almost entirely by the client. It implements 
 #### The largest problem - Updating Permissions
 Permissions is really the largest problem here. When it boils down to it, there are really three possible ways to handle updating of permissions.
 #### 1 - Eventual update via token refresh
-The easiest of the 3 methods, the basis of this is to put permissions information (or, at least, roles) into the JWT and have a very short refresh timer (< 10 minutes) so that when a user's access is changed, it will be updated *eventually*. The downside if storing the tenantId as a claim (like Azure or other companies do) is that you will have to log your user in and out if they switch tenants. I don't believe there is built-in
-functionality to "soft-relog" a user currently, so while it would sound great to simply re-issue the token without prompting the user when they select a tenant to change, I don't believe it can be done, at least not simply.
+The easiest of the 3 methods, the basis of this is to put permissions information (or, at least, roles) into the JWT and have a very short refresh timer (< 10 minutes) so that when a user's access is changed, it will be updated *eventually*. Similarly I have seen systems where the tenant id is stored in the JWT. The downside of storing the tenantId as a claim (like Azure or other companies do, although their systems fit their requirements) is that you will have to log your user in and out if they switch tenants. I don't believe there is built-in
+functionality to "soft-relog" a user currently, so while it would sound great to simply re-issue the token without prompting the user when they select a tenant to change, I don't believe it can be done, at least not without lots of custom complex code.
+
 #### 2 - Force a token refresh
 This is how Auth0 does it. Regardless of the arguments against tracking jwts, many companies do it for revocation anyway. The downside is a lot of custom code server and client-side that goes against a standard that may have major security implications. Basically, a lot of work and kind of hacky (though pragmatic).
+
 #### 3 - Permissions server (policy server)
 This is how some companies do it, using services like OPA (basically json XACML that's very fast). You have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this. I chose to use gRPC to make authorization validation network calls for each protected endpoint using custom attributes.<br>
 Pros<br>
