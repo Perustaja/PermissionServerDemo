@@ -28,7 +28,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             _applicationContext = applicationContext ?? throw new ArgumentNullException(nameof(applicationContext));
         }
 
-        public async Task<List<Organization>> GetUsersOrgsById(Guid userId)
+        public async Task<List<Organization>> GetUsersOrgsByIdAsync(Guid userId)
         {
             return await _applicationContext.Set<UserOrganization>()
             .Where(uo => uo.UserId == userId)
@@ -58,11 +58,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 ? Option<Organization>.Some(res)
                 : Option<Organization>.None;
         }
-
-        public Task<List<Organization>> GetUnsuccessfullyCreatedAsync()
-            => _applicationContext.Set<Organization>()
-                .Where(o => !o.SuccessfullyCreated && (DateTime.UtcNow - o.CreationDate).Hours > 24)
-                .ToListAsync();
 
         public Organization Add(Organization o)
             => _applicationContext.Set<Organization>().Add(o).Entity;

@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,18 +26,18 @@ namespace CoreMultiTenancy.Identity.Controllers
             _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpPost]
+        public async Task<IActionResult> Post(OrganizationPostDto dto)
         {
-            // Create a new tenant for testing
-            Organization o = new Organization("test", false);
-            var orgOpt = await _orgManager.AddAsync(o);
+            var ms = new MemoryStream();
+            await dto.Logo.CopyToAsync(ms);
+            Organization o = new Organization("test", false, new Guid(User.GetSubjectId()), ms.ToArray(), dto.Logo.ContentType);
+            var errOpt = await _orgManager.AddAsync(o, User.GetSubjectId());
 
-            return orgOpt.MapOrElse<IActionResult>
-            (
-                () => StatusCode(StatusCodes.Status500InternalServerError),
-                o => Created("test", o)
-            );
+            if (errOpt.IsNone())
+                return CreatedAtAction(nameof(o), o);
+            else
+                return BadRequest(errOpt.Unwrap());
         }
     }
 }

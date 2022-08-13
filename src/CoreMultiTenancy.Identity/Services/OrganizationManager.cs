@@ -10,15 +10,16 @@ using CoreMultiTenancy.Identity.Results.Errors;
 using Microsoft.Extensions.Configuration;
 using CoreMultiTenancy.Identity.Extensions;
 using System.Linq;
-using Cmt.Protobuf;
-using Grpc.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace CoreMultiTenancy.Identity.Services
 {
     public class OrganizationManager : IOrganizationManager
     {
         private readonly string _connectionString;
-        private readonly Guid _defaultRoleId;
+        private readonly Guid _defaultLowestUserRoleId;
+        private readonly Guid _defaultAdminRoleId;
+        private readonly UserManager<User> _userManager;
         private readonly IUserOrganizationRepository _userOrgRepo;
         private readonly IOrganizationRepository _orgRepo;
         private readonly IRoleRepository _roleRepo;
@@ -26,6 +27,7 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IOrganizationInviteService _inviteSvc;
 
         public OrganizationManager(IConfiguration config,
+            UserManager<User> userManager,
             IUserOrganizationRepository userOrgRepo,
             IOrganizationRepository orgRepo,
             IRoleRepository roleRepo,
@@ -33,7 +35,9 @@ namespace CoreMultiTenancy.Identity.Services
             IOrganizationInviteService inviteSvc)
         {
             _connectionString = config.GetConnectionString("IdentityDb");
-            _defaultRoleId = config.GetDefaultRoleId();
+            _defaultAdminRoleId = config.GetDefaultAdminRoleId();
+            _defaultLowestUserRoleId = config.GetDefaultAdminRoleId();
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _userOrgRepo = userOrgRepo ?? throw new ArgumentNullException(nameof(userOrgRepo));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
             _roleRepo = roleRepo ?? throw new ArgumentNullException(nameof(roleRepo));
@@ -48,10 +52,19 @@ namespace CoreMultiTenancy.Identity.Services
         public async Task<Option<Organization>> GetByIdAsync(Guid orgId)
             => await _orgRepo.GetByIdAsync(orgId);
 
-        public async Task<Option<Organization>> AddAsync(Organization o)
+        public async Task<Option<Error>> AddAsync(Organization o, string userId)
         {
-            // TODO: new logic without jobs
-            return Option<Organization>.None;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return Option<Error>.Some(new Error($"Unable to find user with id {userId}", ErrorType.NotFound));
+
+            _orgRepo.Add(o);
+            var userGuid = new Guid(userId);
+            _userOrgRepo.Add(new UserOrganization(userGuid, o.Id));
+            AddDefaultAdminRoleToUserAsync(userGuid, o.Id);
+            await _orgRepo.UnitOfWork.Commit();
+
+            return Option<Error>.None;
         }
 
         public async Task<Organization> UpdateAsync(Organization o)
@@ -114,7 +127,7 @@ namespace CoreMultiTenancy.Identity.Services
             // verify role is not global or only role for any user before deletion
             if (role.IsGlobal)
                 return Option<Error>.Some(new Error("Cannot delete a global role.", ErrorType.DomainLogic));
-            if (await _roleRepo.RoleIsOnlyRoleForAnyUser(role))
+            if (await _roleRepo.RoleIsOnlyRoleForAnyUserAsync(role))
                 return Option<Error>.Some(new Error("This Role cannot be deleted because it is the last Role for at least one User.", ErrorType.DomainLogic));
             _roleRepo.DeleteRoleOfOrg(role);
             await _roleRepo.UnitOfWork.Commit();
@@ -153,16 +166,22 @@ namespace CoreMultiTenancy.Identity.Services
             // Save new record representing User's access to Organization, assign default role
             var accessGrant = new UserOrganization(user.Id, org.Id);
             _userOrgRepo.Add(accessGrant);
-            AddDefaultRoleToUserAsync(user.Id, org.Id);
+            AddDefaultLowestUserRoleToUserAsync(user.Id, org.Id);
             await _userOrgRepo.UnitOfWork.Commit();
-            return org.RequiresConfirmation
+            return org.RequiresConfirmationForNewUsers
                 ? InviteResult.RequiresConfirmation(org.Title)
                 : InviteResult.ImmediateSuccess(org.Title);
         }
 
-        private void AddDefaultRoleToUserAsync(Guid userId, Guid orgId)
+        private void AddDefaultLowestUserRoleToUserAsync(Guid userId, Guid orgId)
         {
-            var defaultRole = new UserOrganizationRole(userId, orgId, _defaultRoleId);
+            var defaultRole = new UserOrganizationRole(userId, orgId, _defaultLowestUserRoleId);
+            _userOrgRoleRepo.Add(defaultRole);
+        }
+
+        private void AddDefaultAdminRoleToUserAsync(Guid userId, Guid orgId)
+        {
+            var defaultRole = new UserOrganizationRole(userId, orgId, _defaultAdminRoleId);
             _userOrgRoleRepo.Add(defaultRole);
         }
     }
