@@ -25,7 +25,7 @@ functionality to "soft-relog" a user currently, so while it would sound great to
 #### 2 - Force a token refresh
 This is how Auth0 does it. Regardless of the arguments against tracking jwts, many companies do it for revocation anyway. The downside is a lot of custom code server and client-side that goes against a standard that may have major security implications. Basically, a lot of work and kind of hacky (though pragmatic).
 
-#### 3 - Permissions server (policy server)
+#### 3 - Permissions server (My choice)
 This is how some companies do it, using services like OPA (basically json XACML that's very fast). You have a remote server authorize requests that are protected. This is the approach I chose. It isn't for everyone but I wanted to try this. I chose to use gRPC to make authorization validation network calls for each protected endpoint using custom attributes.<br>
 Pros<br>
 1. Immediate updating of permissions.
