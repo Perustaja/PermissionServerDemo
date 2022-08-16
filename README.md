@@ -55,12 +55,10 @@ $ cd src/CoreMultiTenancy.Identity
 $ dotnet user-secrets set "Email:SendGridUser" "<your_username>"
 $ dotnet user-secrets set "Email:SendGridKey" "<your_key>"
 ```
-#### Migrations and databases
-Migrations are tracked and do not need to be generated. Note that MySQL is currently used, so
-appsettings.json will need to be changed in the Identity and API projects to use either a trusted connection
-or a user/pass setup based on your local environment (In 5.0 SQLite supports migrations almost fully, but this is still pre 5.0). I plan on making a SQLite version when fully done.
 
-Each database needs to be updated prior to launch.
+#### Demo databases
+
+Each database needs to be updated prior to launch. Demo seed data is applied through migrations when the database is made.
 ```
 $ cd src/CoreMultiTenancy.Identity
 $ dotnet ef database update
