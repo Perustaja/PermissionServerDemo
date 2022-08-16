@@ -79,12 +79,29 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
+        },
+        {
+            "name": ".NET Core Build (Core)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildCore",
+            "program": "${workspaceFolder}/src/CoreMultiTenancy.Core/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Core.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Core",
+            "stopAtEntry": false,
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
         }
     ],
     "compounds": [
         {
             "name": "Api, Idp, and Mvc",
             "configurations": [
+                ".NET Core Build (Core)",
                 ".NET Core Launch (Api)",
                 ".NET Core Launch (Identity)",
                 ".NET Core Launch (Mvc)"

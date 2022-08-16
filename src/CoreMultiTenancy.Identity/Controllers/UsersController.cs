@@ -24,7 +24,7 @@ namespace CoreMultiTenancy.Identity.Controllers
         }
 
         [HttpGet]
-        [Route("api/v{version:apiVersion}/[controller]/{orgId}/myPermissions")]
+        [Route("/{orgId}/myPermissions")]
         public IActionResult GetMyPermissions(string orgId)
         {
             var perms = _permSvc.GetUsersPermissionsAsync(new Guid(User.GetSubjectId()), new Guid(orgId));
