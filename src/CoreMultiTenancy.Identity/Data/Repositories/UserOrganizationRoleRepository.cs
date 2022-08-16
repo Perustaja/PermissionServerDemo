@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CoreMultiTenancy.Identity.Interfaces;
+using CoreMultiTenancy.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories

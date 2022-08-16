@@ -1,14 +1,16 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using CoreMultiTenancy.Api.Entities;
 using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
+using CoreMultiTenancy.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 
 namespace CoreMultiTenancy.Api.Data
 {
-    public class TenantedDbContext : DbContext
+    public class TenantedDbContext : DbContext, IUnitOfWork
     {
         DbSet<Aircraft> Aircraft { get; set; }
         public string tenantId => _tenant.Id;
@@ -35,6 +37,13 @@ namespace CoreMultiTenancy.Api.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        // Note that SaveChangesAsync() works with most providers to rollback by default 
+        // on failure. In other words, it's only being exposed so that multiple operations
+        // may be performed in a commit by services. No complicated methods are required for this basic
+        // transactional behavior. EF may have proposed best practices so just follow those. 
+        public async Task<int> Commit(CancellationToken cancellationToken = default)
+            => await SaveChangesAsync();
+            
         private void SeedDatabaseForDemo(ModelBuilder modelBuilder)
         {
             var tenant1Ac = new Aircraft("N772GK", _demoMyTenantId, "N772GK.jpg");
