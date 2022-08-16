@@ -8,26 +8,28 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
         private readonly Guid _defaultAdminRoleId;
+        private readonly Guid _defaultNewUserRoleId;
 
-        public RoleConfiguration(Guid DefaultAdminRoleId) => _defaultAdminRoleId = DefaultAdminRoleId;
+        public RoleConfiguration(Guid defaultAdminRoleId, Guid defaultNewUserRoleId)
+        {
+            _defaultAdminRoleId = defaultAdminRoleId;
+            _defaultNewUserRoleId = defaultNewUserRoleId;
+
+        }
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             SeedGlobalRoles(builder);
         }
-        
+
         /// <summary>
-        /// Adds default global roles.
+        /// Adds default global roles for the owner and for new users joining the tenant.
         /// </summary>
         public EntityTypeBuilder<Role> SeedGlobalRoles(EntityTypeBuilder<Role> builder)
         {
-            const string adminRoleId = "2301D884-221A-4E7D-B509-0113DCC043E1";
-            const string mechRoleId = "7D9B7113-A8F8-4035-99A7-A20DD400F6A3";
-            Guid pilotRoleId = _defaultAdminRoleId;
-
-            builder.HasData(
-                new Role(new Guid(adminRoleId), "Admin"),
-                new Role(new Guid(mechRoleId), "Mechanic"),
-                new Role(pilotRoleId, "Pilot")
+            builder.HasData
+            (
+                new Role(_defaultAdminRoleId, "Admin"),
+                new Role(_defaultNewUserRoleId, "User")
             );
             return builder;
         }

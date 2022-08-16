@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
 using Dapper;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MySql.Data.MySqlClient;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -39,7 +39,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public async Task<bool> ExistsByIdAsync(Guid id)
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = new SqliteConnection(_connectionString))
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM Organizations 

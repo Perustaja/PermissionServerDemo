@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.EntityFrameworkCore.Sqlite;
 
 namespace CoreMultiTenancy.Api
 {
@@ -27,7 +27,7 @@ namespace CoreMultiTenancy.Api
         {
             // Design time connection string for migrations, connection string is overriden later if necessary
             services.AddDbContext<TenantedDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DesignTimeString")));
+                options.UseSqlite(Configuration.GetConnectionString("ApiDb")));
 
             services.AddControllers();
             services.AddApiVersioning();
@@ -68,6 +68,7 @@ namespace CoreMultiTenancy.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
             app.UseAuthentication();

@@ -12,11 +12,23 @@ namespace CoreMultiTenancy.Identity.Entities
         public string LastName { get; private set; }
         public List<UserOrganization> UserOrganizations { get; set; }
         public List<UserOrganizationRole> UserOrganizationRoles { get; set; }
-        public User() {}
+        public User() { }
 
         public User(string fName, string lName, string email)
         {
             Id = Guid.NewGuid();
+            FirstName = fName;
+            LastName = lName;
+            UserName = email;
+            Email = email;
+        }
+
+        /// <summary>
+        /// For demo purposes only
+        /// </summary>
+        public User(Guid id, string fName, string lName, string email)
+        {
+            Id = id;
             FirstName = fName;
             LastName = lName;
             UserName = email;

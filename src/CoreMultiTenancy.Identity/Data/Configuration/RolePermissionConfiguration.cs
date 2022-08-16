@@ -8,6 +8,15 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
 {
     public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermission>
     {
+        private readonly Guid _defaultAdminRoleId;
+        private readonly Guid _defaultNewUserRoleId;
+
+        public RolePermissionConfiguration(Guid defaultAdminRoleId, Guid defaultNewUserRoleId)
+        {
+            _defaultAdminRoleId = defaultAdminRoleId;
+            _defaultNewUserRoleId = defaultNewUserRoleId;
+        }
+
         public void Configure(EntityTypeBuilder<RolePermission> builder)
         {
             // Join table configuration
@@ -29,19 +38,10 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
         /// </summary>
         public EntityTypeBuilder<RolePermission> SeedGlobalRolePerms(EntityTypeBuilder<RolePermission> builder)
         {
-            const string adminRoleId = "2301D884-221A-4E7D-B509-0113DCC043E1";
-            const string mechRoleId = "7D9B7113-A8F8-4035-99A7-A20DD400F6A3";
-            const string pilotRoleId = "78A7570F-3CE5-48BA-9461-80283ED1D94D";
-            
+            // Admin has all, user is basically readonly
             builder.HasData(
-                // Admin
-                new RolePermission(new Guid(adminRoleId), PermissionEnum.All),
-                // Mechanic
-                new RolePermission(new Guid(mechRoleId), PermissionEnum.AircraftCreate),
-                new RolePermission(new Guid(mechRoleId), PermissionEnum.AircraftEdit),
-                new RolePermission(new Guid(mechRoleId), PermissionEnum.AircraftDelete),
-                // Pilot
-                new RolePermission(new Guid(pilotRoleId), PermissionEnum.AircraftEdit)
+                new RolePermission(_defaultAdminRoleId, PermissionEnum.All),
+                new RolePermission(_defaultNewUserRoleId, PermissionEnum.Default)
             );
             return builder;
         }
