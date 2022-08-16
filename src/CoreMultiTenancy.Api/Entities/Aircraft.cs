@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace CoreMultiTenancy.Api.Entities
@@ -6,13 +7,15 @@ namespace CoreMultiTenancy.Api.Entities
     {
         [Key]
         public string RegNumber { get; private set; }
-        public string TenantId { get; private set;  }
+        public string ThumbnailUri { get; private set; }
+        public Guid TenantId { get; private set;  }
         public bool IsGrounded { get; private set; }
         public Aircraft() { }
-        public Aircraft(string regNum, string tenantId) 
+        public Aircraft(string regNum, Guid tenantId, string thumbUri) 
         {
             RegNumber = regNum;
             TenantId = tenantId;
+            ThumbnailUri = thumbUri;
         }
         public void Ground() => IsGrounded = true;
     }

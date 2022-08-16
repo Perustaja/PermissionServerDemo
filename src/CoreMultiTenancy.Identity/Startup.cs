@@ -18,9 +18,6 @@ using Microsoft.Extensions.Hosting;
 using CoreMultiTenancy.Identity.Grpc;
 using Microsoft.AspNetCore.Routing;
 using Cmt.Protobuf;
-using Hangfire;
-using Hangfire.Storage.SQLite;
-using System.Threading;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -36,7 +33,7 @@ namespace CoreMultiTenancy.Identity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("IdentityDb")));
+                options.UseSqlite(Configuration.GetConnectionString("IdentityDb")));
 
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

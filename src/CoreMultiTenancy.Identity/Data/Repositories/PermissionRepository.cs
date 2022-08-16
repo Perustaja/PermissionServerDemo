@@ -7,9 +7,9 @@ using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Dapper;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -27,7 +27,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         }
         public async Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm)
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = new SqliteConnection(_connectionString))
             {
                 var res = await conn.QuerySingleOrDefaultAsync(
                     @"SELECT COUNT(*) 
@@ -43,7 +43,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms)
         {
-            using (var conn = new MySqlConnection(_connectionString))
+            using (var conn = new SqliteConnection(_connectionString))
             {
                 var res = await conn.QuerySingleOrDefaultAsync(
                     @"SELECT COUNT(*) 

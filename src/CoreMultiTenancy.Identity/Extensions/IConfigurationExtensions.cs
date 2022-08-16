@@ -19,16 +19,16 @@ namespace CoreMultiTenancy.Identity.Extensions
         }
 
         /// <summary>
-        /// Verifies current configuration contains a guid value associated with the key "DefaultLowestUserRoleId" 
+        /// Verifies current configuration contains a guid value associated with the key "DefaultNewUserRoleId" 
         /// and returns it.
         /// </summary>
         /// <exception cref="System.Exception">If no configuration found</exception>
         /// <returns>The default new user role id.</returns>
-        public static Guid GetDefaultLowestUserRoleId(this IConfiguration configuration)
+        public static Guid GetDefaultNewUserRoleId(this IConfiguration configuration)
         {
-            if (Guid.TryParse(configuration["DefaultLowestUserRoleId"], out Guid res))
+            if (Guid.TryParse(configuration["DefaultNewUserRoleId"], out Guid res))
                 return res;
-            throw new Exception("Location of DefaultLowestUserRoleId or parsing to Guid failed.");
+            throw new Exception("Location of DefaultNewUserRoleId or parsing to Guid failed.");
         }
     }
 }

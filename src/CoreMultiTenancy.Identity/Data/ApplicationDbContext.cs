@@ -20,31 +20,67 @@ namespace CoreMultiTenancy.Identity.Data
         public DbSet<UserOrganization> UserOrganizations { get; set; }
         public DbSet<UserOrganizationRole> UserOrganizationRoles { get; set; }
         private readonly Guid _defaultAdminRoleId;
+        private readonly Guid _defaultNewUserRoleId;
+        private readonly Guid _demoAdminId;
+        private readonly Guid _demoShadowAdminId;
+        private readonly Guid _demoMyTenantId;
+        private readonly Guid _demoOtherTenantId;
 
         public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
             _defaultAdminRoleId = config.GetDefaultAdminRoleId();
+            _defaultNewUserRoleId = config.GetDefaultNewUserRoleId();
+            _demoAdminId = Guid.Parse(config["DemoAdminId"]);
+            _demoShadowAdminId = Guid.Parse(config["DemoShadowAdminId"]);
+            _demoMyTenantId = Guid.Parse(config["DemoMyTenantId"]);
+            _demoOtherTenantId = Guid.Parse(config["DemoOtherTenantId"]);
         }
-        protected override void OnModelCreating(ModelBuilder builder)
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Permissions seeding MUST be done before others, and in this order to seed properly
-            builder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
-            builder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
-            // Pass default role id for seed data
-            builder.ApplyConfiguration(new RoleConfiguration(_defaultAdminRoleId));
-            builder.ApplyConfiguration(new RolePermissionConfiguration());
-            builder.ApplyConfiguration(new UserOrganizationConfiguration());
-            builder.ApplyConfiguration(new UserOrganizationRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
+            // Seed global defaults and setup join tables
+            modelBuilder.ApplyConfiguration(new RoleConfiguration(_defaultAdminRoleId, _defaultNewUserRoleId));
+            modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(_defaultAdminRoleId, _defaultNewUserRoleId));
+            modelBuilder.ApplyConfiguration(new UserOrganizationConfiguration());
+            modelBuilder.ApplyConfiguration(new UserOrganizationRoleConfiguration());
 
-            base.OnModelCreating(builder);
+            SeedDatabaseForDemo(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
 
         // Note that SaveChangesAsync() works with most providers to rollback by default 
         // on failure. In other words, it's only being exposed so that multiple operations
         // may be performed in a commit by services. No complicated methods are required for this basic
-        // transactional behavior.
+        // transactional behavior. EF may have proposed best practices so just follow those. 
         public async Task<int> Commit(CancellationToken cancellationToken = default)
             => await SaveChangesAsync();
+
+        private void SeedDatabaseForDemo(ModelBuilder modelBuilder)
+        {
+            // users
+            var admin = new User(_demoAdminId, "Admin", "Admin", "admin@mydomain.com");
+            var shadowAdmin = new User(_demoShadowAdminId, "Admin", "Admin", "shadowadmin@mydomain.com");
+
+            // tenants
+            var myOrg = new Organization(_demoMyTenantId, "MyCompany", false, _demoAdminId, "tenantlogo1.jpg");
+            var otherOrg = new Organization(_demoOtherTenantId, "OtherCompany", false, _demoShadowAdminId, "tenantlogo2.jpg");
+
+            // tenancy and permissions
+            var tenancy1 = new UserOrganization(_demoAdminId, _demoMyTenantId);
+            var tenancy2 = new UserOrganization(_demoAdminId, _demoOtherTenantId);
+            var shadow = new UserOrganization(_demoShadowAdminId, _demoOtherTenantId);
+            var adminRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultAdminRoleId);
+            var adminRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultAdminRoleId);
+            var shadowAdminRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultAdminRoleId);
+
+            modelBuilder.Entity<User>().HasData(admin, shadowAdmin);
+            modelBuilder.Entity<Organization>().HasData(myOrg, otherOrg);
+            modelBuilder.Entity<UserOrganization>().HasData(tenancy1, tenancy2);
+            modelBuilder.Entity<UserOrganizationRole>().HasData(adminRole1, adminRole2, shadowAdminRole);
+        }
     }
 }
