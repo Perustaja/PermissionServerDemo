@@ -36,7 +36,7 @@ namespace CoreMultiTenancy.Api.Controllers
                 return Conflict($"Aircraft already exists with registration number: {aircraft.RegNumber}");
 
             _dbContext.Set<Aircraft>().Add(aircraft);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Commit();
             return CreatedAtAction(nameof(aircraft), new { RegNumber = aircraft.RegNumber }, aircraft);
         }
 
@@ -50,7 +50,7 @@ namespace CoreMultiTenancy.Api.Controllers
                 return NotFound();
             if (aircraft.IsGrounded)
                 a.Ground();
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Commit();
             return Ok();
         }
     }

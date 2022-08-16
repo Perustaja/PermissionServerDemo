@@ -14,12 +14,6 @@ namespace CoreMultiTenancy.Api.Data
     /// </summary>
     public class DesignTimeTenantedDbContextFactory : IDesignTimeDbContextFactory<TenantedDbContext>
     {
-        private readonly IServiceProvider _svcProvider;
-
-        public DesignTimeTenantedDbContextFactory(IServiceProvider svcProvider)
-        {
-            _svcProvider = svcProvider ?? throw new ArgumentNullException(nameof(svcProvider));
-        }
         public TenantedDbContext CreateDbContext(string[] args)
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -29,11 +23,11 @@ namespace CoreMultiTenancy.Api.Data
                 .AddJsonFile($"appsettings.{env}.json", true, true)
                 .Build();
             
-            // make dummy database
             var dummyId = config["DummyTenantId"] ?? throw new ArgumentNullException("Unable to source dummy tenant id from config.");
             var o = new DbContextOptionsBuilder<TenantedDbContext>();
+            o.UseSqlite(config.GetConnectionString("ApiDb"));
             var dummyProvider = new ManualTenantProvider(dummyId);
-            return ActivatorUtilities.CreateInstance<TenantedDbContext>(_svcProvider, dummyProvider);
+            return new TenantedDbContext(o.Options, config, dummyProvider);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Entities;
-using CoreMultiTenancy.Identity.Interfaces;
+using CoreMultiTenancy.Core.Interfaces;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Dapper;
 using Microsoft.Data.Sqlite;

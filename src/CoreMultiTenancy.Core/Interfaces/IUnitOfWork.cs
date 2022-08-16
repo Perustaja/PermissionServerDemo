@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoreMultiTenancy.Identity.Interfaces
+namespace CoreMultiTenancy.Core.Interfaces
 {
     /// <summary>
     /// Contains functionality to allow for atomic transactions coordinated by services.

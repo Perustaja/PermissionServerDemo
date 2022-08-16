@@ -1,10 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Core.Interfaces;
 using CoreMultiTenancy.Identity.Data.Configuration;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -62,8 +64,33 @@ namespace CoreMultiTenancy.Identity.Data
         private void SeedDatabaseForDemo(ModelBuilder modelBuilder)
         {
             // users
-            var admin = new User(_demoAdminId, "Admin", "Admin", "admin@mydomain.com");
-            var shadowAdmin = new User(_demoShadowAdminId, "Admin", "Admin", "shadowadmin@mydomain.com");
+            var hasher = new PasswordHasher<User>();
+            var admin = new User
+            {
+                Id = _demoAdminId,
+                UserName = "admin@mydomain.com",
+                NormalizedUserName = "ADMIN@MYDOMAIN.COM",
+                Email = "admin@mydomain.com",
+                NormalizedEmail = "ADMIN@MYDOMAIN.COM",
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                SecurityStamp = new Guid().ToString(),
+            };
+            admin.PasswordHash = hasher.HashPassword(admin, "password");
+            admin.UpdateName("Admin", "Admin");
+
+            var shadowAdmin = new User
+            {
+                Id = _demoShadowAdminId,
+                UserName = "shadow@mydomain.com",
+                NormalizedUserName = "SHADOW@MYDOMAIN.COM",
+                Email = "shadow@mydomain.com",
+                NormalizedEmail = "SHADOW@MYDOMAIN.COM",
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                SecurityStamp = new Guid().ToString(),
+            };
+            shadowAdmin.PasswordHash = hasher.HashPassword(shadowAdmin, "password");
 
             // tenants
             var myOrg = new Organization(_demoMyTenantId, "MyCompany", false, _demoAdminId, "tenantlogo1.jpg");

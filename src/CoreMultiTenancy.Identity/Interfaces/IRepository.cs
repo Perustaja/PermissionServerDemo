@@ -1,3 +1,5 @@
+using CoreMultiTenancy.Core.Interfaces;
+
 namespace CoreMultiTenancy.Identity.Interfaces
 {
     /// <summary>
