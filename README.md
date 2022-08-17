@@ -1,8 +1,8 @@
 # Goals
 This project has three main goals in order of least to greatest difficulty
-#### 1 - To showcase how a client, API, and identity provider can be distinct and work together
+#### 1 - To showcase how a client, API, and identity provider can work together despite being entirely separate projects
 #### 2 - To have a multi-tenant structure across this architecture with tenant management handled by the identity provider
-#### 3 - To have an authorization system built on permissions that have immediate affect on the users when changed (no refresh delay such as with JWT)
+#### 3 - To have an authorization system built on permissions that have immediate affect on the users when changed (no refresh delay such as with JWT), alongside user-created roles with global defaults
 
 ## 1 - To showcase how a client, API, and identity provider can be distinct and work together
 
