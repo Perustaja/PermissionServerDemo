@@ -23,7 +23,6 @@ namespace CoreMultiTenancy.Mvc.Controllers
         [Route("/")]
         public async Task<IActionResult> CallApi()
         {
-            // Get access token and display information
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             _logger.LogInformation(accessToken);
 
