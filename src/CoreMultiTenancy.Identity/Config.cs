@@ -22,13 +22,14 @@ namespace CoreMultiTenancy.Identity
         public static IEnumerable<Client> Clients =>
             new Client[]
             { 
-                // MVC
                 new Client()
                 {
-                    ClientName = "Test MVC Client",
-                    ClientId = "testmvc",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientName = "Test Angular Client",
+                    ClientId = "testclient",
+                    AllowedGrantTypes = GrantTypes.Implicit,
                     RequireConsent = false,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedCorsOrigins = { "https://localhost:5001" },
                     RedirectUris = { "https://localhost:5001/signin-oidc" },
                     PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
                     AllowedScopes =

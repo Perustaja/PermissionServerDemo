@@ -50,13 +50,13 @@
             "processId": "${command:pickProcess}"
         },
         {
-            "name": ".NET Core Launch (Mvc)",
+            "name": ".NET Core Launch (Client)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildMvc",
-            "program": "${workspaceFolder}/src/CoreMultiTenancy.Mvc/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Mvc.dll",
+            "preLaunchTask": "buildClient",
+            "program": "${workspaceFolder}/src/CoreMultiTenancy.Client/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Client.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Mvc",
+            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Client",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
@@ -95,12 +95,12 @@
     ],
     "compounds": [
         {
-            "name": "Api, Idp, and Mvc",
+            "name": "Api, Idp, and Client",
             "configurations": [
                 ".NET Core Build (Core)",
                 ".NET Core Launch (Api)",
                 ".NET Core Launch (Identity)",
-                ".NET Core Launch (Mvc)"
+                ".NET Core Launch (Client)"
             ]
         }
     ]
