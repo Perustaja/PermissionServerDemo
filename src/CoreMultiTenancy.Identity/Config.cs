@@ -9,7 +9,7 @@ namespace CoreMultiTenancy.Identity
         public static IEnumerable<IdentityResource> Ids =>
             new IdentityResource[]
             {
-                new IdentityResources.OpenId(), // Required for OpenID Connect
+                new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
             };
 
@@ -27,11 +27,11 @@ namespace CoreMultiTenancy.Identity
                     ClientName = "Test Angular Client",
                     ClientId = "testclient",
                     AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedCorsOrigins = { "https://localhost:44459" },
                     RequireConsent = false,
                     AllowAccessTokensViaBrowser = true,
-                    AllowedCorsOrigins = { "https://localhost:5001" },
-                    RedirectUris = { "https://localhost:5001/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
+                    RedirectUris = { "https://localhost:44459/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:44459/signout-callback-oidc" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
