@@ -69,4 +69,4 @@ $ dotnet ef database update
 
 #### Startup
 the tracked .vscode folder contains json files to launch all 3 projects at once. Navigate to the
-debug tab in vscode and select the "Api, Idp, and Mvc" selection, then click on the Run button.
+debug tab in vscode and select the "Api, Idp, and Client" selection, then click on the Run button.
