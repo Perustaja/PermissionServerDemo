@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { User, UserManager, UserManagerSettings  } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
-import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
 
 export type IAuthenticationResult =
   SuccessAuthenticationResult |
@@ -172,11 +171,6 @@ export class AuthorizeService {
   private async ensureUserManagerInitialized(): Promise<void> {
     if (this.userManager !== undefined) {
       return;
-    }
-
-    const response = await fetch(ApplicationPaths.ApiAuthorizationClientConfigurationUrl);
-    if (!response.ok) {
-      throw new Error(`Could not load settings for '${ApplicationName}'`);
     }
 
     const settings: UserManagerSettings = {

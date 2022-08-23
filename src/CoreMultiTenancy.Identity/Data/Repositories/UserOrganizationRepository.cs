@@ -56,6 +56,14 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<UserOrganization>.None;
         }
 
+        public async Task<List<UserOrganization>> GetByUserIdAsync(Guid userId)
+        {
+            return await _applicationContext.Set<UserOrganization>()
+                .Where(uo => uo.UserId == userId)
+                .Include(uo => uo.Organization)
+                .ToListAsync();
+        }
+
         public UserOrganization Add(UserOrganization uo)
             => _applicationContext.Add(uo).Entity;
 

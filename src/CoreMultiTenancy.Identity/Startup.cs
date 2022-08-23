@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using CoreMultiTenancy.Identity.Grpc;
 using Microsoft.AspNetCore.Routing;
 using Cmt.Protobuf;
+using System.Reflection;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -68,6 +69,8 @@ namespace CoreMultiTenancy.Identity
             services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
             services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
+
+            services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
 
             services.AddRazorPages()
                 .AddRazorPagesOptions(o =>

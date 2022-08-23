@@ -133,6 +133,10 @@ namespace CoreMultiTenancy.Identity.Services
             await _roleRepo.UnitOfWork.Commit();
             return Option<Error>.None;
         }
+
+        public async Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid userId) {
+            return await _userOrgRepo.GetByUserIdAsync(userId);
+        }
         #endregion
 
         #region InvitationManagement

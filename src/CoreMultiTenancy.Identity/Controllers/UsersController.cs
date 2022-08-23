@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -14,21 +18,27 @@ namespace CoreMultiTenancy.Identity.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly IPermissionService _permSvc;
+        private readonly IOrganizationManager _orgManager;
+        private readonly IMapper _mapper;
 
         public UsersController(UserManager<User> userManager,
-            IPermissionService permSvc)
+            IOrganizationManager orgManager,
+            IMapper mapper)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _permSvc = permSvc ?? throw new ArgumentNullException(nameof(permSvc));
+            _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
-        [Route("/{orgId}/myPermissions")]
-        public IActionResult GetMyPermissions(string orgId)
+        [Route("/organizations")]
+        public async Task<IActionResult> Get(Guid userId)
         {
-            var perms = _permSvc.GetUsersPermissionsAsync(new Guid(User.GetSubjectId()), new Guid(orgId));
-            return Ok(perms);
+            var orgs = await _orgManager.GetUserOrganizationsByUserIdAsync(new Guid(User.GetSubjectId()));
+            var orgDtos = orgs.Count > 0
+                ? _mapper.Map<List<UserOrganizationGetDto>>(orgs)
+                : new List<UserOrganizationGetDto>();
+            return Ok(orgDtos);
         }
     }
 }
