@@ -34,7 +34,7 @@ Pros<br>
 
 Cons<br>
 1. Network traffic/latency, partially mitigated by using gRPC calls. There is simply no way around this and IMO it is worth it if you need security.
-2. Coupling between the identity provider and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers and only one or two proto files are needed.
+2. Coupling between the identity provider and the API, however it is quite workable from a developer standpoint because gRPC protos provide a very nice contractual understanding between servers and only one or two proto files are needed. Permissions, if stored as an Enum like here, can be stored in a shared library so no magical strings are used and compile-time safety is kept.
 
 #### Permissions themselves
 There are tons of different ways to approach authorization whether it be claims, roles, or policies including both. I chose to map tables to two enum values representing Permissions and PermissionCategories (used for sorting on the front end). On migration, they are updated from the enums in code. There are many different approaches. Using an enum decorated with the [Flags] attribute is the most performant way if you want to model finely-grained permissions and you need less than 64 (the max if using long).
