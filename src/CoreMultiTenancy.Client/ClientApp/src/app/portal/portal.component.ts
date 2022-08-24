@@ -5,7 +5,8 @@ import { TenantStorageService } from '../../tenancy/tenantStorage.service';
 
 @Component({
   selector: 'app-portal-component',
-  templateUrl: './portal.component.html'
+  templateUrl: './portal.component.html',
+  providers: [TenantStorageService]
 })
 export class PortalComponent {
   public userOrganizations: UserOrganization[] = [];

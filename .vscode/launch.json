@@ -35,7 +35,6 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Identity",
             "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
@@ -54,18 +53,17 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildClient",
-            "program": "${workspaceFolder}/src/CoreMultiTenancy.Client/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Client.dll",
+            "program": "${workspaceFolder}/src/CoreMultiTenancy.Client/bin/Debug/net6.0/CoreMultiTenancy.Client.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Client",
             "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
-            },
+            }
         },
         {
             "name": ".NET Core Attach",
@@ -81,13 +79,20 @@
             "program": "${workspaceFolder}/src/CoreMultiTenancy.Core/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Core.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Core",
-            "stopAtEntry": false,
+            "stopAtEntry": false
         },
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
+        },
+        {
+            "type": "chrome",
+            "name": "https://localhost:44459",
+            "request": "launch",
+            "url": "https://localhost:44459",
+            "webRoot": "${workspaceFolder}/src/CoreMultiTenancy.Client/ClientApp"
         }
     ],
     "compounds": [
