@@ -9,7 +9,7 @@ namespace CoreMultiTenancy.Identity
         public static IEnumerable<IdentityResource> Ids =>
             new IdentityResource[]
             {
-                new IdentityResources.OpenId(), // Required for OpenID Connect
+                new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
             };
 
@@ -22,22 +22,28 @@ namespace CoreMultiTenancy.Identity
         public static IEnumerable<Client> Clients =>
             new Client[]
             { 
-                // MVC
                 new Client()
                 {
-                    ClientName = "Test MVC Client",
-                    ClientId = "testmvc",
+                    // Angular SPA, Code with PKCE flow. Read links for information on why not to use implicit
+                    // https://docs.identityserver.io/en/latest/topics/grant_types.html
+                    // https://pragmaticwebsecurity.com/articles/oauthoidc/from-implicit-to-pkce.html
+                    ClientName = "Test Angular Client",
+                    ClientId = "testclient",
                     AllowedGrantTypes = GrantTypes.Code,
+                    AllowedCorsOrigins = { "https://localhost:44459" },
                     RequireConsent = false,
-                    RedirectUris = { "https://localhost:5001/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
+                    AllowAccessTokensViaBrowser = true,
+                    RedirectUris = { "https://localhost:44459/authentication/login-callback" },
+                    PostLogoutRedirectUris = { "https://localhost:44459/authentication/logout-callback" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "testapi",
                     },
-                    ClientSecrets = { new Secret("secret".Sha256()) },
+                    // NOTE: Configure a client secret for production.
+                    RequirePkce = true,
+                    RequireClientSecret = false
                 },
             };
 

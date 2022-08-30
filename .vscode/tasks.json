@@ -38,12 +38,12 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildMvc",
+            "label": "buildClient",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/CoreMultiTenancy.Mvc/CoreMultiTenancy.Mvc.csproj",
+                "${workspaceFolder}/src/CoreMultiTenancy.Client/CoreMultiTenancy.Client.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

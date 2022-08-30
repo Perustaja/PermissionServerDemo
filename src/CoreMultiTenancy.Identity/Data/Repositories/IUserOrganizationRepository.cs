@@ -21,6 +21,9 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         /// <returns>An Option containing a UserOrganization with populated User, UserOrgRole, and Role NPs if found.</returns>
         Task<Option<UserOrganization>> GetByIdsAsync(Guid orgId, Guid userId);
 
+        /// <returns>All UserOrganizations for a given User with populated Organizations</returns>
+        Task<List<UserOrganization>> GetByUserIdAsync(Guid userId);
+
         /// <returns>The UserOrganization entity being tracked on add.</returns>
         UserOrganization Add(UserOrganization uo);
 

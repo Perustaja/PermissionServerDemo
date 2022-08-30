@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Google.Protobuf" Version="3.15.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />

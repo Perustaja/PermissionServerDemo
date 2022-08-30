@@ -82,6 +82,9 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// </summary>
         /// <returns>An Option containing an Error on failure.</returns>
         Task<Option<Error>> DeleteRoleOfOrgAsync(Role role);
+
+        /// <returns>All UserOrganizations for a User, representing which tenants they have access to, empty list if none exist.</returns>
+        Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid id);
         #endregion
 
         #region InvitationManagement
