@@ -24,21 +24,26 @@ namespace CoreMultiTenancy.Identity
             { 
                 new Client()
                 {
+                    // Angular SPA, Code with PKCE flow. Read links for information on why not to use implicit
+                    // https://docs.identityserver.io/en/latest/topics/grant_types.html
+                    // https://pragmaticwebsecurity.com/articles/oauthoidc/from-implicit-to-pkce.html
                     ClientName = "Test Angular Client",
                     ClientId = "testclient",
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.Code,
                     AllowedCorsOrigins = { "https://localhost:44459" },
                     RequireConsent = false,
                     AllowAccessTokensViaBrowser = true,
-                    RedirectUris = { "https://localhost:44459/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:44459/signout-callback-oidc" },
+                    RedirectUris = { "https://localhost:44459/authentication/login-callback" },
+                    PostLogoutRedirectUris = { "https://localhost:44459/authentication/logout-callback" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "testapi",
                     },
-                    ClientSecrets = { new Secret("secret".Sha256()) },
+                    // NOTE: Configure a client secret for production.
+                    RequirePkce = true,
+                    RequireClientSecret = false
                 },
             };
 

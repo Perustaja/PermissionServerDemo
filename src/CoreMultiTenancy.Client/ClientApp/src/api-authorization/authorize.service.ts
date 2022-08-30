@@ -176,13 +176,14 @@ export class AuthorizeService {
     const settings: UserManagerSettings = {
       authority: "https://localhost:5100",
       client_id: "testclient",
-      redirect_uri: "https://localhost:44459/signin-oidc",
-      post_logout_redirect_uri: "https://localhost:44459/signout-callback-oidc",
-      response_type: "id_token",
+      redirect_uri: "https://localhost:44459/authentication/login-callback",
+      post_logout_redirect_uri: "https://localhost:44459/authentication/logout-callback",
+      scope: "openid profile testapi",
+      response_type: "code",
       filterProtocolClaims: true,
       loadUserInfo: true,
       automaticSilentRenew: true,
-      includeIdTokenInSilentRenew: true
+      includeIdTokenInSilentRenew: true,
     };
     this.userManager = new UserManager(settings);
 
