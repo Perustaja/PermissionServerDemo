@@ -6,7 +6,7 @@ import { Injectable } from "@angular/core";
 
 export class TenantStorageService {
     private _tenantId: string = '';
-    public isTenantSet: boolean = this._tenantId.length > 0;
+    public isTenantSet: boolean = this. _tenantId.length > 0;
 
     get tenantId(): string {
         return this._tenantId;

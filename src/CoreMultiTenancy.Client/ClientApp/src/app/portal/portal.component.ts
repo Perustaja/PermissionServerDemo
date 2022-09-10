@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { map, tap } from 'rxjs/operators';
 import { TenantStorageService } from '../../tenancy/tenantStorage.service';
+import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-portal-component',
@@ -10,21 +13,31 @@ import { TenantStorageService } from '../../tenancy/tenantStorage.service';
   styleUrls: ['./portal.component.css'],
   providers: [TenantStorageService]
 })
-export class PortalComponent {
+export class PortalComponent implements OnInit{
   faUserCircle = faUserCircle;
-  idpUrl: string;
-  public userOrganizations: UserOrganization[] = [];
+  idpApiUrl: string;
+  idpBaseUrl: string;
+  userOrganizations: UserOrganization[] = [];
 
   constructor(private http: HttpClient, 
+    private authorizeSvc: AuthorizeService,
     private tenantStorage: TenantStorageService, 
     private router: Router,
-    @Inject('IDP_BASE_URL') idpUrl: string) {
-    this.idpUrl = idpUrl;
-    this.http.get<UserOrganization[]>(idpUrl + `users/organizations`).subscribe({
-      next: (res) => this.userOrganizations = res,
-      error: (e) => console.log(e)
-    });
+    @Inject('IDP_API_URL') idpApiUrl: string,
+    @Inject('IDP_BASE_URL') idpBaseUrl: string) {
+    this.idpApiUrl = idpApiUrl;
+    this.idpBaseUrl = idpBaseUrl;
   }
+
+  ngOnInit() {
+    this.authorizeSvc.getUser()
+      .pipe(map(u => u && u.sub))
+      .subscribe(userId => 
+        this.http.get<UserOrganization[]>(this.idpApiUrl + `/users/${userId}/organizations`).subscribe({
+          next: (res) => this.userOrganizations = res,
+          error: (e) => console.log(e)})
+      )
+  } 
   
   selectTenant(id: string) {
     this.tenantStorage.tenantId = id;

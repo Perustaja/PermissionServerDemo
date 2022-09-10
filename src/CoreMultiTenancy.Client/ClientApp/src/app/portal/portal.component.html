@@ -4,7 +4,7 @@
             <fa-icon [icon]="faUserCircle" size="2x"></fa-icon>
         </a>
         <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="{{idpUrl}}/account/settings/profile">Account</a></li>
+            <li><a class="dropdown-item" href="{{idpBaseUrl}}/account/settings/profile">Account</a></li>
             <li><a class="dropdown-item" [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a></li>
         </ul>
     </div>
@@ -15,15 +15,12 @@
     <p class="text-center">This portal serves as the entry point for the application. Select a tenant to continue.</p>
 </div>
 <div class="tenant-card-container">
-    <div class="tenant-card">
+    <a class="tenant-card onlycursor" href="#">
         <div class="logo">
             <img
                 src="https://us.123rf.com/450wm/lumut/lumut1806/lumut180600090/103080800-plane-ilustration-logo-vector-icon-template.jpg?ver=6" />
         </div>
-        <div class="title">My Organization</div>
-    </div>
-    <div class="tenant-card">
-        <div class="logo"></div>
-        <div class="title">Other Organization</div>
-    </div>
+        <div class="title">My Company</div>
+    </a>
+    <li *ngFor="let userOrg of userOrganizations">{{ userOrg | json }}</li>
 </div>

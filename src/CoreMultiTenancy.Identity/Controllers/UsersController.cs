@@ -9,12 +9,13 @@ using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace CoreMultiTenancy.Identity.Controllers
 {
     [ApiVersion("1.0")]
-    [Authorize]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(LocalApi.PolicyName)]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -30,10 +31,10 @@ namespace CoreMultiTenancy.Identity.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet]
-        [Route("/organizations")]
-        public async Task<IActionResult> Get(Guid userId)
+        [HttpGet("{userId}/organizations")]
+        public async Task<IActionResult> GetOrganizations(Guid userId)
         {
+            // ensure user requesting matches requested id
             var orgs = await _orgManager.GetUserOrganizationsByUserIdAsync(new Guid(User.GetSubjectId()));
             var orgDtos = orgs.Count > 0
                 ? _mapper.Map<List<UserOrganizationGetDto>>(orgs)

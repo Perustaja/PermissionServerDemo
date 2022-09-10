@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, UserManager, UserManagerSettings  } from 'oidc-client';
+import { User, UserManager, UserManagerSettings } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 
@@ -30,6 +30,7 @@ export enum AuthenticationResultStatus {
 
 export interface IUser {
   name?: string;
+  sub?: string;
 }
 
 @Injectable({
@@ -178,7 +179,7 @@ export class AuthorizeService {
       client_id: "testclient",
       redirect_uri: "https://localhost:44459/authentication/login-callback",
       post_logout_redirect_uri: "https://localhost:44459/authentication/logout-callback",
-      scope: "openid profile testapi",
+      scope: "openid profile testapi IdentityServerApi",
       response_type: "code",
       filterProtocolClaims: true,
       loadUserInfo: true,

@@ -22,6 +22,7 @@
     margin-bottom: 20px;
 }
 .tenant-card .logo {
+    display: block;
     height: 158px;
     width: 250px;
     border-bottom: 1px solid #3f3f3f;
