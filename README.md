@@ -67,9 +67,10 @@ $ cd src/CoreMultiTenancy.Api
 $ dotnet ef database update
 ```
 
-Default user has an email & password combination of<br />
-  admin@mydomain.com<br />
-  password
+The database has a seeded default user with the following email & password combination
+
+admin@mydomain.com
+password
 
 #### Startup
 the tracked .vscode folder contains json files to launch all 3 projects at once. Navigate to the
