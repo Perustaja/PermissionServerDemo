@@ -2,10 +2,11 @@ using System;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Options;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Services;
 using IdentityModel;
-using IdentityServer4.Events;
-using IdentityServer4.Extensions;
-using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +49,7 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         // Data for post-signout results. Breaks razor page conventions but necessary for security.
         public LoggedOutViewModel LogoutResult { get; set; }
 
-        public class LoggedOutModel 
+        public class LoggedOutModel
         {
             public string LogoutId { get; set; }
             public string PostLogoutRedirectUri { get; set; }
@@ -58,11 +59,11 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             public bool TriggerExternalSignout => ExternalAuthenticationScheme != null;
             public string ExternalAuthenticationScheme { get; set; }
         }
-        public class InputModel 
+        public class InputModel
         {
             public string LogoutId { get; set; }
             public bool ShowLogoutPrompt { get; set; }
-        } 
+        }
 
         /// <summary>
         /// Logs the user out. Logout should be called via the end-session endpoint.
@@ -74,14 +75,14 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         /// <returns></returns>
         public async Task<IActionResult> OnGetAsync(string logoutId)
         {
-            Input = new InputModel 
+            Input = new InputModel
             {
                 LogoutId = logoutId,
                 ShowLogoutPrompt = _oidcAccountOptions.ShowLogoutPrompt
             };
 
             // If somehow user is not logged in, show login page
-            if (User?.Identity.IsAuthenticated != true) 
+            if (User?.Identity.IsAuthenticated != true)
             {
                 return RedirectToPage("Login");
             }
@@ -147,10 +148,11 @@ namespace CoreMultiTenancy.Identity.Pages.Account
             if (User?.Identity.IsAuthenticated == true)
             {
                 var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
+                if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
                 {
-                    var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
-                    if (providerSupportsSignout)
+                    var provider = HttpContext.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+                    var handler = await provider.GetHandlerAsync(HttpContext, idp);
+                    if (handler is IAuthenticationSignOutHandler)
                     {
                         if (vm.LogoutId == null)
                         {

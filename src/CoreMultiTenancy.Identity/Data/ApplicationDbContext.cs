@@ -15,6 +15,7 @@ namespace CoreMultiTenancy.Identity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
     {
+        private readonly IConfiguration _config;
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionCategory> PermissionCategories { get; set; }
@@ -31,12 +32,18 @@ namespace CoreMultiTenancy.Identity.Data
         public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
             _defaultAdminRoleId = config.GetDefaultAdminRoleId();
             _defaultNewUserRoleId = config.GetDefaultNewUserRoleId();
             _demoAdminId = Guid.Parse(config["DemoAdminId"]);
             _demoShadowAdminId = Guid.Parse(config["DemoShadowAdminId"]);
             _demoMyTenantId = Guid.Parse(config["DemoMyTenantId"]);
             _demoOtherTenantId = Guid.Parse(config["DemoOtherTenantId"]);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseSqlite(_config.GetConnectionString("IdentityDb"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

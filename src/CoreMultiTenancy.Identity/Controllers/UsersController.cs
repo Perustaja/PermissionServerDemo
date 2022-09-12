@@ -5,11 +5,11 @@ using AutoMapper;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
-using IdentityServer4.Extensions;
+using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using static IdentityServer4.IdentityServerConstants;
+using static Duende.IdentityServer.IdentityServerConstants;
 
 namespace CoreMultiTenancy.Identity.Controllers
 {
