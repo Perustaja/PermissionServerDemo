@@ -19,6 +19,8 @@ using CoreMultiTenancy.Identity.Grpc;
 using Microsoft.AspNetCore.Routing;
 using Cmt.Protobuf;
 using System.Reflection;
+using IdentityServer4.Services;
+using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity
 {
@@ -42,13 +44,13 @@ namespace CoreMultiTenancy.Identity
                 .AddDefaultTokenProviders();
 
             services.AddApiVersioning();
-            services.AddAuthentication();
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiScopes(Config.ApiScopes)
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<User>();
+
             builder.AddDeveloperSigningCredential();
 
             services.AddGrpc();
@@ -107,6 +109,7 @@ namespace CoreMultiTenancy.Identity
             });
 
             services.AddGrpcClients();
+            services.AddLocalApiAuthentication();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -124,8 +127,8 @@ namespace CoreMultiTenancy.Identity
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseRazorPagesNotFoundFilter("/error/notfound");
-            app.UseRouting();
 
+            app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
 
@@ -140,15 +143,15 @@ namespace CoreMultiTenancy.Identity
 
     public static class StartupExtensions
     {
+        // Ensures that Not Found razor page results are not sent as api responses
         public static IApplicationBuilder UseRazorPagesNotFoundFilter(this IApplicationBuilder app, string path)
         {
             return app.Use(async (context, next) =>
             {
                 await next();
 
-                // Hacky check at the end for differentiating between api NotFound and razor 404
                 if (context.Response.StatusCode == 404 && !context.Response.HasStarted
-                    && context.Response.ContentType != "application/json")
+                    && !context.Request.Path.Value.Contains("api"))
                 {
                     // If 404 response, re-execute with notfound path request,
                     // this proliferates the existing url in the user's browser.

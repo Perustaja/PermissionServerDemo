@@ -34,21 +34,19 @@
             Log out successful
         </div>
         <hr class="col-sm-12 p-0 m-2" />
-        <div class="col-sm-12">
-                <p>You have been signed out of your account.</p>
-                <p><a href="~/">Click here to return to the home page</a></p>
-        </div>
         @if (Model.LogoutResult.PostLogoutRedirectUri != null)
         {
-            <div>
-                Click <a class="PostLogoutRedirectUri" href="@Model.LogoutResult.PostLogoutRedirectUri">here</a> to return to the
-                <span>@Model.LogoutResult.ClientName</span> application.
+            <div class="col-sm-12">
+                <div>
+                    Click <a class="PostLogoutRedirectUri" href="@Model.LogoutResult.PostLogoutRedirectUri">here</a> to return to the
+                    <span>@Model.LogoutResult.ClientName</span> application.
+                </div>
             </div>
-        }
-
-        @if (Model.LogoutResult.SignOutIframeUrl != null)
-        {
-            <iframe width="0" height="0" class="signout" src="@Model.LogoutResult.SignOutIframeUrl"></iframe>
+        } else {
+            <div class="col-sm-12">
+                    <p>You have been signed out of your account.</p>
+                    <p><a href="~/">Click here to return to the home page</a></p>
+            </div>
         }
     </div>
 </div>   

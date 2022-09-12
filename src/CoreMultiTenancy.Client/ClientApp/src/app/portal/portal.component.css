@@ -1,0 +1,42 @@
+.portal-header {
+    display: flex;
+    justify-content: flex-end;
+    align-content: center;
+    padding-bottom: 20vh;
+}
+.tenant-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, max-content));
+    justify-content: center;
+    padding: initial;
+    margin-top: 30px;
+}
+.tenant-card {
+    display: inline-block;
+    place-self: center;
+    border: 1px solid #3f3f3f;
+    box-shadow: 1px 1px #b9b9b9;
+    border-radius: 2px;
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-bottom: 20px;
+}
+.tenant-card .logo {
+    display: block;
+    height: 158px;
+    width: 250px;
+    border-bottom: 1px solid #3f3f3f;
+}
+.tenant-card .logo img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.tenant-card .title {
+    background-color: #D9D9D9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 500;
+    padding: 4px 0px 4px 0px;
+}

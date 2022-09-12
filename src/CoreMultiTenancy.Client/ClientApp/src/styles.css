@@ -1,0 +1,13 @@
+.fw-350 {
+    font-weight: 350;
+}
+a.onlycursor:link {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+a.onlycursor:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}

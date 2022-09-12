@@ -16,12 +16,14 @@ namespace CoreMultiTenancy.Identity
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("testapi", "Test API")
+                new ApiScope("testapi", "Test API"),
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
+
             };
 
         public static IEnumerable<Client> Clients =>
             new Client[]
-            { 
+            {
                 new Client()
                 {
                     // Angular SPA, Code with PKCE flow. Read links for information on why not to use implicit
@@ -39,6 +41,7 @@ namespace CoreMultiTenancy.Identity
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.LocalApi.ScopeName,
                         "testapi",
                     },
                     // NOTE: Configure a client secret for production.
@@ -46,6 +49,5 @@ namespace CoreMultiTenancy.Identity
                     RequireClientSecret = false
                 },
             };
-
     }
 }

@@ -68,6 +68,7 @@ $ dotnet ef database update
 ```
 
 The database has a seeded default user with the following email & password combination
+
 admin@mydomain.com
 password
 
