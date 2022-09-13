@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Entities;
-using IdentityServer4.Events;
-using IdentityServer4.Models;
-using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Events;
+using Duende.IdentityServer.Models;
 
 namespace CoreMultiTenancy.Identity.Pages.Account
 {
@@ -116,10 +116,6 @@ namespace CoreMultiTenancy.Identity.Pages.Account
         {
             if (context != null)
             {
-                if (context.IsNativeClient())
-                {
-                    return this.NativeRedirectPage(returnUrl);
-                }
                 return Redirect(returnUrl);
             }
             // Else if local, redirect
