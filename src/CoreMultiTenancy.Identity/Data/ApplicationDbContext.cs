@@ -105,7 +105,9 @@ namespace CoreMultiTenancy.Identity.Data
 
             // tenancy and permissions
             var tenancy1 = new UserOrganization(_demoAdminId, _demoMyTenantId);
+            tenancy1.Approve();
             var tenancy2 = new UserOrganization(_demoAdminId, _demoOtherTenantId);
+            tenancy2.Approve();
             var shadow = new UserOrganization(_demoShadowAdminId, _demoOtherTenantId);
             var adminRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultAdminRoleId);
             var adminRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultAdminRoleId);
