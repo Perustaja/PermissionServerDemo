@@ -1,6 +1,12 @@
 using CoreMultiTenancy.Identity;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+    .Enrich.FromLogContext()
+    .ReadFrom.Configuration(ctx.Configuration));
 
 builder.Services.AddControllers();
 
@@ -17,6 +23,7 @@ app.UseCookiePolicy();
 app.UseRazorPagesNotFoundFilter("/error/notfound");
 
 app.UseRouting();
+app.UseCors();
 app.UseIdentityServer();
 app.UseAuthorization();
 
