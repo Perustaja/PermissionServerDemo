@@ -30,7 +30,7 @@ internal static class ServiceExtensions
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.AllowAnyOrigin()
+                policy.WithOrigins("https://localhost:44459")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace CoreMultiTenancy.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
@@ -13,8 +15,7 @@ namespace CoreMultiTenancy.Identity.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Organization", b =>
                 {
@@ -48,7 +49,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 8, 16, 22, 57, 2, 482, DateTimeKind.Utc).AddTicks(8558),
+                            CreationDate = new DateTime(2022, 9, 13, 4, 44, 45, 728, DateTimeKind.Utc).AddTicks(7049),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -58,7 +59,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 8, 16, 22, 57, 2, 483, DateTimeKind.Utc).AddTicks(303),
+                            CreationDate = new DateTime(2022, 9, 13, 4, 44, 45, 728, DateTimeKind.Utc).AddTicks(7053),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -182,19 +183,19 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsGlobal")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid?>("OrgId")
                         .HasColumnType("TEXT");
@@ -203,17 +204,17 @@ namespace CoreMultiTenancy.Identity.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.HasIndex("OrgId");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "a0191735-599a-4efc-a272-8ac1b4a50591",
+                            ConcurrencyStamp = "ad26a1e9-5918-4690-b6fd-7fecc4df95e3",
                             Description = "",
                             IsGlobal = true,
                             Name = "Admin",
@@ -222,7 +223,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "acec8408-32d2-4323-bc4f-b851cacbd9a4",
+                            ConcurrencyStamp = "e8806c0e-120c-4b11-b8c5-5b59636e7e1a",
                             Description = "",
                             IsGlobal = true,
                             Name = "User",
@@ -271,8 +272,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
@@ -290,12 +291,12 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
@@ -313,26 +314,26 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ec5b53c2-c31c-4f37-9c85-d0aad5d810ea",
+                            ConcurrencyStamp = "c4e91628-e1e6-4971-b1c3-a6702fbc887e",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -340,7 +341,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG79lZ7tfECmrTVBxiAmO4emg7aG1ql586GjDCakerAukhN1N9Maf2t8SC2e54RDCA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOqbOizE3nsqToBslTz3YVjhe3rG0Md1tISw3pOoQtfUEFu//RxmgtNNtZ3675tsQA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -350,13 +351,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "706e363f-87d5-4092-a7d0-1627e5d7219a",
+                            ConcurrencyStamp = "05fe2764-bcaa-49b5-9f75-87788bc02b23",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGu/FxqOUapBWRNzrTi07JbA7P9T+EyZ23hQB1hGgGT1yuFnVA3tsNCoVIO/WmencA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPQkjvsfLPA41En7eIup6QyP8UmbSOWDAvzotYKn/kb7eIg+5OpCpGgKqK3ay3kCag==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -401,17 +402,19 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             UserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             OrgId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            AwaitingApproval = true,
+                            AwaitingApproval = false,
                             Blacklisted = false,
-                            DateSubmitted = new DateTime(2022, 8, 16, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
                             UserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            AwaitingApproval = true,
+                            AwaitingApproval = false,
                             Blacklisted = false,
-                            DateSubmitted = new DateTime(2022, 8, 16, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -474,7 +477,7 @@ namespace CoreMultiTenancy.Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -496,7 +499,7 @@ namespace CoreMultiTenancy.Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -517,7 +520,7 @@ namespace CoreMultiTenancy.Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -532,7 +535,7 @@ namespace CoreMultiTenancy.Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -551,7 +554,7 @@ namespace CoreMultiTenancy.Identity.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
@@ -561,6 +564,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasForeignKey("PermCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("PermCategory");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Role", b =>
@@ -568,6 +573,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                     b.HasOne("CoreMultiTenancy.Identity.Entities.Organization", "Organization")
                         .WithMany("Roles")
                         .HasForeignKey("OrgId");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.RolePermission", b =>
@@ -583,6 +590,10 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.UserOrganization", b =>
@@ -598,6 +609,10 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.UserOrganizationRole", b =>
@@ -619,6 +634,12 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -670,6 +691,34 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Organization", b =>
+                {
+                    b.Navigation("Roles");
+
+                    b.Navigation("UserOrganizationRoles");
+
+                    b.Navigation("UserOrganizations");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
+
+                    b.Navigation("UserOrganizationRoles");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.User", b =>
+                {
+                    b.Navigation("UserOrganizationRoles");
+
+                    b.Navigation("UserOrganizations");
                 });
 #pragma warning restore 612, 618
         }

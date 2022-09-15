@@ -5,7 +5,8 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="{{idpBaseUrl}}/account/settings/profile">Account</a></li>
-            <li><a class="dropdown-item" [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a></li>
+            <li><a class="dropdown-item" [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -15,12 +16,11 @@
     <p class="text-center">This portal serves as the entry point for the application. Select a tenant to continue.</p>
 </div>
 <div class="tenant-card-container">
-    <a class="tenant-card onlycursor" href="#">
+    <a *ngFor="let userOrg of userOrganizations" class="tenant-card onlycursor" href="#"
+        (click)="this.selectTenant(userOrg.organization.id)">
         <div class="logo">
-            <img
-                src="https://us.123rf.com/450wm/lumut/lumut1806/lumut180600090/103080800-plane-ilustration-logo-vector-icon-template.jpg?ver=6" />
+            <img src="{{idpBaseUrl}}/img/{{userOrg.organization.logoUri}}" />
         </div>
-        <div class="title">My Company</div>
+        <div class="title">{{userOrg.organization.title}}</div>
     </a>
-    <li *ngFor="let userOrg of userOrganizations">{{ userOrg | json }}</li>
 </div>

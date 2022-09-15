@@ -27,7 +27,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ApiAuthorizationModule,
     RouterModule.forRoot([
-      { path: '', component: PortalComponent, canActivate: [AuthorizeGuard] },
+      { path: '', redirectTo: '/portal', pathMatch: 'full'},
       { path: 'portal', component: PortalComponent, canActivate: [AuthorizeGuard] },
       { path: 'aircraft', component: AircraftComponent, canActivate: [AuthorizeGuard, TenantGuard] },
     ]),

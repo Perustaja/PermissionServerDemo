@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace CoreMultiTenancy.Identity.Migrations
 {
     public partial class demo : Migration
@@ -11,23 +13,23 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
+                    LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,13 +40,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "Organizations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    OwnerUserId = table.Column<Guid>(nullable: false),
-                    LogoUri = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false),
-                    RequiresConfirmationForNewUsers = table.Column<bool>(nullable: false),
-                    CreationDate = table.Column<DateTime>(nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OwnerUserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LogoUri = table.Column<string>(type: "TEXT", nullable: true),
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    RequiresConfirmationForNewUsers = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,9 +57,9 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "PermissionCategories",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    IsObsolete = table.Column<bool>(nullable: false)
+                    Id = table.Column<byte>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    IsObsolete = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,11 +70,11 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<Guid>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,10 +91,10 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: false)
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,10 +111,10 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -129,13 +131,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    OrgId = table.Column<Guid>(nullable: true),
-                    Description = table.Column<string>(maxLength: 50, nullable: true),
-                    IsGlobal = table.Column<bool>(nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OrgId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
+                    IsGlobal = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -144,36 +146,35 @@ namespace CoreMultiTenancy.Identity.Migrations
                         name: "FK_AspNetRoles_Organizations_OrgId",
                         column: x => x.OrgId,
                         principalTable: "Organizations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserOrganizations",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
-                    OrgId = table.Column<Guid>(nullable: false),
-                    AwaitingApproval = table.Column<bool>(nullable: false),
-                    Blacklisted = table.Column<bool>(nullable: false),
-                    InternalNotes = table.Column<string>(nullable: true),
-                    DateSubmitted = table.Column<DateTime>(nullable: false),
-                    DateApproved = table.Column<DateTime>(nullable: true),
-                    DateBlacklisted = table.Column<DateTime>(nullable: true)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OrgId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AwaitingApproval = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Blacklisted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    InternalNotes = table.Column<string>(type: "TEXT", nullable: true),
+                    DateSubmitted = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateApproved = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DateBlacklisted = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserOrganizations", x => new { x.UserId, x.OrgId });
                     table.ForeignKey(
-                        name: "FK_UserOrganizations_Organizations_OrgId",
-                        column: x => x.OrgId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_UserOrganizations_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserOrganizations_Organizations_OrgId",
+                        column: x => x.OrgId,
+                        principalTable: "Organizations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -182,12 +183,12 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "Permissions",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    IsObsolete = table.Column<bool>(nullable: false),
-                    VisibleToUser = table.Column<bool>(nullable: false),
-                    PermCategoryId = table.Column<byte>(nullable: false)
+                    Id = table.Column<byte>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    IsObsolete = table.Column<bool>(type: "INTEGER", nullable: false),
+                    VisibleToUser = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PermCategoryId = table.Column<byte>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -204,11 +205,11 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<Guid>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -225,8 +226,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
-                    RoleId = table.Column<Guid>(nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -249,19 +250,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                 name: "UserOrganizationRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(nullable: false),
-                    OrgId = table.Column<Guid>(nullable: false),
-                    RoleId = table.Column<Guid>(nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OrgId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserOrganizationRoles", x => new { x.UserId, x.OrgId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_UserOrganizationRoles_Organizations_OrgId",
-                        column: x => x.OrgId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserOrganizationRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
@@ -274,28 +269,34 @@ namespace CoreMultiTenancy.Identity.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserOrganizationRoles_Organizations_OrgId",
+                        column: x => x.OrgId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RolePermissions",
                 columns: table => new
                 {
-                    RoleId = table.Column<Guid>(nullable: false),
-                    PermissionId = table.Column<byte>(nullable: false)
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PermissionId = table.Column<byte>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_RolePermissions_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "Permissions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_RolePermissions_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -303,32 +304,32 @@ namespace CoreMultiTenancy.Identity.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "IsGlobal", "Name", "NormalizedName", "OrgId" },
-                values: new object[] { new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), "a0191735-599a-4efc-a272-8ac1b4a50591", "", true, "Admin", "ADMIN", null });
+                values: new object[] { new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"), "e8806c0e-120c-4b11-b8c5-5b59636e7e1a", "", true, "User", "USER", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "IsGlobal", "Name", "NormalizedName", "OrgId" },
-                values: new object[] { new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"), "acec8408-32d2-4323-bc4f-b851cacbd9a4", "", true, "User", "USER", null });
+                values: new object[] { new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), "ad26a1e9-5918-4690-b6fd-7fecc4df95e3", "", true, "Admin", "ADMIN", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), 0, "ec5b53c2-c31c-4f37-9c85-d0aad5d810ea", "admin@mydomain.com", true, "Admin", "Admin", false, null, "ADMIN@MYDOMAIN.COM", "ADMIN@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEG79lZ7tfECmrTVBxiAmO4emg7aG1ql586GjDCakerAukhN1N9Maf2t8SC2e54RDCA==", null, false, "00000000-0000-0000-0000-000000000000", false, "admin@mydomain.com" });
+                values: new object[] { new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), 0, "05fe2764-bcaa-49b5-9f75-87788bc02b23", "shadow@mydomain.com", true, null, null, false, null, "SHADOW@MYDOMAIN.COM", "SHADOW@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEPQkjvsfLPA41En7eIup6QyP8UmbSOWDAvzotYKn/kb7eIg+5OpCpGgKqK3ay3kCag==", null, false, "00000000-0000-0000-0000-000000000000", false, "shadow@mydomain.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), 0, "706e363f-87d5-4092-a7d0-1627e5d7219a", "shadow@mydomain.com", true, null, null, false, null, "SHADOW@MYDOMAIN.COM", "SHADOW@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEGu/FxqOUapBWRNzrTi07JbA7P9T+EyZ23hQB1hGgGT1yuFnVA3tsNCoVIO/WmencA==", null, false, "00000000-0000-0000-0000-000000000000", false, "shadow@mydomain.com" });
+                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), 0, "c4e91628-e1e6-4971-b1c3-a6702fbc887e", "admin@mydomain.com", true, "Admin", "Admin", false, null, "ADMIN@MYDOMAIN.COM", "ADMIN@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEOqbOizE3nsqToBslTz3YVjhe3rG0Md1tISw3pOoQtfUEFu//RxmgtNNtZ3675tsQA==", null, false, "00000000-0000-0000-0000-000000000000", false, "admin@mydomain.com" });
 
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "CreationDate", "IsActive", "LogoUri", "OwnerUserId", "RequiresConfirmationForNewUsers", "Title" },
-                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 8, 16, 22, 57, 2, 482, DateTimeKind.Utc).AddTicks(8558), true, "tenantlogo1.jpg", new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, "MyCompany" });
+                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 9, 13, 4, 44, 45, 728, DateTimeKind.Utc).AddTicks(7049), true, "tenantlogo1.jpg", new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, "MyCompany" });
 
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "CreationDate", "IsActive", "LogoUri", "OwnerUserId", "RequiresConfirmationForNewUsers", "Title" },
-                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 8, 16, 22, 57, 2, 483, DateTimeKind.Utc).AddTicks(303), true, "tenantlogo2.jpg", new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), false, "OtherCompany" });
+                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 9, 13, 4, 44, 45, 728, DateTimeKind.Utc).AddTicks(7053), true, "tenantlogo2.jpg", new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), false, "OtherCompany" });
 
             migrationBuilder.InsertData(
                 table: "PermissionCategories",
@@ -367,38 +368,38 @@ namespace CoreMultiTenancy.Identity.Migrations
 
             migrationBuilder.InsertData(
                 table: "UserOrganizationRoles",
-                columns: new[] { "UserId", "OrgId", "RoleId" },
-                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d") });
+                columns: new[] { "OrgId", "RoleId", "UserId" },
+                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d") });
 
             migrationBuilder.InsertData(
                 table: "UserOrganizationRoles",
-                columns: new[] { "UserId", "OrgId", "RoleId" },
-                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d") });
+                columns: new[] { "OrgId", "RoleId", "UserId" },
+                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d") });
 
             migrationBuilder.InsertData(
                 table: "UserOrganizationRoles",
-                columns: new[] { "UserId", "OrgId", "RoleId" },
-                values: new object[] { new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d") });
+                columns: new[] { "OrgId", "RoleId", "UserId" },
+                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d") });
 
             migrationBuilder.InsertData(
                 table: "UserOrganizations",
-                columns: new[] { "UserId", "OrgId", "AwaitingApproval", "Blacklisted", "DateApproved", "DateBlacklisted", "DateSubmitted", "InternalNotes" },
-                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), true, false, null, null, new DateTime(2022, 8, 16, 0, 0, 0, 0, DateTimeKind.Local), null });
+                columns: new[] { "OrgId", "UserId", "AwaitingApproval", "Blacklisted", "DateApproved", "DateBlacklisted", "DateSubmitted", "InternalNotes" },
+                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, false, new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local), null, new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local), null });
 
             migrationBuilder.InsertData(
                 table: "UserOrganizations",
-                columns: new[] { "UserId", "OrgId", "AwaitingApproval", "Blacklisted", "DateApproved", "DateBlacklisted", "DateSubmitted", "InternalNotes" },
-                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), true, false, null, null, new DateTime(2022, 8, 16, 0, 0, 0, 0, DateTimeKind.Local), null });
+                columns: new[] { "OrgId", "UserId", "AwaitingApproval", "Blacklisted", "DateApproved", "DateBlacklisted", "DateSubmitted", "InternalNotes" },
+                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, false, new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local), null, new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local), null });
 
             migrationBuilder.InsertData(
                 table: "RolePermissions",
-                columns: new[] { "RoleId", "PermissionId" },
-                values: new object[] { new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"), (byte)0 });
+                columns: new[] { "PermissionId", "RoleId" },
+                values: new object[] { (byte)0, new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d") });
 
             migrationBuilder.InsertData(
                 table: "RolePermissions",
-                columns: new[] { "RoleId", "PermissionId" },
-                values: new object[] { new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), (byte)1 });
+                columns: new[] { "PermissionId", "RoleId" },
+                values: new object[] { (byte)1, new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -406,15 +407,15 @@ namespace CoreMultiTenancy.Identity.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoles_OrgId",
+                table: "AspNetRoles",
+                column: "OrgId");
+
+            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoles_OrgId",
-                table: "AspNetRoles",
-                column: "OrgId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
