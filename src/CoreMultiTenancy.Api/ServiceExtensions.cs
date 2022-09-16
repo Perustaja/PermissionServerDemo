@@ -36,6 +36,16 @@ internal static class ServiceExtensions
             });
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("https://localhost:44459")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         builder.Services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
         builder.Services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
         builder.Services.AddGrpc();

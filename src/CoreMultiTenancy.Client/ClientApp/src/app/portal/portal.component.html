@@ -16,11 +16,11 @@
     <p class="text-center">This portal serves as the entry point for the application. Select a tenant to continue.</p>
 </div>
 <div class="tenant-card-container">
-    <a *ngFor="let userOrg of userOrganizations" class="tenant-card onlycursor" href="#"
+    <div *ngFor="let userOrg of userOrganizations" class="tenant-card pointer"
         (click)="this.selectTenant(userOrg.organization.id)">
         <div class="logo">
             <img src="{{idpBaseUrl}}/img/{{userOrg.organization.logoUri}}" />
         </div>
         <div class="title">{{userOrg.organization.title}}</div>
-    </a>
+    </div>
 </div>

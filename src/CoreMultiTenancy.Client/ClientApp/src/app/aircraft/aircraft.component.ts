@@ -5,9 +5,9 @@ import { TenantManagerService } from '../../tenancy/tenantManager.service';
 @Component({
     selector: 'app-aircraft-component',
     templateUrl: './aircraft.component.html',
+    styleUrls: ['./aircraft.component.css'],
     providers: [TenantManagerService]
 })
-
 export class AircraftComponent implements OnInit {
     aircraft: Aircraft[] = [];
     apiUrl: string;
