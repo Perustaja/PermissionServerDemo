@@ -9,7 +9,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 {
     public interface IPermissionRepository
     {
-        Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm);
         Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms);
         Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
         /// <summary>

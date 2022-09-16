@@ -1,17 +1,16 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using CoreMultiTenancy.Api.Authorization;
 using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Entities;
 using CoreMultiTenancy.Api.Entities.Dtos;
 using CoreMultiTenancy.Core.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreMultiTenancy.Api.Controllers
 {
+    [Authorize]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/organizations")]
     public class AircraftController : ControllerBase
@@ -27,19 +26,18 @@ namespace CoreMultiTenancy.Api.Controllers
 
         [HttpGet]
         [TenantedAuthorize]
-        [Route("{tenantId}/[controller]")]
+        [Route("{tenantId}/aircraft")]
         public async Task<IActionResult> Get(Guid tenantId)
         {
             var ac = await _dbContext.Set<Aircraft>()
-                .Where(a => a.TenantId == tenantId)
                 .ToListAsync();
-            var mappedAc = _mapper.Map<AircraftGetDto>(ac);
+            var mappedAc = _mapper.Map<List<AircraftGetDto>>(ac);
             return Ok(mappedAc);
         }
 
         [HttpPost]
         [TenantedAuthorize(PermissionEnum.AircraftCreate)]
-        [Route("{tenantId}/[controller]")]
+        [Route("{tenantId}/aircraft")]
         public async Task<IActionResult> Post(Guid tenantId, Aircraft aircraft)
         {
             if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == aircraft.RegNumber))
@@ -52,7 +50,7 @@ namespace CoreMultiTenancy.Api.Controllers
 
         [HttpPut]
         [TenantedAuthorize(PermissionEnum.AircraftEdit)]
-        [Route("{tenantId}/[controller]/{id}")]
+        [Route("{tenantId}/aircraft/{id}")]
         public async Task<IActionResult> Put(Guid tenantId, string id, Aircraft aircraft)
         {
             var a = await _dbContext.Set<Aircraft>().Where(a => a.RegNumber == id).FirstOrDefaultAsync();

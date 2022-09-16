@@ -4,6 +4,7 @@ using Cmt.Protobuf;
 using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Interfaces;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace UnitTests
             // PermissionService says that the user has permission(s)
             var permSvcMock = AlwaysXPermissionService(true);
 
-            var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
+            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), invalidPerm);
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -44,7 +45,7 @@ namespace UnitTests
             // but the Permission Service says it does not have permission
             var permSvcMock = AlwaysXPermissionService(false);
 
-            var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
+            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.All.ToString());
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -62,7 +63,7 @@ namespace UnitTests
             // And the PermissionService says it has the given permission
             var permSvcMock = AlwaysXPermissionService(true);
 
-            var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
+            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.All.ToString());
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -80,7 +81,7 @@ namespace UnitTests
             // And the PermissionService says it has the given permission
             var permSvcMock = AlwaysXPermissionService(true);
 
-            var evaluator = new RemoteAuthorizationEvaluator(orgManMock.Object, permSvcMock.Object);
+            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr());
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -93,9 +94,11 @@ namespace UnitTests
         private Mock<IPermissionService> AlwaysXPermissionService(bool x)
         {
             var permSvcMock = new Mock<IPermissionService>();
-            permSvcMock.Setup(m => m.UserHasPermissionsAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<List<PermissionEnum>>())).ReturnsAsync(x);
-            permSvcMock.Setup(m => m.UserHasPermissionAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<PermissionEnum>())).ReturnsAsync(x);
+            permSvcMock.Setup(m => m.UserHasPermissionsAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<PermissionEnum[]>())).ReturnsAsync(x);
             return permSvcMock;
         }
+
+        private ILogger<RemoteAuthorizationEvaluator> MockAuthLogger() 
+            => new Mock<ILogger<RemoteAuthorizationEvaluator>>().Object;
     }
 }

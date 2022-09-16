@@ -8,6 +8,7 @@ import { mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthorizeInterceptor implements HttpInterceptor {
+  tokenDestinations: string[] = ['https://localhost:5100', 'https://localhost:6100'];
   constructor(private authorize: AuthorizeService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -15,11 +16,9 @@ export class AuthorizeInterceptor implements HttpInterceptor {
       .pipe(mergeMap(token => this.processRequestWithToken(token, req, next)));
   }
 
-  // Checks if there is an access_token available in the authorize service
-  // and adds it to the request in case it's targeted at the same origin as the
-  // single page application.
+  // Adds the access token to the header if authenticated and request is being sent to api or idp
   private processRequestWithToken(token: string | null, req: HttpRequest<any>, next: HttpHandler) {
-    if (!!token && req.url.startsWith("https://localhost:5100")) {
+    if (!!token && this.tokenDestinations.some(o => req.url.startsWith(o))) {
       req = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`

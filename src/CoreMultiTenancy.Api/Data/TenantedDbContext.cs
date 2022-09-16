@@ -14,7 +14,7 @@ namespace CoreMultiTenancy.Api.Data
     {
         private readonly IConfiguration _config;
         DbSet<Aircraft> Aircraft { get; set; }
-        public string tenantId => _tenant.Id;
+        public Guid tenantId => _tenant.Id;
         private readonly Tenant _tenant;
         private readonly Guid _demoMyTenantId;
         private readonly Guid _demoOtherTenantId;
@@ -38,16 +38,13 @@ namespace CoreMultiTenancy.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // tenancy filter
-            modelBuilder.Entity<Aircraft>().HasQueryFilter(ac => EF.Property<string>(ac, "tenantId") == tenantId);
+            modelBuilder.Entity<Aircraft>().HasQueryFilter(ac => EF.Property<Guid>(ac, "TenantId") == tenantId);
 
             SeedDatabaseForDemo(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
 
-        // Note that SaveChangesAsync() works with most providers to rollback by default 
-        // on failure. In other words, it's only being exposed so that multiple operations
-        // may be performed in a commit by services. No complicated methods are required for this basic
-        // transactional behavior. EF may have proposed best practices so just follow those. 
+        // EF may have proposed new best practices so just follow those for transactional behavior
         public async Task<int> Commit(CancellationToken cancellationToken = default)
             => await SaveChangesAsync();
 

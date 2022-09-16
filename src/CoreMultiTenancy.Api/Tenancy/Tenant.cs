@@ -2,7 +2,7 @@ namespace CoreMultiTenancy.Api.Tenancy
 {
     public class Tenant
     {
-        public Tenant(string id) => Id = id;
-        public readonly string Id;
+        public Tenant(Guid id) => Id = id;
+        public readonly Guid Id;
     }
 }

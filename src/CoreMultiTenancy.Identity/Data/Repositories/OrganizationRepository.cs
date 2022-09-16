@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Core.Interfaces;
 using CoreMultiTenancy.Identity.Entities;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -43,7 +37,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             {
                 var res = await conn.QuerySingleAsync<int>(
                     @"SELECT COUNT(*) FROM Organizations 
-                    WHERE Id = @Id AND SuccessfullyCreated = true",
+                    WHERE Id = @Id AND IsActive = true",
                     new { Id = id }
                 );
                 return res > 0;
@@ -67,7 +61,5 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public void Delete(Organization o)
             => _applicationContext.Set<Organization>().Remove(o);
-
-
     }
 }
