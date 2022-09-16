@@ -2,16 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
-import { map, tap } from 'rxjs/operators';
-import { TenantStorageService } from '../../tenancy/tenantStorage.service';
+import { map } from 'rxjs/operators';
+import { TenantManagerService } from '../../tenancy/tenantManager.service';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-portal-component',
   templateUrl: './portal.component.html',
   styleUrls: ['./portal.component.css'],
-  providers: [TenantStorageService]
+  providers: [TenantManagerService]
 })
 export class PortalComponent implements OnInit{
   faUserCircle = faUserCircle;
@@ -21,7 +20,7 @@ export class PortalComponent implements OnInit{
 
   constructor(private http: HttpClient, 
     private authorizeSvc: AuthorizeService,
-    private tenantStorage: TenantStorageService, 
+    private tenantManager: TenantManagerService, 
     private router: Router,
     @Inject('IDP_API_URL') idpApiUrl: string,
     @Inject('IDP_BASE_URL') idpBaseUrl: string) {
@@ -40,22 +39,22 @@ export class PortalComponent implements OnInit{
   } 
   
   selectTenant(id: string) {
-    this.tenantStorage.tenantId = id;
-    // update permissions cache for controls
+    this.tenantManager.updateTenantSelection(id);
     this.router.navigate(['/aircraft'])
   }
 }
 
 interface UserOrganization {
-  Id: string,
-  LogoUri: string,
-  Title: string,
-  IsActive: boolean
-  Organization: Organization
+  awaitingApproval: boolean,
+  blacklisted: boolean;
+  dateSubmitted: Date
+  organization: Organization
 }
 
 interface Organization {
-  AwaitingApproval: boolean,
-  Blacklisted: boolean;
-  DateSubmitted: Date
+  id: string,
+  logoUri: string,
+  title: string,
+  isActive: boolean
+  organization: Organization
 }

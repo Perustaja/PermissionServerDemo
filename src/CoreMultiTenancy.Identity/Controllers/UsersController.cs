@@ -4,7 +4,6 @@ using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static Duende.IdentityServer.IdentityServerConstants;
@@ -32,12 +31,17 @@ namespace CoreMultiTenancy.Identity.Controllers
         [HttpGet("{userId}/organizations")]
         public async Task<IActionResult> GetOrganizations(Guid userId)
         {
-            // ensure user requesting matches requested id
-            var orgs = await _orgManager.GetUserOrganizationsByUserIdAsync(new Guid(User.GetSubjectId()));
-            var orgDtos = orgs.Count > 0
-                ? _mapper.Map<List<UserOrganizationGetDto>>(orgs)
-                : new List<UserOrganizationGetDto>();
-            return Ok(orgDtos);
+            var tokenId = new Guid(User.GetSubjectId());
+            if (userId == tokenId)
+            {
+                var orgs = await _orgManager.GetUserOrganizationsByUserIdAsync(userId);
+                var orgDtos = orgs.Count > 0
+                    ? _mapper.Map<List<UserOrganizationGetDto>>(orgs)
+                    : new List<UserOrganizationGetDto>();
+                return Ok(orgDtos);
+            }
+
+            return BadRequest($"userId in the URI must match the userId within the access token. Token id: {tokenId}");
         }
     }
 }
