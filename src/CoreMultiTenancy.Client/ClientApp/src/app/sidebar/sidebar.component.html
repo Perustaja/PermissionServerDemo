@@ -7,25 +7,25 @@
   <div class="sidebar-nav">
     <ul class="nav nav-pills flex-column" id="sidebarNav">
       <li class="nav-item">
-        <a class="nav-link active" [routerLink]='["/aircraft"]' [state]='{ local: true }'>
+        <a class="nav-link" [routerLink]='["/aircraft"]' [state]='{ local: true }' [routerLinkActive]="['active']">
           <fa-icon [icon]="faPlaneDeparture" size="1x"></fa-icon>
           Aircraft
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]='["/users"]' [state]='{ local: true }'>
+        <a class="nav-link" [routerLink]='["/users"]' [state]='{ local: true }' [routerLinkActive]="['active']">
           <fa-icon [icon]="faUsers" size="1x"></fa-icon>
           Users
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]='["/roles"]' [state]='{ local: true }'>
+        <a class="nav-link" [routerLink]='["/roles"]' [state]='{ local: true }' [routerLinkActive]="['active']">
           <fa-icon [icon]="faSitemap" size="1x"></fa-icon>
           Roles
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [routerLink]='["/controls"]' [state]='{ local: true }'>
+        <a class="nav-link" [routerLink]='["/controls"]' [state]='{ local: true }' [routerLinkActive]="['active']">
           <fa-icon [icon]="faCog" size="1x"></fa-icon>
           Demo Controls
         </a>
