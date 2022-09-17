@@ -4,3 +4,34 @@
 .pointer {
     cursor: pointer;
 }
+.container-padding {
+    padding-right: 10vw;
+    padding-left: 10vw;
+}
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+.content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    box-shadow: 1px 1px rgb(228, 228, 228);
+}
+.content-header-title {
+    font-size: 22px;
+}
+.content {
+    width: 100%;
+}
+.controls-bg {
+    background-color: #e7e7e7;
+}
+.content-main {
+    margin-left: 10px;
+    margin-top: 10px
+}

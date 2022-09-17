@@ -1,0 +1,30 @@
+.sidebar {
+    min-width: 280px;
+    max-width: 280px;
+    height: 100vh;
+    padding: 0px 10px;
+}
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    height: 10vh;
+}
+.sidebar-nav {
+    height: calc(80vh - 4rem);
+}
+.sidebar-footer {
+    height: 10vh;
+}
+.sidebar-logo {
+    width:35px;
+    height: 35px;
+}
+.nav-link {
+    color: black;
+}
+.nav-link.active {
+   background-color: #646464;
+}
+.nav-item {
+    font-size: 17px;
+}

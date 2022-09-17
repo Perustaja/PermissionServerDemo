@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace CoreMultiTenancy.Api.Migrations
 {
     [DbContext(typeof(TenantedDbContext))]
@@ -13,8 +15,7 @@ namespace CoreMultiTenancy.Api.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.8");
 
             modelBuilder.Entity("CoreMultiTenancy.Api.Entities.Aircraft", b =>
                 {
@@ -23,6 +24,9 @@ namespace CoreMultiTenancy.Api.Migrations
 
                     b.Property<bool>("IsGrounded")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("TEXT");
@@ -39,6 +43,7 @@ namespace CoreMultiTenancy.Api.Migrations
                         {
                             RegNumber = "N772GK",
                             IsGrounded = false,
+                            Model = "Cessna 172S",
                             TenantId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
                             ThumbnailUri = "N772GK.jpg"
                         },
@@ -46,6 +51,7 @@ namespace CoreMultiTenancy.Api.Migrations
                         {
                             RegNumber = "N5342K",
                             IsGrounded = false,
+                            Model = "Piper Archer",
                             TenantId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
                             ThumbnailUri = "N5342K.jpg"
                         });

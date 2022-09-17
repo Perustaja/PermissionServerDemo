@@ -11,11 +11,14 @@ import { TenantManagerService } from '../../tenancy/tenantManager.service';
 export class AircraftComponent implements OnInit {
     aircraft: Aircraft[] = [];
     apiUrl: string;
+    apiBaseUrl: string;
 
     constructor(private http: HttpClient,
         private tenantManager: TenantManagerService,
-        @Inject('API_BASE_URL') apiUrl: string) {
+        @Inject('API_URL') apiUrl: string,
+        @Inject('API_BASE_URL') apiBaseUrl: string) {
         this.apiUrl = apiUrl;
+        this.apiBaseUrl = apiBaseUrl;
     }
 
     ngOnInit() {
@@ -28,6 +31,7 @@ export class AircraftComponent implements OnInit {
 
 export interface Aircraft {
     regNumber: string,
+    model: string,
     thumbnailUri: string,
     isGrounded: boolean
 }

@@ -1,14 +1,5 @@
-<div class="portal-header pt-2">
-    <div class="btn-group">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#">
-            <fa-icon [icon]="faUserCircle" size="2x"></fa-icon>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="{{idpBaseUrl}}/account/settings/profile">Account</a></li>
-            <li><a class="dropdown-item" [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a>
-            </li>
-        </ul>
-    </div>
+<div class="portal-header pt-2 container-padding">
+    <app-login-menu></app-login-menu>
 </div>
 <div class="row justify-content-center">
     <p class="text-center mb-2 display-3 fw-350">CoreMultiTenancy - Portal</p>

@@ -50,8 +50,8 @@ namespace CoreMultiTenancy.Api.Data
 
         private void SeedDatabaseForDemo(ModelBuilder modelBuilder)
         {
-            var tenant1Ac = new Aircraft("N772GK", _demoMyTenantId, "N772GK.jpg");
-            var tenant2Ac = new Aircraft("N5342K", _demoOtherTenantId, "N5342K.jpg");
+            var tenant1Ac = new Aircraft("N772GK", _demoMyTenantId, "N772GK.jpg", "Cessna 172S");
+            var tenant2Ac = new Aircraft("N5342K", _demoOtherTenantId, "N5342K.jpg", "Piper Archer");
 
             modelBuilder.Entity<Aircraft>().HasData(tenant1Ac, tenant2Ac);
         }
