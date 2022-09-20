@@ -22,14 +22,14 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
         }
 
         /// <summary>
-        /// Adds default global roles for the owner and for new users joining the tenant.
+        /// Adds default global roles.
         /// </summary>
         public EntityTypeBuilder<Role> SeedGlobalRoles(EntityTypeBuilder<Role> builder)
         {
             builder.HasData
             (
-                new Role(_defaultAdminRoleId, "Admin"),
-                new Role(_defaultNewUserRoleId, "User")
+                Role.SeededGlobalRole(_defaultAdminRoleId, "Admin", "Default admin role with all permissions."),
+                Role.SeededGlobalRole(_defaultNewUserRoleId, "User", "Default role with minimal permissions.")
             );
             return builder;
         }

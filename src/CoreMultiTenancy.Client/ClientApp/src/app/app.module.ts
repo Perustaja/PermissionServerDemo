@@ -15,13 +15,15 @@ import { TenantGuard } from '../tenancy/tenant.guard';
 import { AircraftComponent } from './aircraft/aircraft.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoginMenuComponent } from '../api-authorization/login-menu/login-menu.component';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
     PortalComponent,
-    AircraftComponent
+    AircraftComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,6 +34,7 @@ import { LoginMenuComponent } from '../api-authorization/login-menu/login-menu.c
       { path: '', redirectTo: '/portal', pathMatch: 'full'},
       { path: 'portal', component: PortalComponent, canActivate: [AuthorizeGuard] },
       { path: 'aircraft', component: AircraftComponent, canActivate: [AuthorizeGuard, TenantGuard] },
+      { path: 'users', component: UsersComponent, canActivate: [AuthorizeGuard, TenantGuard] },
     ]),
     FontAwesomeModule,
     NgbModule,

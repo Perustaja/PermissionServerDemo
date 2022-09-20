@@ -1,0 +1,34 @@
+<div class="wrapper">
+    <app-sidebar></app-sidebar>
+    <div class="content">
+        <div class="content-main">
+            <h5 class="users-count"> Total users: {{users.length}}</h5>
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Awaiting Approval?</th>
+                        <th scope="col">Blacklisted?</th>
+                        <th scope="col">Roles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users, let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{user.firstName}}</td>
+                        <td>{{user.lastName}}</td>
+                        <td>{{ user.userOrganization.awaitingApproval }}</td>
+                        <td>{{ user.userOrganization.blacklisted }}</td>
+                        <td>
+                            <span *ngFor="let role of user.roles, let last = last">
+                                {{ role.name + (last ? "" : ",") }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
