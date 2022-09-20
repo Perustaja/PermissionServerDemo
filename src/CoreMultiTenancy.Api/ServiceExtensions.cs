@@ -1,7 +1,9 @@
+using System.Reflection;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CoreMultiTenancy.Api;
@@ -15,7 +17,7 @@ internal static class ServiceExtensions
         builder.Services.AddControllers();
         builder.Services.AddApiVersioning();
         builder.Services.AddHttpContextAccessor();
-        builder.Services.AddAuthentication("Bearer")
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", o =>
             {
                 o.Authority = "https://localhost:5100";
@@ -34,7 +36,18 @@ internal static class ServiceExtensions
             });
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("https://localhost:44459")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         builder.Services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
+        builder.Services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
         builder.Services.AddGrpc();
         builder.Services.AddGrpcClients();
 

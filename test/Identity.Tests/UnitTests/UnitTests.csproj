@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Grpc.Core" Version="2.35.0" />
     <PackageReference Include="Grpc.Core.Testing" Version="2.35.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="moq" Version="4.15.2" />
     <PackageReference Include="xunit" Version="2.4.1" />

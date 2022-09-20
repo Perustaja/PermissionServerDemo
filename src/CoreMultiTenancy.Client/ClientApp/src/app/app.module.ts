@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 import { PortalComponent } from './portal/portal.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
@@ -14,12 +14,14 @@ import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { TenantGuard } from '../tenancy/tenant.guard';
 import { AircraftComponent } from './aircraft/aircraft.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoginMenuComponent } from '../api-authorization/login-menu/login-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
+    SidebarComponent,
     PortalComponent,
+    AircraftComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

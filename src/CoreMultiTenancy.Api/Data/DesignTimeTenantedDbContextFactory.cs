@@ -1,10 +1,6 @@
-using System;
-using System.IO;
 using CoreMultiTenancy.Api.Tenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreMultiTenancy.Api.Data
 {
@@ -26,7 +22,7 @@ namespace CoreMultiTenancy.Api.Data
             var dummyId = config["DummyTenantId"] ?? throw new ArgumentNullException("Unable to source dummy tenant id from config.");
             var o = new DbContextOptionsBuilder<TenantedDbContext>();
             o.UseSqlite(config.GetConnectionString("ApiDb"));
-            var dummyProvider = new ManualTenantProvider(dummyId);
+            var dummyProvider = new ManualTenantProvider(new Guid(dummyId));
             return new TenantedDbContext(o.Options, config, dummyProvider);
         }
     }

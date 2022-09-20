@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { map, Observable } from 'rxjs';
 import { AuthorizeService } from '../authorize.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-menu',
@@ -9,13 +9,16 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./login-menu.component.css']
 })
 export class LoginMenuComponent implements OnInit {
-  public isAuthenticated?: Observable<boolean>;
-  public userName?: Observable<string | null | undefined>;
+  faUserCircle = faUserCircle;
+  idpBaseUrl: string;
+  userName?: Observable<string | null | undefined>;
 
-  constructor(private authorizeService: AuthorizeService) { }
+  constructor(private authorizeSvc: AuthorizeService,
+    @Inject('IDP_BASE_URL') idpBaseUrl: string) {
+    this.idpBaseUrl = idpBaseUrl;
+  }
 
   ngOnInit() {
-    this.isAuthenticated = this.authorizeService.isAuthenticated();
-    this.userName = this.authorizeService.getUser().pipe(map(u => u && u.name));
+    this.userName = this.authorizeSvc.getUser().pipe(map(u => u && u.name));
   }
 }

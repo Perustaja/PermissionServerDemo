@@ -1,11 +1,7 @@
 using AutoMapper;
-using CoreMultiTenancy.Identity.Entities;
-using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Services;
 using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static Duende.IdentityServer.IdentityServerConstants;
 

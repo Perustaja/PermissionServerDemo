@@ -27,10 +27,7 @@ namespace CoreMultiTenancy.Identity.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UserHasPermissionAsync(Guid userId, Guid orgId, PermissionEnum perm)
-            => await _permRepo.UserHasPermissionAsync(userId, orgId, perm);
-
-        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms)
-            => await _permRepo.UserHasPermissionsAsync(userId, orgId, perms);
+        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms)
+            => await _permRepo.UserHasPermissionsAsync(userId, orgId, perms.ToList());
     }
 }

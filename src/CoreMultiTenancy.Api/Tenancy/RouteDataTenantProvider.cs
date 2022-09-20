@@ -21,7 +21,7 @@ namespace CoreMultiTenancy.Api.Tenancy
             _httpContext.Request.RouteValues.TryGetValue(_routeDataIdentifier, out object value);
             if (value == null)
                 throw new TenantNotFoundException(_httpContext, _routeDataIdentifier);
-            return new Tenant(value.ToString());
+            return new Tenant(new Guid(value.ToString()));
         }
     }
 }

@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using CoreMultiTenancy.Core.Authorization;
-using System.Linq;
 
 namespace CoreMultiTenancy.Api.Authorization
 {
@@ -24,9 +17,13 @@ namespace CoreMultiTenancy.Api.Authorization
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+            var logger = GetLogger(context.HttpContext);
+            logger.LogInformation("Beginning authorization request from Api to Idp.");
+
             // If user is somehow is an invalid state, challenge
             if (context.HttpContext.User?.Identity.IsAuthenticated == false)
             {
+                logger.LogWarning("User was not authenticated for GRPC authorization. Returning challenge.");
                 context.Result = new ChallengeResult();
                 return;
             }
@@ -38,12 +35,14 @@ namespace CoreMultiTenancy.Api.Authorization
             var request = new PermissionAuthorizeRequest()
             {
                 UserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                TenantId = tenantId,
+                TenantId = tenantId.ToString(),
             };
+
             if (_permissions != null)
                 request.Perms.AddRange(_permissions);
 
             // Send and set context.Result based on reply
+            logger.LogInformation($"Authorization request to be sent via GRPC: {request}");
             var reply = await client.AuthorizeAsync(request);
             SetContextResultOnReply(context, reply);
         }
@@ -51,6 +50,7 @@ namespace CoreMultiTenancy.Api.Authorization
         private void SetContextResultOnReply(AuthorizationFilterContext context, AuthorizeDecision reply)
         {
             var logger = GetLogger(context.HttpContext);
+            logger.LogInformation($"Remote authorization result: {reply}");
             if (!reply.Allowed)
             {
                 switch (reply.FailureReason)

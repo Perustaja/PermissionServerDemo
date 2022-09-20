@@ -14,6 +14,7 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
 })
 export class PortalComponent implements OnInit{
   faUserCircle = faUserCircle;
+  
   idpApiUrl: string;
   idpBaseUrl: string;
   userOrganizations: UserOrganization[] = [];

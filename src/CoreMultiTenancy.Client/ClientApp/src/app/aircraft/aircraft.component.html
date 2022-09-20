@@ -1,0 +1,18 @@
+<div class="wrapper">
+    <app-sidebar></app-sidebar>
+    <div class="content">
+        <div class="content-main">
+            <div *ngFor="let ac of aircraft" class="card-deck">
+                <div class="col-md-3 col-sm-6" style="margin-bottom: 40px;">
+                    <div class="card">
+                        <img class="card-img-top" src="{{apiBaseUrl}}/img/{{ac.thumbnailUri}}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ac.regNumber }}</h5>
+                            <span class="card-text text-muted">{{ ac.model }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

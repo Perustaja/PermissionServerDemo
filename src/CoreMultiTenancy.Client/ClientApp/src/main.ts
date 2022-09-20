@@ -9,6 +9,9 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 export function getApiBaseUrl(): string {
+  return 'https://localhost:6100/';
+}
+export function getApiUrl(): string {
   return 'https://localhost:6100/api/v1.0';
 }
 export function getIdpBaseUrl(): string {
@@ -20,6 +23,7 @@ export function getIdpApiUrl(): string {
 
 const providers = [
   { provide: 'API_BASE_URL', useFactory: getApiBaseUrl, deps: [] },
+  { provide: 'API_URL', useFactory: getApiUrl, deps: [] },
   { provide: 'IDP_API_URL', useFactory: getIdpApiUrl, deps: [] },
   { provide: 'IDP_BASE_URL', useFactory: getIdpBaseUrl, deps: [] }
 ];

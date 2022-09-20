@@ -8,9 +8,9 @@ namespace CoreMultiTenancy.Api.Tenancy
     /// </summary>
     public class ManualTenantProvider : ITenantProvider
     {
-        private readonly string _tenantId;
+        private readonly Guid _tenantId;
 
-        public ManualTenantProvider(string tenantId)
+        public ManualTenantProvider(Guid tenantId)
         {
             _tenantId = tenantId;
         }
