@@ -10,7 +10,10 @@
     height: 10vh;
 }
 .sidebar-nav {
+    display: flex;
+    flex-direction: column;
     height: calc(80vh - 4rem);
+    justify-content: space-between;
 }
 .sidebar-footer {
     height: 10vh;
