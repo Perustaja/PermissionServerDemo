@@ -25,9 +25,9 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         public async Task<List<UserOrganization>> GetAllByOrgId(Guid orgId)
         {
             return await _applicationContext.Set<UserOrganization>()
-                .Where(uo => uo.OrgId == orgId && uo.AwaitingApproval == false)
+                .Where(uo => uo.OrgId == orgId)
                 .Include(uo => uo.User)
-                .ThenInclude(u => u.UserOrganizationRoles)
+                .ThenInclude(u => u.UserOrganizationRoles.Where(uor => uor.OrgId == orgId))
                 .ThenInclude(uor => uor.Role)
                 .ToListAsync();
         }

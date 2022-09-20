@@ -49,7 +49,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 13, 4, 44, 45, 728, DateTimeKind.Utc).AddTicks(7049),
+                            CreationDate = new DateTime(2022, 9, 20, 4, 3, 31, 481, DateTimeKind.Utc).AddTicks(7611),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -59,7 +59,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 13, 4, 44, 45, 728, DateTimeKind.Utc).AddTicks(7053),
+                            CreationDate = new DateTime(2022, 9, 20, 4, 3, 31, 481, DateTimeKind.Utc).AddTicks(7619),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -214,8 +214,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "ad26a1e9-5918-4690-b6fd-7fecc4df95e3",
-                            Description = "",
+                            ConcurrencyStamp = "7e9396d7-7b6b-412f-8d0b-775068b6de56",
+                            Description = "Default admin role with all permissions.",
                             IsGlobal = true,
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -223,8 +223,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "e8806c0e-120c-4b11-b8c5-5b59636e7e1a",
-                            Description = "",
+                            ConcurrencyStamp = "6074f846-56d2-4f1b-b949-5ce1e5f40d8e",
+                            Description = "Default role with minimal permissions.",
                             IsGlobal = true,
                             Name = "User",
                             NormalizedName = "USER"
@@ -333,7 +333,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c4e91628-e1e6-4971-b1c3-a6702fbc887e",
+                            ConcurrencyStamp = "a1b2a51e-ba57-40ed-8e69-d6c1441e807f",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -341,7 +341,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOqbOizE3nsqToBslTz3YVjhe3rG0Md1tISw3pOoQtfUEFu//RxmgtNNtZ3675tsQA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOaBzUNMHsgegYJ0ejUDPjLwjhKRJ4h2l99K9wdZFZrHBinknf02cqTvFGYeZb+etg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -351,13 +351,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "05fe2764-bcaa-49b5-9f75-87788bc02b23",
+                            ConcurrencyStamp = "4b5c27d5-2510-44bc-a7f5-b8b5dba36d63",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPQkjvsfLPA41En7eIup6QyP8UmbSOWDAvzotYKn/kb7eIg+5OpCpGgKqK3ay3kCag==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEtVk1gkpxDR/nX465hbMx6C+NJ3OHii0GWJQymGYT0hh+09kq/TO6F4+4H/qOlGZg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -404,8 +404,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                             OrgId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
@@ -413,8 +413,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                             OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 9, 12, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -452,9 +452,27 @@ namespace CoreMultiTenancy.Identity.Migrations
                         },
                         new
                         {
+                            UserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
+                            OrgId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
+                            RoleId = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d")
+                        },
+                        new
+                        {
+                            UserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
+                            OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
+                            RoleId = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d")
+                        },
+                        new
+                        {
                             UserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
                             RoleId = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d")
+                        },
+                        new
+                        {
+                            UserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
+                            OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
+                            RoleId = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d")
                         });
                 });
 

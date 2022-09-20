@@ -6,7 +6,7 @@ namespace CoreMultiTenancy.Identity.Entities.Dtos
 {
     [AutoMap(typeof(UserOrganization))]
     public class UserOrganizationGetDto {
-        public bool AwaitingApproval { get; set; } = true;
+        public bool AwaitingApproval { get; set; }
         public bool Blacklisted { get; set; }
         public DateTime DateSubmitted { get; set; }
         [SourceMember(nameof(UserOrganization.Organization))]

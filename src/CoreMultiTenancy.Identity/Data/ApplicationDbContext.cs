@@ -111,12 +111,18 @@ namespace CoreMultiTenancy.Identity.Data
             var shadow = new UserOrganization(_demoShadowAdminId, _demoOtherTenantId);
             var adminRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultAdminRoleId);
             var adminRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultAdminRoleId);
+            var adminBaseRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultNewUserRoleId);
+            var adminBaseRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultNewUserRoleId);
             var shadowAdminRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultAdminRoleId);
+            var shadowBaseRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultNewUserRoleId);
 
+            // note that global roles are seeded in RoleConfiguration.cs as that would take place
+            // outside of a demo environment
             modelBuilder.Entity<User>().HasData(admin, shadowAdmin);
             modelBuilder.Entity<Organization>().HasData(myOrg, otherOrg);
             modelBuilder.Entity<UserOrganization>().HasData(tenancy1, tenancy2);
-            modelBuilder.Entity<UserOrganizationRole>().HasData(adminRole1, adminRole2, shadowAdminRole);
+            modelBuilder.Entity<UserOrganizationRole>().HasData(
+                adminRole1, adminRole2, adminBaseRole1, adminBaseRole2, shadowAdminRole, shadowBaseRole);
         }
     }
 }

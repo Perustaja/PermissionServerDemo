@@ -29,20 +29,24 @@ namespace CoreMultiTenancy.Identity.Entities
         {
             OrgId = orgId;
             Name = name;
+            NormalizedName = name.ToUpper();
             IsGlobal = false;
             Description = desc;
         }
 
-        /// <summary>
-        /// Creates a global role accessible by all tenants (Guid specified for seeding).
-        /// </summary>
-        public Role(Guid id, string name)
+
+        /// <returns>
+        /// A global role accessible by all tenants (Guid specified for seeding).
+        /// </returns>
+        public static Role SeededGlobalRole(Guid id, string name, string desc)
         {
-            Id = id;
-            Name = name;
-            NormalizedName = name.ToUpper();
-            IsGlobal = true;
-            Description = String.Empty;
+            var r = new Role();
+            r.Id = id;
+            r.IsGlobal = true;
+            r.Name = name;
+            r.NormalizedName = name.ToUpper();
+            r.Description = desc;
+            return r;
         }
 
         /// <summary>
