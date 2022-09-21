@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Perustaja.Polyglot.Option;
 
@@ -19,6 +20,9 @@ namespace CoreMultiTenancy.Identity.Interfaces
         Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms);
 
         Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
+
+        /// <returns>A list of permission objects with populated PermissionCategories</returns>
+        Task<List<Permission>> GetAllVisiblePermissionsAsync();
         
         /// <summary>
         /// Sets the User's permissions based on the role id under a specific tenant.

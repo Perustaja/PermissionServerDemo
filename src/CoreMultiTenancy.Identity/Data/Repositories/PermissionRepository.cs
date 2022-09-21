@@ -53,5 +53,13 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<Permission>> GetAllVisiblePermissionsAsync()
+        {
+            return await _applicationContext.Set<Permission>()
+                .Where(p => p.VisibleToUser && !p.IsObsolete)
+                .Include(p => p.PermCategory)
+                .ToListAsync();
+        }
     }
 }

@@ -47,19 +47,5 @@ namespace CoreMultiTenancy.Api.Controllers
             await _dbContext.Commit();
             return CreatedAtAction(nameof(aircraft), new { RegNumber = aircraft.RegNumber }, aircraft);
         }
-
-        [HttpPut]
-        [TenantedAuthorize(PermissionEnum.AircraftEdit)]
-        [Route("{tenantId}/aircraft/{id}")]
-        public async Task<IActionResult> Put(Guid tenantId, string id, Aircraft aircraft)
-        {
-            var a = await _dbContext.Set<Aircraft>().Where(a => a.RegNumber == id).FirstOrDefaultAsync();
-            if (a == null)
-                return NotFound();
-            if (aircraft.IsGrounded)
-                a.Ground();
-            await _dbContext.Commit();
-            return Ok();
-        }
     }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +26,16 @@ namespace CoreMultiTenancy.Identity.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // Used for angular controls to keep a small payload size
-        [HttpGet("users/{userId}/organizations/{orgId}/quickpermissions")]
-        public async Task<IActionResult> GetQuickPermissionsForTenant(Guid userId, Guid orgId)
+        [HttpGet("permissions")]
+        public async Task<IActionResult> GetAllVisiblePermissions()
+        {
+            var perms = await _permSvc.GetAllVisiblePermissionsAsync();
+            var mappedPerms = _mapper.Map<List<PermissionGetDto>>(perms);
+            return Ok(mappedPerms);
+        }
+
+        [HttpGet("users/{userId}/organizations/{orgId}/permissions")]
+        public async Task<IActionResult> GetPermissionsWithinTenant(Guid userId, Guid orgId)
         {
             var tokenId = new Guid(User.GetSubjectId());
             if (userId == tokenId)
@@ -37,7 +45,7 @@ namespace CoreMultiTenancy.Identity.Controllers
                     var perms = await _permSvc.GetUsersPermissionsAsync(userId, orgId);
                     if (perms.Count > 0)
                     {
-                        return Ok(perms.Select(p => Enum.GetName(p)));
+                        return Ok(perms.Select(p => p.ToString()));
                     }
 
                     throw new Exception($"User: {userId}, Org: {orgId} User has access but no permissions.");

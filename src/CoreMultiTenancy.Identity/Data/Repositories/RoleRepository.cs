@@ -30,19 +30,16 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public async Task<List<Role>> GetRolesOfOrgAsync(Guid orgId)
         {
-            return await _applicationContext.Set<UserOrganizationRole>()
-                .Where(uor => uor.OrgId == orgId)
-                .Include(uor => uor.Role)
-                .Select(uor => uor.Role)
+            return await _applicationContext.Set<Role>()
+                .Where(r => r.OrgId == orgId)
+                .Include(r => r.RolePermissions)
                 .ToListAsync();
         }
 
         public async Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId)
         {
-            var res = await _applicationContext.Set<UserOrganizationRole>()
-                .Where(uor => uor.OrgId == orgId && uor.RoleId == roleId)
-                .Include(uor => uor.Role)
-                .Select(uor => uor.Role)
+            var res = await _applicationContext.Set<Role>()
+                .Where(r => r.OrgId == orgId && r.Id == roleId)
                 .FirstOrDefaultAsync();
             return res != null
                 ? Option<Role>.Some(res)

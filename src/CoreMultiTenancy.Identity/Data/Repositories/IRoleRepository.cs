@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Results.Errors;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -14,7 +10,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     /// </summary>
     public interface IRoleRepository : IRepository
     {
-        /// <returns>A list of Roles including tenant-specific and global roles.</returns>
+        /// <returns>A list of Roles including tenant-specific and global roles with populated Permissions.</returns>
         Task<List<Role>> GetRolesOfOrgAsync(Guid orgId);
 
         /// <returns>An Option containing the Role if found.</returns>

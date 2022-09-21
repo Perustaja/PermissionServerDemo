@@ -1,5 +1,7 @@
 using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Data.Repositories;
+using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Results.Errors;
 using Perustaja.Polyglot.Option;
@@ -20,6 +22,9 @@ namespace CoreMultiTenancy.Identity.Services
             var perms = await _permRepo.GetUsersPermissionsAsync(userId, orgId);
             return perms;
         }
+
+        public async Task<List<Permission>> GetAllVisiblePermissionsAsync() => 
+            await _permRepo.GetAllVisiblePermissionsAsync();
 
         public Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId)
         {
