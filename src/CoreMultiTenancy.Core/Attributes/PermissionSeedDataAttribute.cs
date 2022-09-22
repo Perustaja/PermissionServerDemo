@@ -27,6 +27,7 @@ namespace CoreMultiTenancy.Core.Attributes
             Name = name;
             PermissionCategory = cat;
             Description = description;
+            VisibleToUser = visibleToUser;
         }
     }
 }

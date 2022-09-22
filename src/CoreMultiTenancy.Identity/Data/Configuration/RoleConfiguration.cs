@@ -29,7 +29,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
             builder.HasData
             (
                 Role.SeededGlobalRole(_defaultAdminRoleId, "Admin", "Default admin role with all permissions."),
-                Role.SeededGlobalRole(_defaultNewUserRoleId, "User", "Default role with minimal permissions.")
+                Role.SeededGlobalRole(_defaultNewUserRoleId, "Default", "Default role with minimal permissions.")
             );
             return builder;
         }

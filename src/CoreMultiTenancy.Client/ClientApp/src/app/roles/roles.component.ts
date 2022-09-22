@@ -44,5 +44,10 @@ export interface Permission {
     id: number,
     name: string,
     description: string,
-    category: string
+    permissionCategory: PermissionCategory
+}
+
+export interface PermissionCategory {
+    id: number,
+    name: string
 }

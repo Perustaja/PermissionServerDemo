@@ -1,0 +1,10 @@
+<div class="wrapper">
+    <app-sidebar></app-sidebar>
+    <div class="content">
+        <div class="content-main">
+            <div *ngFor="let role of roles">
+                {{ role | json }}
+            </div>
+        </div>
+    </div>
+</div>

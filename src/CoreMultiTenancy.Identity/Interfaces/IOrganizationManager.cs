@@ -59,7 +59,7 @@ namespace CoreMultiTenancy.Identity.Interfaces
         #endregion
 
         #region RoleManagement
-        /// <returns>A list of Roles including tenant-specific and global roles.</returns>
+        /// <returns>A list of Roles including tenant-specific and global roles with populated permissions.</returns>
         Task<List<Role>> GetRolesOfOrgAsync(Guid orgId);
 
         /// <returns>An Option containing the Role if found.</returns>

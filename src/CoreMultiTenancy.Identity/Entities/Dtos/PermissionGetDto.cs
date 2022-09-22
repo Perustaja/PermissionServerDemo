@@ -12,7 +12,7 @@ namespace CoreMultiTenancy.Identity.Entities.Dtos
         public string Name { get; set; }
         public string Description { get; set; }
         
-        [SourceMember(nameof(Permission.PermCategory.Name))]
-        public string Category { get; set; }
+        [SourceMember(nameof(Permission.PermCategory))]
+        public PermissionCategoryGetDto PermissionCategory { get; set; }
     }
 }

@@ -22,7 +22,8 @@ import { RolesComponent } from './roles/roles.component';
     SidebarComponent,
     PortalComponent,
     AircraftComponent,
-    UsersComponent
+    UsersComponent,
+    RolesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
