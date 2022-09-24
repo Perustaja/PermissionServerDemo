@@ -26,11 +26,11 @@ namespace CoreMultiTenancy.Identity.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet("permissions")]
-        public async Task<IActionResult> GetAllVisiblePermissions()
+        [HttpGet("permissionCategories")]
+        public async Task<IActionResult> GetAllCategories()
         {
-            var perms = await _permSvc.GetAllVisiblePermissionsAsync();
-            var mappedPerms = _mapper.Map<List<PermissionGetDto>>(perms);
+            var perms = await _permSvc.GetAllVisiblePermissionCategoriesAsync();
+            var mappedPerms = _mapper.Map<List<PermissionCategoryGetDto>>(perms);
             return Ok(mappedPerms);
         }
 

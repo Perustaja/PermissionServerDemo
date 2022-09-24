@@ -2,9 +2,11 @@ using System.Reflection;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Data;
+using CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Grpc;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Mapping;
@@ -25,6 +27,24 @@ internal static class ServiceExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager<UserSignInManager>()
             .AddDefaultTokenProviders();
+
+        builder.Services.AddGlobalRoles(options =>
+        {
+            var adminRoleId = builder.Configuration.GetDefaultAdminRoleId();
+            var newUserRoleId = builder.Configuration.GetDefaultNewUserRoleId();
+
+            options.AddGlobalRole(role =>
+                {
+                    role.WithBaseRole(adminRoleId, "Owner", "Default admin role for new tenant owners")
+                        .AsDefaultAdminRole()
+                        .GrantAllPermissions();
+                });
+            options.AddGlobalRole(role =>
+            {
+                role.WithBaseRole(newUserRoleId, "User", "Default user role with minimal permissions")
+                    .AsDefaultNewUserRole();
+            });
+        });
 
         builder.Services.AddApiVersioning();
 

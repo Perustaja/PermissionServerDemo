@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities.Dtos
@@ -8,5 +9,7 @@ namespace CoreMultiTenancy.Identity.Entities.Dtos
     {
         public PermissionCategoryEnum Id { get; set; }
         public string Name { get; set; }
+        [SourceMember(nameof(PermissionCategory.Permissions))]
+        public List<PermissionGetDto> Permissions { get; set; }
     }
 }

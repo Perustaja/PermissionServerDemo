@@ -1,6 +1,7 @@
 using System;
 using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,13 +9,11 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
 {
     public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermission>
     {
-        private readonly Guid _defaultAdminRoleId;
-        private readonly Guid _defaultNewUserRoleId;
+        private readonly IGlobalRoleProvider _globalRoleProvider;
 
-        public RolePermissionConfiguration(Guid defaultAdminRoleId, Guid defaultNewUserRoleId)
+        public RolePermissionConfiguration(IGlobalRoleProvider globalRoleProvider)
         {
-            _defaultAdminRoleId = defaultAdminRoleId;
-            _defaultNewUserRoleId = defaultNewUserRoleId;
+            _globalRoleProvider = globalRoleProvider ?? throw new ArgumentNullException(nameof(globalRoleProvider));
         }
 
         public void Configure(EntityTypeBuilder<RolePermission> builder)
@@ -39,10 +38,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
         public EntityTypeBuilder<RolePermission> SeedGlobalRolePerms(EntityTypeBuilder<RolePermission> builder)
         {
             // Admin has all, user is basically readonly
-            builder.HasData(
-                new RolePermission(_defaultAdminRoleId, PermissionEnum.All),
-                new RolePermission(_defaultNewUserRoleId, PermissionEnum.Default)
-            );
+            builder.HasData(_globalRoleProvider.GetGlobalRoles().Select(r => r.RolePermissions));
             return builder;
         }
     }

@@ -34,5 +34,9 @@ namespace CoreMultiTenancy.Identity.Services
 
         public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms)
             => await _permRepo.UserHasPermissionsAsync(userId, orgId, perms.ToList());
+
+        public async Task<List<PermissionCategory>> GetAllVisiblePermissionCategoriesAsync()
+            => await _permRepo.GetAllVisiblePermissionCategoriesAsync();
+
     }
 }

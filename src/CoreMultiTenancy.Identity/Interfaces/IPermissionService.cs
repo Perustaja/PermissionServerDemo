@@ -23,6 +23,8 @@ namespace CoreMultiTenancy.Identity.Interfaces
 
         /// <returns>A list of permission objects with populated PermissionCategories</returns>
         Task<List<Permission>> GetAllVisiblePermissionsAsync();
+        /// <returns>A list of all PermissionCategories with populated Permissions</returns>
+        Task<List<PermissionCategory>> GetAllVisiblePermissionCategoriesAsync();
         
         /// <summary>
         /// Sets the User's permissions based on the role id under a specific tenant.

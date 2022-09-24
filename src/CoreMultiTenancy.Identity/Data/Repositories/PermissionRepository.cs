@@ -61,5 +61,13 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 .Include(p => p.PermCategory)
                 .ToListAsync();
         }
+
+        public async Task<List<PermissionCategory>> GetAllVisiblePermissionCategoriesAsync()
+        {
+            return await _applicationContext.Set<PermissionCategory>()
+                .Where(pc => pc.VisibleToUser)
+                .Include(pc => pc.Permissions.Where(p => p.VisibleToUser))
+                .ToListAsync();
+        }
     }
 }

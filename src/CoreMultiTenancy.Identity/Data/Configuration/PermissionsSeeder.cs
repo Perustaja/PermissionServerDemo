@@ -63,7 +63,9 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
 
         private static EntityTypeBuilder<PermissionCategory> SeedGlobalPermCats(EntityTypeBuilder<PermissionCategory> builder)
         {
-            // Create PermissionCategory objects, and then add or update them on startup.
+            // note that there is a one-many relation modeled in EF core, so these categories can
+            // have their permissions pulled out using the dbcontext and LINQ include just by the foreign key,
+            // adding the permissions here is unnecessary
             var categoriesDict = new Dictionary<PermissionCategoryEnum, PermissionCategory>();
             foreach (PermissionCategoryEnum e in Enum.GetValues(typeof(PermissionCategoryEnum)))
             {
@@ -73,7 +75,9 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
                 pc.IsObsolete = attribs.Any(a => a is ObsoleteAttribute);
                 try
                 {
-                    pc.Name = attribs.OfType<DisplayAttribute>().First().Name;
+                    var seedData = attribs.OfType<PermissionCategorySeedDataAttribute>().First();
+                    pc.Name = seedData.Name;
+                    pc.VisibleToUser = seedData.VisibleToUser;
                 }
                 catch
                 {

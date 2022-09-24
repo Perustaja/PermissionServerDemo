@@ -16,6 +16,12 @@ namespace CoreMultiTenancy.Identity.Entities
         [StringLength(50)]
         public string Description { get; private set; }
         public bool IsGlobal { get; private set; }
+        /// <summary>Whether or not the role is the default for a new tenant owner.</summary>
+        public bool IsGlobalAdminDefault { get; private set; }
+        /// <summary>Whether or not the role is the default for a new user.</summary>
+        public bool IsGlobalDefaultForNewUsers { get; private set; }
+        /// <summary>Whether or not the role is the default for a new user for this tenant. Takes priority over global.</summary>
+        public bool IsTenantDefaultForNewUsers { get; private set; }
         [ForeignKey("OrgId")]
         public Organization Organization { get; set; }
         public List<RolePermission> RolePermissions { get; set; }
@@ -32,12 +38,12 @@ namespace CoreMultiTenancy.Identity.Entities
             NormalizedName = name.ToUpper();
             IsGlobal = false;
             Description = desc;
+            IsGlobalAdminDefault = false;
+            IsGlobalDefaultForNewUsers = false;
+            IsTenantDefaultForNewUsers = false;
         }
 
-
-        /// <returns>
-        /// A global role accessible by all tenants (Guid specified for seeding).
-        /// </returns>
+        ///<returns>A global role accessible by all tenants to be tracked by migrations.</returns>
         public static Role SeededGlobalRole(Guid id, string name, string desc)
         {
             var r = new Role();
@@ -46,8 +52,17 @@ namespace CoreMultiTenancy.Identity.Entities
             r.Name = name;
             r.NormalizedName = name.ToUpper();
             r.Description = desc;
+            r.IsGlobalAdminDefault = false;
+            r.IsGlobalDefaultForNewUsers = false;
+            r.IsTenantDefaultForNewUsers = false;
             return r;
         }
+
+        /// <summary>Configures this role to be assigned to all new tenant owners within the application.</summary>
+        public void SetAsGlobalAdminRole() => IsGlobalAdminDefault =true;
+        public void SetAsTenantDefaultNewUserRole() => IsTenantDefaultForNewUsers = true;
+        public void SetAsGlobalDefaultNewUserRole() => IsGlobalDefaultForNewUsers = true;
+
 
         /// <summary>
         /// Sets this Role as belonging to the given Organization. Silently fails if this Role is global.

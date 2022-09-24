@@ -2,8 +2,39 @@
     <app-sidebar></app-sidebar>
     <div class="content">
         <div class="content-main">
-            <div *ngFor="let role of roles">
-                {{ role | json }}
+            <div class="global-roles">
+                <h4>Global Roles</h4>
+                <div class="accordion" id="accordionGlobalRoles">
+                    <ngb-accordion #acc="ngbAccordion">
+                        <ngb-panel *ngFor="let role of globalRoles" title="{{role.name}}: {{role.description}}">
+                            <ng-template ngbPanelContent>
+                                <div class="perm-list">
+                                    <div *ngFor="let cat of permCats">
+                                        <h6>{{cat.name}}</h6>
+                                        <span *ngFor="let perm of cat.permissions">
+                                            <div class="form-check">
+                                                <input class="form-check-input" readonly [checked]="roleHasPermission(role, perm)">
+                                                {{ perm.name }}
+                                              </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+                </div>
+            </div>
+            <div class="user-roles">
+                <h4>User-defined Roles</h4>
+                <div class="accordion" id="accordionGlobalRoles">
+                    <ngb-accordion #acc="ngbAccordion">
+                        <ngb-panel *ngFor="let role of userRoles" title="{{ role.name }}">
+                            <ng-template ngbPanelContent>
+                                {{ role | json }}
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+                </div>
             </div>
         </div>
     </div>

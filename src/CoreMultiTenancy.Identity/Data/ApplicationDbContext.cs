@@ -15,13 +15,15 @@ namespace CoreMultiTenancy.Identity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
     {
-        private readonly IConfiguration _config;
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionCategory> PermissionCategories { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserOrganization> UserOrganizations { get; set; }
         public DbSet<UserOrganizationRole> UserOrganizationRoles { get; set; }
+
+        private readonly IConfiguration _config;
+        private readonly IGlobalRoleProvider _globalRoleProvider;
         private readonly Guid _defaultAdminRoleId;
         private readonly Guid _defaultNewUserRoleId;
         private readonly Guid _demoAdminId;
@@ -29,10 +31,12 @@ namespace CoreMultiTenancy.Identity.Data
         private readonly Guid _demoMyTenantId;
         private readonly Guid _demoOtherTenantId;
 
-        public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options,
+            IGlobalRoleProvider globalRoleProvider)
             : base(options)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
+            _globalRoleProvider = globalRoleProvider ?? throw new ArgumentNullException(nameof(globalRoleProvider));
             _defaultAdminRoleId = config.GetDefaultAdminRoleId();
             _defaultNewUserRoleId = config.GetDefaultNewUserRoleId();
             _demoAdminId = Guid.Parse(config["DemoAdminId"]);
@@ -52,8 +56,8 @@ namespace CoreMultiTenancy.Identity.Data
             modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
             // Seed global defaults and setup join tables
-            modelBuilder.ApplyConfiguration(new RoleConfiguration(_defaultAdminRoleId, _defaultNewUserRoleId));
-            modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(_defaultAdminRoleId, _defaultNewUserRoleId));
+            modelBuilder.ApplyConfiguration(new RoleConfiguration(_globalRoleProvider));
+            modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(_globalRoleProvider));
             modelBuilder.ApplyConfiguration(new UserOrganizationConfiguration());
             modelBuilder.ApplyConfiguration(new UserOrganizationRoleConfiguration());
 

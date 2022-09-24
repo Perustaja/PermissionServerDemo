@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities
@@ -16,6 +17,7 @@ namespace CoreMultiTenancy.Identity.Entities
         public bool IsObsolete { get; set; }
         public bool VisibleToUser { get; set; }
         public PermissionCategoryEnum PermCategoryId { get; set; }
+        [ForeignKey("PermCategoryId")]
         public PermissionCategory PermCategory { get; set; }
         public List<RolePermission> RolePermissions { get; set; }
         public Permission() { }

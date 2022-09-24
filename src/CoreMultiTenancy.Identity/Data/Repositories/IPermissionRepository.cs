@@ -21,5 +21,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         /// <returns>A list of all visible permissions with populated PermissionCategory objects</returns>
         Task<List<Permission>> GetAllVisiblePermissionsAsync();
+        Task<List<PermissionCategory>> GetAllVisiblePermissionCategoriesAsync();
     }
 }

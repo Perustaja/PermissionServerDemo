@@ -9,11 +9,7 @@ namespace CoreMultiTenancy.Core.Authorization
     /// </summary>
     public enum PermissionEnum : byte
     {
-        [PermissionSeedData("Default", PermissionCategoryEnum.Default, VisibleToUser = false)]
-        Default = 0,
-        [PermissionSeedData("All", PermissionCategoryEnum.Default, VisibleToUser = false)]
-        All = 1,
-        [PermissionSeedData("Create Aircraft", PermissionCategoryEnum.Aircraft, "Users with this permission can create new aircraft within the tenant.")]
-        AircraftCreate = 2,
+        [PermissionSeedData(PermissionCategoryEnum.Aircraft, "Create Aircraft", "Users with this permission can create new aircraft within the tenant.")]
+        AircraftCreate = 0,
     }
 }
