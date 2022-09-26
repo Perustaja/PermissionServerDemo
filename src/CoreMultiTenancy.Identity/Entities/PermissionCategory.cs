@@ -11,7 +11,6 @@ namespace CoreMultiTenancy.Identity.Entities
         [Key]
         public PermissionCategoryEnum Id { get; set; }
         public string Name { get; set; }
-        public bool VisibleToUser { get; set; }
         public bool IsObsolete { get; set; }
         public List<Permission> Permissions { get; set; }
         public PermissionCategory() { }

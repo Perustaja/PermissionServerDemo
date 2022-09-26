@@ -38,7 +38,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
         public EntityTypeBuilder<RolePermission> SeedGlobalRolePerms(EntityTypeBuilder<RolePermission> builder)
         {
             // Admin has all, user is basically readonly
-            builder.HasData(_globalRoleProvider.GetGlobalRoles().Select(r => r.RolePermissions));
+            builder.HasData(_globalRoleProvider.GetGlobalRolePermissions());
             return builder;
         }
     }

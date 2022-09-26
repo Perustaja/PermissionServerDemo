@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using CoreMultiTenancy.Core.Attributes;
 using CoreMultiTenancy.Core.Authorization;
@@ -46,7 +42,6 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
                     p.Name = seedData.Name;
                     p.Description = seedData.Description;
                     p.PermCategoryId = seedData.PermissionCategory;
-                    p.VisibleToUser = seedData.VisibleToUser;
                 }
                 catch
                 {
@@ -77,7 +72,6 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
                 {
                     var seedData = attribs.OfType<PermissionCategorySeedDataAttribute>().First();
                     pc.Name = seedData.Name;
-                    pc.VisibleToUser = seedData.VisibleToUser;
                 }
                 catch
                 {

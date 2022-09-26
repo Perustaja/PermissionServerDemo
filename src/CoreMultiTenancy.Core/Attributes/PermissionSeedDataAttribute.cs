@@ -12,7 +12,6 @@ namespace CoreMultiTenancy.Core.Attributes
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool VisibleToUser { get; set; }
         public PermissionCategoryEnum PermissionCategory { get; set; }
 
         /// <summary>
@@ -21,16 +20,12 @@ namespace CoreMultiTenancy.Core.Attributes
         /// <param name="name">
         /// The name to display to the end user in forms
         /// </param>
-        /// <param name="visibleToUser">
-        /// Whether or not the user is allowed to select this as a permission when creating roles
-        /// </param>
-        public PermissionSeedDataAttribute(PermissionCategoryEnum cat, string name = "", string description = "", 
-            bool visibleToUser = true)
+        public PermissionSeedDataAttribute(PermissionCategoryEnum cat, string name = "", 
+            string description = "")
         {
             Name = name;
             PermissionCategory = cat;
             Description = description;
-            VisibleToUser = visibleToUser;
         }
     }
 }

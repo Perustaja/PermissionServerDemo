@@ -21,30 +21,32 @@ internal static class ServiceExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddGlobalRoles(options =>
+        {
+            // in a normal application you will not need to hardcode these ids, the demo
+            // just seeds some users for brevity
+            var adminRoleId = builder.Configuration.GetDefaultAdminRoleId();
+            var newUserRoleId = builder.Configuration.GetDefaultNewUserRoleId();
+
+            options.AddGlobalRole(role =>
+                {
+                    role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
+                        .AsDefaultAdminRole()
+                        .GrantAllPermissions();
+                });
+            options.AddGlobalRole(role =>
+            {
+                role.WithBaseRoleForDemo(newUserRoleId, "User", "Default user role with minimal permissions")
+                    .AsDefaultNewUserRole();
+            });
+        });
+
         builder.Services.AddDbContext<ApplicationDbContext>();
 
         builder.Services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager<UserSignInManager>()
             .AddDefaultTokenProviders();
-
-        builder.Services.AddGlobalRoles(options =>
-        {
-            var adminRoleId = builder.Configuration.GetDefaultAdminRoleId();
-            var newUserRoleId = builder.Configuration.GetDefaultNewUserRoleId();
-
-            options.AddGlobalRole(role =>
-                {
-                    role.WithBaseRole(adminRoleId, "Owner", "Default admin role for new tenant owners")
-                        .AsDefaultAdminRole()
-                        .GrantAllPermissions();
-                });
-            options.AddGlobalRole(role =>
-            {
-                role.WithBaseRole(newUserRoleId, "User", "Default user role with minimal permissions")
-                    .AsDefaultNewUserRole();
-            });
-        });
 
         builder.Services.AddApiVersioning();
 

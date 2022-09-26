@@ -43,11 +43,27 @@ namespace CoreMultiTenancy.Identity.Entities
             IsTenantDefaultForNewUsers = false;
         }
 
-        ///<returns>A global role accessible by all tenants to be tracked by migrations.</returns>
-        public static Role SeededGlobalRole(Guid id, string name, string desc)
+        /// <summary>
+        /// Only used for demo purposes where a hardcoded id is necessary to seed in a user
+        /// </summary>
+        public static Role SeededGlobalRoleForDemo(Guid id, string name, string desc)
         {
             var r = new Role();
             r.Id = id;
+            r.IsGlobal = true;
+            r.Name = name;
+            r.NormalizedName = name.ToUpper();
+            r.Description = desc;
+            r.IsGlobalAdminDefault = false;
+            r.IsGlobalDefaultForNewUsers = false;
+            r.IsTenantDefaultForNewUsers = false;
+            return r;
+        }
+
+        ///<returns>A global role accessible by all tenants to be tracked by migrations.</returns>
+        public static Role SeededGlobalRole(string name, string desc)
+        {
+            var r = new Role();
             r.IsGlobal = true;
             r.Name = name;
             r.NormalizedName = name.ToUpper();

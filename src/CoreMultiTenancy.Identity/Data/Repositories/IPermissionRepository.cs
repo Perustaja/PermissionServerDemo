@@ -20,7 +20,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId);
 
         /// <returns>A list of all visible permissions with populated PermissionCategory objects</returns>
-        Task<List<Permission>> GetAllVisiblePermissionsAsync();
-        Task<List<PermissionCategory>> GetAllVisiblePermissionCategoriesAsync();
+        Task<List<Permission>> GetAllPermissionsAsync();
+        Task<List<PermissionCategory>> GetAllPermissionCategoriesAsync();
     }
 }

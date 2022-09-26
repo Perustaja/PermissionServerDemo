@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreMultiTenancy.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220923042600_demo")]
+    [Migration("20220926080812_demo")]
     partial class demo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 23, 4, 25, 59, 544, DateTimeKind.Utc).AddTicks(8013),
+                            CreationDate = new DateTime(2022, 9, 26, 8, 8, 11, 707, DateTimeKind.Utc).AddTicks(6706),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -61,7 +61,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 23, 4, 25, 59, 544, DateTimeKind.Utc).AddTicks(8017),
+                            CreationDate = new DateTime(2022, 9, 26, 8, 8, 11, 707, DateTimeKind.Utc).AddTicks(6717),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -87,9 +87,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                     b.Property<byte>("PermCategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("VisibleToUser")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PermCategoryId");
@@ -100,29 +97,10 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Description = "",
-                            IsObsolete = false,
-                            Name = "",
-                            PermCategoryId = (byte)0,
-                            VisibleToUser = false
-                        },
-                        new
-                        {
-                            Id = (byte)1,
-                            Description = "",
-                            IsObsolete = false,
-                            Name = "",
-                            PermCategoryId = (byte)0,
-                            VisibleToUser = false
-                        },
-                        new
-                        {
-                            Id = (byte)2,
                             Description = "Users with this permission can create new aircraft within the tenant.",
                             IsObsolete = false,
                             Name = "Create Aircraft",
-                            PermCategoryId = (byte)1,
-                            VisibleToUser = true
+                            PermCategoryId = (byte)1
                         });
                 });
 
@@ -137,9 +115,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("VisibleToUser")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.ToTable("PermissionCategories");
@@ -147,17 +122,9 @@ namespace CoreMultiTenancy.Identity.Migrations
                     b.HasData(
                         new
                         {
-                            Id = (byte)0,
-                            IsObsolete = false,
-                            Name = "",
-                            VisibleToUser = false
-                        },
-                        new
-                        {
                             Id = (byte)1,
                             IsObsolete = false,
-                            Name = "Aircraft",
-                            VisibleToUser = true
+                            Name = "Aircraft"
                         });
                 });
 
@@ -176,6 +143,15 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsGlobal")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsGlobalAdminDefault")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsGlobalDefaultForNewUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsTenantDefaultForNewUsers")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -203,20 +179,26 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "ba77433d-cc36-4960-9f82-c0850df8edd4",
-                            Description = "Default admin role with all permissions.",
+                            ConcurrencyStamp = "160fe0d0-c067-4cc5-8e15-772be7243a99",
+                            Description = "Default admin role for new tenant owners",
                             IsGlobal = true,
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            IsGlobalAdminDefault = true,
+                            IsGlobalDefaultForNewUsers = false,
+                            IsTenantDefaultForNewUsers = false,
+                            Name = "Owner",
+                            NormalizedName = "OWNER"
                         },
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "b9caf510-4882-4156-95b0-7771682b1acb",
-                            Description = "Default role with minimal permissions.",
+                            ConcurrencyStamp = "a5ad572c-a6e2-4889-b768-4399f55c3c20",
+                            Description = "Default user role with minimal permissions",
                             IsGlobal = true,
-                            Name = "Default",
-                            NormalizedName = "DEFAULT"
+                            IsGlobalAdminDefault = false,
+                            IsGlobalDefaultForNewUsers = true,
+                            IsTenantDefaultForNewUsers = false,
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 
@@ -238,11 +220,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             RoleId = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            PermissionId = (byte)1
-                        },
-                        new
-                        {
-                            RoleId = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             PermissionId = (byte)0
                         });
                 });
@@ -322,7 +299,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c45b3fb4-fa34-4801-816e-0a240aa1a62e",
+                            ConcurrencyStamp = "a1af45f0-2f40-415d-9aa0-f8710d7f9191",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -330,7 +307,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB2RVkWkWerW5+KXBeNGWryTB3jkFuTNeOkadFUV/Pwc03/uVPbDwPTgLX1vHrXACA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAvEDKdu+UQBtEE1TsUQp85G8utFYfSLwrp8KeL38S1v7/r5shNdS4Nw8awCHXd2ig==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -340,13 +317,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "81fc5b8e-92f6-4595-8894-03b73599747a",
+                            ConcurrencyStamp = "5f5324f6-4991-433a-bfb3-04498ffca1c9",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHR2Fdj4d21p+TwdrnltoT9jYn7mBRyFteSt2s+8e6HItbar+PByw0pfIIQkb/FV4A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENyUtwc4i22a2mGsr3y7qdtotzjDnMOHLWtIzpD6izacuggzQqAHl15rYFr7OdQKqQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -393,8 +370,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                             OrgId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 9, 22, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 9, 22, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
@@ -402,8 +379,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                             OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 9, 22, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 9, 22, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 

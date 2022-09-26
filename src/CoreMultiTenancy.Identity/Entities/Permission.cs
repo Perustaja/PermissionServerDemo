@@ -15,7 +15,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsObsolete { get; set; }
-        public bool VisibleToUser { get; set; }
         public PermissionCategoryEnum PermCategoryId { get; set; }
         [ForeignKey("PermCategoryId")]
         public PermissionCategory PermCategory { get; set; }

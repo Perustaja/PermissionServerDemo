@@ -10,10 +10,19 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
     public class GlobalRoleBuilder
     {
         private Role _role;
-        public Role Build() => _role;
-        public GlobalRoleBuilder WithBaseRole(Guid id, string name, string desc)
+        private List<RolePermission> _rolePermissions;
+        public Role BuildRole() => _role;
+        public List<RolePermission> BuildPermissions() => _rolePermissions;
+        public GlobalRoleBuilder WithBaseRoleForDemo(Guid id, string name, string desc)
         {
-            var r = Role.SeededGlobalRole(id, name, desc);
+            _rolePermissions = new List<RolePermission>();
+            _role = Role.SeededGlobalRoleForDemo(id, name, desc);;
+            return this;
+        }
+
+        public GlobalRoleBuilder WithBaseRole(string name, string desc)
+        {
+            var r = Role.SeededGlobalRole(name, desc);
             _role = r;
             return this;
         }
@@ -37,13 +46,13 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
             ensureBaseRoleCreated();
             // add permissions to be saved into the db later
             foreach (PermissionEnum p in Enum.GetValues(typeof(PermissionEnum)))
-                _role.RolePermissions.Add(new RolePermission(_role.Id, p));
+                _rolePermissions.Add(new RolePermission(_role.Id, p));
             return this;
         }
 
         private void ensureBaseRoleCreated()
         {
-            if (_role == null)
+            if (_role == null || _rolePermissions == null)
                 throw new Exception("Attempted to configure a global role without specifying a base role. Ensure WithBaseRole() is called before further configuration.");
         }
     }

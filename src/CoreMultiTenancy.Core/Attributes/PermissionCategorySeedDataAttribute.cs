@@ -19,13 +19,9 @@ namespace CoreMultiTenancy.Core.Attributes
         /// <param name="name">
         /// The name to display to the end user in forms
         /// </param>
-        /// <param name="visibleToUser">
-        /// Whether or not the category and its permissions should be shown to the end user (e.g. no for default category)
-        /// </param>
-        public PermissionCategorySeedDataAttribute(string name = "", bool visibleToUser = true)
+        public PermissionCategorySeedDataAttribute(string name = "")
         {
             Name = name;
-            VisibleToUser = visibleToUser;
         }
     }
 }

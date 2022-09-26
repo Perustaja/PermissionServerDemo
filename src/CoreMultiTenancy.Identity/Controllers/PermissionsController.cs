@@ -29,7 +29,7 @@ namespace CoreMultiTenancy.Identity.Controllers
         [HttpGet("permissionCategories")]
         public async Task<IActionResult> GetAllCategories()
         {
-            var perms = await _permSvc.GetAllVisiblePermissionCategoriesAsync();
+            var perms = await _permSvc.GetAllPermissionCategoriesAsync();
             var mappedPerms = _mapper.Map<List<PermissionCategoryGetDto>>(perms);
             return Ok(mappedPerms);
         }
