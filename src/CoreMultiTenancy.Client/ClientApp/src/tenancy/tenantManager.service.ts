@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable } from "@angular/core";
-import { User } from 'oidc-client';
+import { Inject, Injectable } from '@angular/core';
 import { map } from "rxjs";
 import { AuthorizeService } from "src/api-authorization/authorize.service";
 
@@ -21,35 +20,38 @@ export class TenantManagerService {
         return localStorage.getItem('tenantId');
     }
 
-    isTenantSet(): boolean {
+    get permissions(): string[] {
+        if (this.isTenantSet) {
+            const perms = localStorage.getItem('permissions');
+            if (perms === null)
+                throw new Error("Tenant marked as selected but empty user permissions in storage.")
+            else
+                return JSON.parse(perms);
+        }
+        throw new Error("Attempted to access user permissions before tenant was set.")
+    }
+
+    get isTenantSet(): boolean {
         return (localStorage.getItem('tenantId')?.length ?? 0) > 0;
     }
 
-    updateTenantSelection(tenantId: string): void {
+    updateTenantSelection(tenantId: string) {
         localStorage.setItem('tenantId', tenantId);
         this.setPermissionsForTenant(tenantId);
     }
 
-    setPermissionsForTenant(tenantId: string): void {
+    private setPermissionsForTenant(tenantId: string) {
         this.authorizeSvc.getUser()
             .pipe(map(u => u && u.sub))
             .subscribe(userId =>
-                this.http.get<string[]>(this.idpApiUrl + `/users/${userId}/organizations/${tenantId}/quickpermissions`)
+                this.http.get<string[]>(this.idpApiUrl + `/users/${userId}/organizations/${tenantId}/permissions`)
                     .subscribe({
                         next: (res) => {
-                            console.log(`Permissions updated: ${res}`);
+                            console.log(`User permissions updated: ${res}`);
                             localStorage.setItem('permissions', JSON.stringify(res));
                         },
                         error: (e) => console.log(e)
                     })
             );
-    }
-
-    getCurrentPermissions(): string[] {
-        const perms = localStorage.getItem('permissions');
-        if (perms === null)
-            throw new Error("Tenant marked as selected but empty permissions in storage.")
-        else
-            return JSON.parse(perms);
     }
 }

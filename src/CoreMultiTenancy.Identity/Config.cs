@@ -1,6 +1,5 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
-using System.Collections.Generic;
 
 namespace CoreMultiTenancy.Identity
 {

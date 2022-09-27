@@ -53,5 +53,20 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<List<Permission>> GetAllPermissionsAsync()
+        {
+            return await _applicationContext.Set<Permission>()
+                .Where(p => !p.IsObsolete)
+                .Include(p => p.PermCategory)
+                .ToListAsync();
+        }
+
+        public async Task<List<PermissionCategory>> GetAllPermissionCategoriesAsync()
+        {
+            return await _applicationContext.Set<PermissionCategory>()
+                .Include(pc => pc.Permissions)
+                .ToListAsync();
+        }
     }
 }

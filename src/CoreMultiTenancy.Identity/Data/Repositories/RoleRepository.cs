@@ -7,8 +7,6 @@ using CoreMultiTenancy.Core.Interfaces;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Data.Repositories
@@ -30,19 +28,18 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public async Task<List<Role>> GetRolesOfOrgAsync(Guid orgId)
         {
-            return await _applicationContext.Set<UserOrganizationRole>()
-                .Where(uor => uor.OrgId == orgId)
-                .Include(uor => uor.Role)
-                .Select(uor => uor.Role)
+            return await _applicationContext.Set<Role>()
+                .Where(r => r.OrgId == orgId || r.IsGlobal)
+                .Include(r => r.RolePermissions)
+                .ThenInclude(rp => rp.Permission)
+                .ThenInclude(p => p.PermCategory)
                 .ToListAsync();
         }
 
         public async Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId)
         {
-            var res = await _applicationContext.Set<UserOrganizationRole>()
-                .Where(uor => uor.OrgId == orgId && uor.RoleId == roleId)
-                .Include(uor => uor.Role)
-                .Select(uor => uor.Role)
+            var res = await _applicationContext.Set<Role>()
+                .Where(r => r.OrgId == orgId && r.Id == roleId)
                 .FirstOrDefaultAsync();
             return res != null
                 ? Option<Role>.Some(res)

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { PortalComponent } from './portal/portal.component';
@@ -14,8 +13,8 @@ import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { TenantGuard } from '../tenancy/tenant.guard';
 import { AircraftComponent } from './aircraft/aircraft.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LoginMenuComponent } from '../api-authorization/login-menu/login-menu.component';
 import { UsersComponent } from './users/users.component';
+import { RolesComponent } from './roles/roles.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,8 @@ import { UsersComponent } from './users/users.component';
     SidebarComponent,
     PortalComponent,
     AircraftComponent,
-    UsersComponent
+    UsersComponent,
+    RolesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -35,6 +35,7 @@ import { UsersComponent } from './users/users.component';
       { path: 'portal', component: PortalComponent, canActivate: [AuthorizeGuard] },
       { path: 'aircraft', component: AircraftComponent, canActivate: [AuthorizeGuard, TenantGuard] },
       { path: 'users', component: UsersComponent, canActivate: [AuthorizeGuard, TenantGuard] },
+      { path: 'roles', component: RolesComponent, canActivate: [AuthorizeGuard, TenantGuard] },
     ]),
     FontAwesomeModule,
     NgbModule,

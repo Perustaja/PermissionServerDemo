@@ -2,10 +2,14 @@ using System.Reflection;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Data;
+using CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Entities.Dtos;
+using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Grpc;
 using CoreMultiTenancy.Identity.Interfaces;
+using CoreMultiTenancy.Identity.Mapping;
 using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +21,26 @@ internal static class ServiceExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddGlobalRoles(options =>
+        {
+            // in a normal application you will not need to hardcode these ids, the demo
+            // just seeds some users for brevity
+            var adminRoleId = builder.Configuration.GetDefaultAdminRoleId();
+            var newUserRoleId = builder.Configuration.GetDefaultNewUserRoleId();
+
+            options.AddGlobalRole(role =>
+                {
+                    role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
+                        .AsDefaultAdminRole()
+                        .GrantAllPermissions();
+                });
+            options.AddGlobalRole(role =>
+            {
+                role.WithBaseRoleForDemo(newUserRoleId, "User", "Default user role with minimal permissions")
+                    .AsDefaultNewUserRole();
+            });
+        });
+
         builder.Services.AddDbContext<ApplicationDbContext>();
 
         builder.Services.AddIdentity<User, Role>()
@@ -70,8 +94,6 @@ internal static class ServiceExtensions
         builder.Services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
-        builder.Services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
-
         builder.Services.AddRazorPages()
             .AddRazorPagesOptions(o =>
             {
@@ -108,6 +130,8 @@ internal static class ServiceExtensions
 
         builder.Services.AddGrpcClients();
         builder.Services.AddLocalApiAuthentication();
+        builder.Services.AddAutoMapperWithTypeConverters();
+
         return builder.Build();
     }
 
@@ -140,6 +164,18 @@ internal static class ServiceExtensions
         sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeBase>(o =>
         {
             o.Address = new Uri("https://localhost:6100");
+        });
+    }
+
+    public static void AddAutoMapperWithTypeConverters(this IServiceCollection sc)
+    {
+        sc.AddTransient<RolePermissionConverter>();
+
+        sc.AddAutoMapper(cfg =>
+        {
+            cfg.AddMaps(Assembly.GetExecutingAssembly());
+            cfg.CreateMap<RolePermission, PermissionGetDto>()
+                .ConvertUsing<RolePermissionConverter>();
         });
     }
 }

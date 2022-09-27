@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Authorization;
@@ -46,7 +45,7 @@ namespace UnitTests
             var permSvcMock = AlwaysXPermissionService(false);
 
             var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
-            var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.All.ToString());
+            var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.AircraftCreate.ToString());
 
             Assert.True(DecisionsAreEqual(expected, actual));
         }
@@ -64,7 +63,7 @@ namespace UnitTests
             var permSvcMock = AlwaysXPermissionService(true);
 
             var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
-            var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.All.ToString());
+            var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.AircraftCreate.ToString());
 
             Assert.True(DecisionsAreEqual(expected, actual));
         }

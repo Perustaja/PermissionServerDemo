@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CoreMultiTenancy.Core.Attributes;
 
 namespace CoreMultiTenancy.Core.Authorization
 {
@@ -9,10 +10,7 @@ namespace CoreMultiTenancy.Core.Authorization
     /// </summary>
     public enum PermissionCategoryEnum : byte
     {
-        [Display(Name = "Default")]
-        Default = 0,
-
-        [Display(Name = "Aircraft")]
+        [PermissionCategorySeedData("Aircraft")]
         Aircraft = 1,
     }
 }

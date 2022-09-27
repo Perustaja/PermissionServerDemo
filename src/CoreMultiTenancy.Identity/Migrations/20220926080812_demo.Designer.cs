@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreMultiTenancy.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220920040332_demo")]
+    [Migration("20220926080812_demo")]
     partial class demo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 20, 4, 3, 31, 481, DateTimeKind.Utc).AddTicks(7611),
+                            CreationDate = new DateTime(2022, 9, 26, 8, 8, 11, 707, DateTimeKind.Utc).AddTicks(6706),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -61,7 +61,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 20, 4, 3, 31, 481, DateTimeKind.Utc).AddTicks(7619),
+                            CreationDate = new DateTime(2022, 9, 26, 8, 8, 11, 707, DateTimeKind.Utc).AddTicks(6717),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -87,9 +87,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                     b.Property<byte>("PermCategoryId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("VisibleToUser")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PermCategoryId");
@@ -100,47 +97,10 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = (byte)0,
-                            Description = "",
-                            IsObsolete = false,
-                            Name = "Default",
-                            PermCategoryId = (byte)0,
-                            VisibleToUser = false
-                        },
-                        new
-                        {
-                            Id = (byte)1,
-                            Description = "",
-                            IsObsolete = false,
-                            Name = "All",
-                            PermCategoryId = (byte)0,
-                            VisibleToUser = false
-                        },
-                        new
-                        {
-                            Id = (byte)2,
-                            Description = "",
+                            Description = "Users with this permission can create new aircraft within the tenant.",
                             IsObsolete = false,
                             Name = "Create Aircraft",
-                            PermCategoryId = (byte)1,
-                            VisibleToUser = false
-                        },
-                        new
-                        {
-                            Id = (byte)3,
-                            Description = "Users with this role can edit and ground aircraft.",
-                            IsObsolete = false,
-                            Name = "Edit Aircraft",
-                            PermCategoryId = (byte)1,
-                            VisibleToUser = false
-                        },
-                        new
-                        {
-                            Id = (byte)4,
-                            Description = "",
-                            IsObsolete = false,
-                            Name = "Delete Aircraft",
-                            PermCategoryId = (byte)1,
-                            VisibleToUser = false
+                            PermCategoryId = (byte)1
                         });
                 });
 
@@ -160,12 +120,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                     b.ToTable("PermissionCategories");
 
                     b.HasData(
-                        new
-                        {
-                            Id = (byte)0,
-                            IsObsolete = false,
-                            Name = "Default"
-                        },
                         new
                         {
                             Id = (byte)1,
@@ -189,6 +143,15 @@ namespace CoreMultiTenancy.Identity.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsGlobal")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsGlobalAdminDefault")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsGlobalDefaultForNewUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsTenantDefaultForNewUsers")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -216,18 +179,24 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "7e9396d7-7b6b-412f-8d0b-775068b6de56",
-                            Description = "Default admin role with all permissions.",
+                            ConcurrencyStamp = "160fe0d0-c067-4cc5-8e15-772be7243a99",
+                            Description = "Default admin role for new tenant owners",
                             IsGlobal = true,
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            IsGlobalAdminDefault = true,
+                            IsGlobalDefaultForNewUsers = false,
+                            IsTenantDefaultForNewUsers = false,
+                            Name = "Owner",
+                            NormalizedName = "OWNER"
                         },
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "6074f846-56d2-4f1b-b949-5ce1e5f40d8e",
-                            Description = "Default role with minimal permissions.",
+                            ConcurrencyStamp = "a5ad572c-a6e2-4889-b768-4399f55c3c20",
+                            Description = "Default user role with minimal permissions",
                             IsGlobal = true,
+                            IsGlobalAdminDefault = false,
+                            IsGlobalDefaultForNewUsers = true,
+                            IsTenantDefaultForNewUsers = false,
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -251,11 +220,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             RoleId = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            PermissionId = (byte)1
-                        },
-                        new
-                        {
-                            RoleId = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             PermissionId = (byte)0
                         });
                 });
@@ -335,7 +299,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a1b2a51e-ba57-40ed-8e69-d6c1441e807f",
+                            ConcurrencyStamp = "a1af45f0-2f40-415d-9aa0-f8710d7f9191",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -343,7 +307,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOaBzUNMHsgegYJ0ejUDPjLwjhKRJ4h2l99K9wdZFZrHBinknf02cqTvFGYeZb+etg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAvEDKdu+UQBtEE1TsUQp85G8utFYfSLwrp8KeL38S1v7/r5shNdS4Nw8awCHXd2ig==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -353,13 +317,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4b5c27d5-2510-44bc-a7f5-b8b5dba36d63",
+                            ConcurrencyStamp = "5f5324f6-4991-433a-bfb3-04498ffca1c9",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEtVk1gkpxDR/nX465hbMx6C+NJ3OHii0GWJQymGYT0hh+09kq/TO6F4+4H/qOlGZg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENyUtwc4i22a2mGsr3y7qdtotzjDnMOHLWtIzpD6izacuggzQqAHl15rYFr7OdQKqQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -406,8 +370,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                             OrgId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
@@ -415,8 +379,8 @@ namespace CoreMultiTenancy.Identity.Migrations
                             OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 9, 19, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2022, 9, 26, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -580,7 +544,7 @@ namespace CoreMultiTenancy.Identity.Migrations
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
                 {
                     b.HasOne("CoreMultiTenancy.Identity.Entities.PermissionCategory", "PermCategory")
-                        .WithMany()
+                        .WithMany("Permissions")
                         .HasForeignKey("PermCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -725,6 +689,11 @@ namespace CoreMultiTenancy.Identity.Migrations
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.PermissionCategory", b =>
+                {
+                    b.Navigation("Permissions");
                 });
 
             modelBuilder.Entity("CoreMultiTenancy.Identity.Entities.Role", b =>

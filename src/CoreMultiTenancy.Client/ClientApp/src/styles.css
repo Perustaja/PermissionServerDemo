@@ -34,3 +34,7 @@
 .content-main {
     margin: 20px;
 }
+.checkbox-decoration {
+    pointer-events: none;
+    filter: none;
+}

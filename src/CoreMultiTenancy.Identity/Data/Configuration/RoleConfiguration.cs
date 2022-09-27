@@ -1,5 +1,6 @@
 using System;
 using CoreMultiTenancy.Identity.Entities;
+using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,30 +8,20 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
 {
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
-        private readonly Guid _defaultAdminRoleId;
-        private readonly Guid _defaultNewUserRoleId;
+        private readonly IGlobalRoleProvider _globalRoleProvider;
 
-        public RoleConfiguration(Guid defaultAdminRoleId, Guid defaultNewUserRoleId)
+        public RoleConfiguration(IGlobalRoleProvider globalRoleProvider)
         {
-            _defaultAdminRoleId = defaultAdminRoleId;
-            _defaultNewUserRoleId = defaultNewUserRoleId;
-
+            _globalRoleProvider = globalRoleProvider ?? throw new ArgumentNullException(nameof(globalRoleProvider));
         }
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             SeedGlobalRoles(builder);
         }
 
-        /// <summary>
-        /// Adds default global roles.
-        /// </summary>
         public EntityTypeBuilder<Role> SeedGlobalRoles(EntityTypeBuilder<Role> builder)
         {
-            builder.HasData
-            (
-                Role.SeededGlobalRole(_defaultAdminRoleId, "Admin", "Default admin role with all permissions."),
-                Role.SeededGlobalRole(_defaultNewUserRoleId, "User", "Default role with minimal permissions.")
-            );
+            builder.HasData(_globalRoleProvider.GetGlobalRoles());
             return builder;
         }
     }
