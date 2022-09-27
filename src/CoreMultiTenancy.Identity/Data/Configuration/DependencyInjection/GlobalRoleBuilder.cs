@@ -10,13 +10,13 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
     public class GlobalRoleBuilder
     {
         private Role _role;
-        private List<RolePermission> _rolePermissions;
+        private HashSet<RolePermission> _rolePermissions;
         public Role BuildRole() => _role;
-        public List<RolePermission> BuildPermissions() => _rolePermissions;
+        public HashSet<RolePermission> BuildPermissions() => _rolePermissions;
         public GlobalRoleBuilder WithBaseRoleForDemo(Guid id, string name, string desc)
         {
-            _rolePermissions = new List<RolePermission>();
-            _role = Role.SeededGlobalRoleForDemo(id, name, desc);;
+            _rolePermissions = new HashSet<RolePermission>();
+            _role = Role.SeededGlobalRoleForDemo(id, name, desc); ;
             return this;
         }
 
@@ -46,6 +46,15 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
             ensureBaseRoleCreated();
             // add permissions to be saved into the db later
             foreach (PermissionEnum p in Enum.GetValues(typeof(PermissionEnum)))
+                _rolePermissions.Add(new RolePermission(_role.Id, p));
+            return this;
+        }
+
+        public GlobalRoleBuilder GrantPermissions(params PermissionEnum[] perms)
+        {
+            ensureBaseRoleCreated();
+            // add permissions to be saved into the db later
+            foreach (PermissionEnum p in perms)
                 _rolePermissions.Add(new RolePermission(_role.Id, p));
             return this;
         }

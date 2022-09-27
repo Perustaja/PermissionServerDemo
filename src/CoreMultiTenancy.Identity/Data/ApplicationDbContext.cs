@@ -26,6 +26,7 @@ namespace CoreMultiTenancy.Identity.Data
         private readonly IGlobalRoleProvider _globalRoleProvider;
         private readonly Guid _defaultAdminRoleId;
         private readonly Guid _defaultNewUserRoleId;
+        private readonly Guid _createAircraftRoleId;
         private readonly Guid _demoAdminId;
         private readonly Guid _demoShadowAdminId;
         private readonly Guid _demoMyTenantId;
@@ -37,8 +38,9 @@ namespace CoreMultiTenancy.Identity.Data
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _globalRoleProvider = globalRoleProvider ?? throw new ArgumentNullException(nameof(globalRoleProvider));
-            _defaultAdminRoleId = config.GetDefaultAdminRoleId();
-            _defaultNewUserRoleId = config.GetDefaultNewUserRoleId();
+            _defaultAdminRoleId = config.GetDemoRoleId("DefaultAdminRoleId");
+            _defaultNewUserRoleId = config.GetDemoRoleId("DefaultNewUserRoleId");
+            _createAircraftRoleId = config.GetDemoRoleId("CreateAircraftRoleId");
             _demoAdminId = Guid.Parse(config["DemoAdminId"]);
             _demoShadowAdminId = Guid.Parse(config["DemoShadowAdminId"]);
             _demoMyTenantId = Guid.Parse(config["DemoMyTenantId"]);
@@ -55,7 +57,7 @@ namespace CoreMultiTenancy.Identity.Data
             // Permissions seeding MUST be done before others, and in this order to seed properly
             modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
-            // Seed global defaults and setup join tables
+            // Seed global defaults and setup join tables, this is for old EF core so these may be unnecessary
             modelBuilder.ApplyConfiguration(new RoleConfiguration(_globalRoleProvider));
             modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(_globalRoleProvider));
             modelBuilder.ApplyConfiguration(new UserOrganizationConfiguration());
@@ -115,10 +117,8 @@ namespace CoreMultiTenancy.Identity.Data
             var shadow = new UserOrganization(_demoShadowAdminId, _demoOtherTenantId);
             var adminRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultAdminRoleId);
             var adminRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultAdminRoleId);
-            var adminBaseRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultNewUserRoleId);
-            var adminBaseRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultNewUserRoleId);
+            var adminAircraftRole = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _createAircraftRoleId);
             var shadowAdminRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultAdminRoleId);
-            var shadowBaseRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultNewUserRoleId);
 
             // note that global roles are seeded in RoleConfiguration.cs as that would take place
             // outside of a demo environment
@@ -126,7 +126,7 @@ namespace CoreMultiTenancy.Identity.Data
             modelBuilder.Entity<Organization>().HasData(myOrg, otherOrg);
             modelBuilder.Entity<UserOrganization>().HasData(tenancy1, tenancy2);
             modelBuilder.Entity<UserOrganizationRole>().HasData(
-                adminRole1, adminRole2, adminBaseRole1, adminBaseRole2, shadowAdminRole, shadowBaseRole);
+                adminRole1, adminRole2, adminAircraftRole, shadowAdminRole);
         }
     }
 }

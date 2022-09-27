@@ -11,6 +11,10 @@ namespace CoreMultiTenancy.Core.Authorization
     public enum PermissionCategoryEnum : byte
     {
         [PermissionCategorySeedData("Aircraft")]
-        Aircraft = 1,
+        Aircraft,
+        [PermissionCategorySeedData("Roles")]
+        Roles,
+        [PermissionCategorySeedData("Users")]
+        Users,
     }
 }

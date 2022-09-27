@@ -30,8 +30,8 @@ namespace CoreMultiTenancy.Identity.Services
             IOrganizationInviteService inviteSvc)
         {
             _connectionString = config.GetConnectionString("IdentityDb");
-            _defaultAdminRoleId = config.GetDefaultAdminRoleId();
-            _defaultLowestUserRoleId = config.GetDefaultAdminRoleId();
+            _defaultAdminRoleId = config.GetDemoRoleId("DefaultAdminRoleId");
+            _defaultLowestUserRoleId = config.GetDemoRoleId("DefaultNewUserRoleId");
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _userOrgRepo = userOrgRepo ?? throw new ArgumentNullException(nameof(userOrgRepo));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
