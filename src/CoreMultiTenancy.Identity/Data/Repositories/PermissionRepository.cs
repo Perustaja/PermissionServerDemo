@@ -22,7 +22,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             _applicationContext = applicationContext ?? throw new ArgumentNullException(nameof(applicationContext));
         }
 
-        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, List<PermissionEnum> perms)
+        public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, string[] perms)
         {
             using (var conn = new SqliteConnection(_connectionString))
             {
@@ -46,7 +46,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                       join rp in _applicationContext.Set<RolePermission>()
                         on uor.RoleId equals rp.RoleId
                       select rp.PermissionId;
-            return await res.ToListAsync<PermissionEnum>();
+            return await res.Select(r => Enum.Parse<PermissionEnum>(r)).ToListAsync();
         }
 
         public Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId)

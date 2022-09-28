@@ -29,7 +29,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
 
         private static EntityTypeBuilder<Permission> SeedGlobalPerms(EntityTypeBuilder<Permission> builder)
         {
-            var permsDict = new Dictionary<PermissionEnum, Permission>();
+            var permsDict = new Dictionary<string, Permission>();
             foreach (PermissionEnum e in Enum.GetValues(typeof(PermissionEnum)))
             {
                 var p = new Permission(e);
@@ -41,7 +41,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
                     var seedData = attribs.OfType<PermissionSeedDataAttribute>().First();
                     p.Name = seedData.Name;
                     p.Description = seedData.Description;
-                    p.PermCategoryId = seedData.PermissionCategory;
+                    p.PermCategoryId = seedData.PermissionCategory.ToString();
                 }
                 catch
                 {
@@ -61,7 +61,7 @@ namespace CoreMultiTenancy.Identity.Data.Configuration
             // note that there is a one-many relation modeled in EF core, so these categories can
             // have their permissions pulled out using the dbcontext and LINQ include just by the foreign key,
             // adding the permissions here is unnecessary
-            var categoriesDict = new Dictionary<PermissionCategoryEnum, PermissionCategory>();
+            var categoriesDict = new Dictionary<string, PermissionCategory>();
             foreach (PermissionCategoryEnum e in Enum.GetValues(typeof(PermissionCategoryEnum)))
             {
                 var pc = new PermissionCategory(e);

@@ -93,7 +93,7 @@ namespace UnitTests
         private Mock<IPermissionService> AlwaysXPermissionService(bool x)
         {
             var permSvcMock = new Mock<IPermissionService>();
-            permSvcMock.Setup(m => m.UserHasPermissionsAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<PermissionEnum[]>())).ReturnsAsync(x);
+            permSvcMock.Setup(m => m.UserHasPermissionsAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<string[]>())).ReturnsAsync(x);
             return permSvcMock;
         }
 

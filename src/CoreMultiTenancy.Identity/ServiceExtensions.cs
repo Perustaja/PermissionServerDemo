@@ -171,7 +171,7 @@ internal static class ServiceExtensions
             // just seeds some users for brevity
             var adminRoleId = builder.Configuration.GetDemoRoleId("DefaultAdminRoleId");
             var newUserRoleId = builder.Configuration.GetDemoRoleId("DefaultNewUserRoleId");
-            var aircraftCreateRoleId = builder.Configuration.GetDemoRoleId("AicraftCreateRoleId");
+            var aircraftCreateRoleId = builder.Configuration.GetDemoRoleId("AircraftCreateRoleId");
 
             options.AddGlobalRole(role =>
                 {

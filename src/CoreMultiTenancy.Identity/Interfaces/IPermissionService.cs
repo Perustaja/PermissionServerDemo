@@ -17,7 +17,7 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// Whether the User has all of the given Permissions, 
         /// or false if either doesn't exist or the User has no access.
         /// </returns>
-        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms);
+        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params string[] perms);
 
         Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
 

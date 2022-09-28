@@ -6,7 +6,7 @@ namespace CoreMultiTenancy.Identity.Extensions
         {
             if (Guid.TryParse(configuration[name], out Guid res))
                 return res;
-            throw new Exception($"Location of {name} from appsettings.json or parsing to Guid failed.");
+            throw new Exception($"Location of {name} from appsettings.json not found or parsing to Guid failed.");
         }
     }
 }

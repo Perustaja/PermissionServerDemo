@@ -3,7 +3,7 @@ using CoreMultiTenancy.Core.Attributes;
 namespace CoreMultiTenancy.Core.Authorization
 {
     /// <summary>
-    /// Main application permissions represented as an enum. Changing underlying byte value WILL introduce
+    /// Main application permissions represented as an enum. Changing underlying string value WILL introduce
     /// breaking changes to database. Each value must have a PermissionSeedData attribute. Use [Obsolete] 
     /// if one is deprecated.
     /// </summary>
@@ -26,6 +26,6 @@ namespace CoreMultiTenancy.Core.Authorization
         [PermissionSeedData(PermissionCategoryEnum.Users, "Manage Users' Roles", "Users with this permission can add or remove users' roles within the tenant.")]
         UsersManageRoles,
         [PermissionSeedData(PermissionCategoryEnum.Users, "Manage Users' Access", "Users with this permission can revoke access for users within the tenant.")]
-        UsersManageAccess,
+        UsersManageAccess
     }
 }

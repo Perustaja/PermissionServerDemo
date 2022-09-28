@@ -26,7 +26,7 @@ namespace CoreMultiTenancy.Identity.Data
         private readonly IGlobalRoleProvider _globalRoleProvider;
         private readonly Guid _defaultAdminRoleId;
         private readonly Guid _defaultNewUserRoleId;
-        private readonly Guid _createAircraftRoleId;
+        private readonly Guid _aircraftCreateRoleId;
         private readonly Guid _demoAdminId;
         private readonly Guid _demoShadowAdminId;
         private readonly Guid _demoMyTenantId;
@@ -40,7 +40,7 @@ namespace CoreMultiTenancy.Identity.Data
             _globalRoleProvider = globalRoleProvider ?? throw new ArgumentNullException(nameof(globalRoleProvider));
             _defaultAdminRoleId = config.GetDemoRoleId("DefaultAdminRoleId");
             _defaultNewUserRoleId = config.GetDemoRoleId("DefaultNewUserRoleId");
-            _createAircraftRoleId = config.GetDemoRoleId("CreateAircraftRoleId");
+            _aircraftCreateRoleId = config.GetDemoRoleId("AircraftCreateRoleId");
             _demoAdminId = Guid.Parse(config["DemoAdminId"]);
             _demoShadowAdminId = Guid.Parse(config["DemoShadowAdminId"]);
             _demoMyTenantId = Guid.Parse(config["DemoMyTenantId"]);
@@ -117,7 +117,7 @@ namespace CoreMultiTenancy.Identity.Data
             var shadow = new UserOrganization(_demoShadowAdminId, _demoOtherTenantId);
             var adminRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultAdminRoleId);
             var adminRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultAdminRoleId);
-            var adminAircraftRole = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _createAircraftRoleId);
+            var adminAircraftRole = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _aircraftCreateRoleId);
             var shadowAdminRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultAdminRoleId);
 
             // note that global roles are seeded in RoleConfiguration.cs as that would take place
