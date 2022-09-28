@@ -83,6 +83,12 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// <returns>An Option containing an Error on failure.</returns>
         Task<Option<Error>> DeleteRoleOfOrgAsync(Role role);
 
+        /// <summary>
+        /// Attempts to remove the role. This will fail if this is the user's last role.
+        /// </summary>
+        /// <returns>An Option containing an Error on failure.</returns>
+        Task<Option<Error>> RemoveRoleFromUserAsync(Guid userId, Guid orgId, Guid roleId);
+
         /// <returns>All UserOrganizations for a User, representing which tenants they have access to, empty list if none exist.</returns>
         Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid id);
         #endregion

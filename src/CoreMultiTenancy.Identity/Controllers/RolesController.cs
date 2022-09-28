@@ -43,5 +43,22 @@ namespace CoreMultiTenancy.Identity.Controllers
 
             return BadRequest($"Organization {orgId} doesn't exist or user {userId} does not have access.");
         }
+
+        [HttpDelete("organizations/{orgId}/users/{userId}/roles/{roleId}")]
+        public async Task<IActionResult> RemoveRoleFromUser(Guid orgId, Guid userId, Guid roleId)
+        {
+            // need some permission check that the user has access & permissions
+            var errOpt = await _orgManager.RemoveRoleFromUserAsync(userId, orgId, roleId);
+            if (errOpt.IsSome())
+            {  
+                var e = errOpt.Unwrap();
+                if (e.ErrorType == Results.Errors.ErrorType.DomainLogic)
+                    return BadRequest(e.Description);
+                else
+                    return NotFound(e.Description);
+            }
+            else
+                return NoContent();
+        }
     }
 }

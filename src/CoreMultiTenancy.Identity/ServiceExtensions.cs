@@ -22,7 +22,7 @@ internal static class ServiceExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        
+
         builder.Services.AddDbContext<ApplicationDbContext>();
 
         builder.Services.AddIdentity<User, Role>()
@@ -174,11 +174,11 @@ internal static class ServiceExtensions
             var aircraftCreateRoleId = builder.Configuration.GetDemoRoleId("AircraftCreateRoleId");
 
             options.AddGlobalRole(role =>
-                {
-                    role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
-                        .AsDefaultAdminRole()
-                        .GrantAllPermissions();
-                });
+            {
+                role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
+                    .AsDefaultAdminRole()
+                    .GrantAllPermissions();
+            });
             options.AddGlobalRole(role =>
             {
                 role.WithBaseRoleForDemo(newUserRoleId, "User", "Default user role with minimal permissions")

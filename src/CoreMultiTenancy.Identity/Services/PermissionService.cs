@@ -25,12 +25,6 @@ namespace CoreMultiTenancy.Identity.Services
         public async Task<List<Permission>> GetAllPermissionsAsync() => 
             await _permRepo.GetAllPermissionsAsync();
 
-        public Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params string[] perms)
             => await _permRepo.UserHasPermissionsAsync(userId, orgId, perms);
 

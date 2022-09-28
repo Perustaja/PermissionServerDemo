@@ -90,7 +90,7 @@ namespace CoreMultiTenancy.Identity.Services
                 return Option<Error>.Some(new Error("One of the passed Roles was not valid for this Organization.", ErrorType.DomainLogic));
 
             _userOrgRepo.Update(uo);
-            _userOrgRoleRepo.UpdateBulk(uors);
+            _userOrgRoleRepo.Update(uors);
             await _userOrgRepo.UnitOfWork.Commit();
             return Option<Error>.None;
         }
@@ -122,16 +122,32 @@ namespace CoreMultiTenancy.Identity.Services
             // verify role is not global or only role for any user before deletion
             if (role.IsGlobal)
                 return Option<Error>.Some(new Error("Cannot delete a global role.", ErrorType.DomainLogic));
-            if (await _roleRepo.RoleIsOnlyRoleForAnyUserAsync(role))
+            if (await _userOrgRoleRepo.RoleIsOnlyRoleForAnyUserAsync(role))
                 return Option<Error>.Some(new Error("This Role cannot be deleted because it is the last Role for at least one User.", ErrorType.DomainLogic));
             _roleRepo.DeleteRoleOfOrg(role);
             await _roleRepo.UnitOfWork.Commit();
             return Option<Error>.None;
         }
 
-        public async Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid userId) {
-            return await _userOrgRepo.GetByUserIdAsync(userId);
+        public async Task<Option<Error>> RemoveRoleFromUserAsync(Guid userId, Guid orgId, Guid roleId)
+        {
+            var uors = await _userOrgRoleRepo.GetUsersRolesAsync(userId, orgId);
+            var roleToRemove = uors.FirstOrDefault(r => r.RoleId == roleId);
+            if (roleToRemove != null)
+                if (uors.Count > 1)
+                {
+                    _userOrgRoleRepo.Delete(roleToRemove);
+                    await _userOrgRoleRepo.UnitOfWork.Commit();
+                    return Option<Error>.None;
+                }
+                else
+                    return Option<Error>.Some(new Error($"Role {roleId} is this user's last role and cannot be deleted.", ErrorType.DomainLogic));
+            else
+                return Option<Error>.Some(new Error("User does not have this role within this tenant.", ErrorType.NotFound));
         }
+
+        public async Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid userId)
+            => await _userOrgRepo.GetByUserIdAsync(userId);
         #endregion
 
         #region InvitationManagement

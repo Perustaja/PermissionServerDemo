@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using CoreMultiTenancy.Core.Authorization;
 

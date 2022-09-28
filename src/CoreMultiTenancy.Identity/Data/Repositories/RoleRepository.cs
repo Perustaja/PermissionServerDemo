@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Core.Interfaces;
-using Dapper;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Perustaja.Polyglot.Option;
 
@@ -54,20 +48,5 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public void DeleteRoleOfOrg(Role role)
             => _applicationContext.Remove(role);
-
-        public async Task<bool> RoleIsOnlyRoleForAnyUserAsync(Role role)
-        {
-            using (var conn = new SqliteConnection(_connectionString))
-            {
-                int c = await conn.QueryFirstOrDefaultAsync<int>(
-                    @"SELECT COUNT(*) FROM UserOrganizationRoles
-                    WHERE OrgId = @OrgId
-                    GROUP BY UserId
-                    HAVING COUNT(*) = 1 AND RoleId = @RoleId",
-                    new { RoleId = role.Id, OrgId = role.OrgId }
-                );
-                return c > 0;
-            }
-        }
     }
 }
