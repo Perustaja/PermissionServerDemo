@@ -49,7 +49,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 28, 2, 31, 16, 775, DateTimeKind.Utc).AddTicks(7030),
+                            CreationDate = new DateTime(2022, 9, 28, 2, 36, 6, 849, DateTimeKind.Utc).AddTicks(9806),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -59,7 +59,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 28, 2, 31, 16, 775, DateTimeKind.Utc).AddTicks(7035),
+                            CreationDate = new DateTime(2022, 9, 28, 2, 36, 6, 849, DateTimeKind.Utc).AddTicks(9810),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -155,14 +155,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                             IsObsolete = false,
                             Name = "Manage Users' Access",
                             PermCategoryId = "Users"
-                        },
-                        new
-                        {
-                            Id = "Test",
-                            Description = "Users with this permission can revoke access for users within the tenant.",
-                            IsObsolete = false,
-                            Name = "Test",
-                            PermCategoryId = "Test"
                         });
                 });
 
@@ -199,12 +191,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                             Id = "Users",
                             IsObsolete = false,
                             Name = "Users"
-                        },
-                        new
-                        {
-                            Id = "Test",
-                            IsObsolete = false,
-                            Name = "Test"
                         });
                 });
 
@@ -259,7 +245,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "573623e6-74b3-4eda-b1d4-acd8fd05beb1",
+                            ConcurrencyStamp = "70e7f310-7627-4794-a763-cdebba54f23a",
                             Description = "Default admin role for new tenant owners",
                             IsGlobal = true,
                             IsGlobalAdminDefault = true,
@@ -271,7 +257,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "4f712b4e-f086-42d9-ad8b-10a6ae53ad8e",
+                            ConcurrencyStamp = "5f91c305-f8dd-4937-bfa2-5240b2eb4c2d",
                             Description = "Default user role with minimal permissions",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -283,7 +269,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "e48ef4bc-22b4-4fe5-82da-212458bb40fa",
+                            ConcurrencyStamp = "2559330e-5148-424b-b4da-2c8ff3e99c68",
                             Description = "Role for creating new aircraft",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -348,11 +334,6 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             RoleId = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             PermissionId = "UsersManageAccess"
-                        },
-                        new
-                        {
-                            RoleId = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            PermissionId = "Test"
                         },
                         new
                         {
@@ -436,7 +417,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "967d74fe-48b4-491b-8692-79e1e7ac521a",
+                            ConcurrencyStamp = "c4690d12-ca2b-4f6c-bfc7-ee420b61139a",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -444,7 +425,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDPL5hA4vbRkkDdTtpsgotY7GQaD4du+Sos+zbzIVR9XzmAVKzVqQD92lLP5VY0fBg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE0m920wLJdOZ1mPnJgnjj8Ak6W0w2Gt+pkYlYksdcQ625S82/mr1gtmTcJ9W491Qg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -454,13 +435,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0eaa7735-549e-4e65-bd35-333368b962f8",
+                            ConcurrencyStamp = "b6edbcbe-16b2-4aed-abe8-c93839e7e048",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEANSAj8LK7rpnnVVgRxwFg9wjEzwbL3bzBpiFg4HhJhMWDoX4wT89zCDOMyQ59SQw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFiAUanrEdLgV7xbqLpEMct3NZ6jBZjOpL2IRKRX3pOS3+DY/zomqGulu/HdhPxPFQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,

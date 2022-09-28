@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreMultiTenancy.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220928022336_demo")]
+    [Migration("20220928023607_demo")]
     partial class demo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 28, 2, 23, 36, 307, DateTimeKind.Utc).AddTicks(197),
+                            CreationDate = new DateTime(2022, 9, 28, 2, 36, 6, 849, DateTimeKind.Utc).AddTicks(9806),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -61,7 +61,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 9, 28, 2, 23, 36, 307, DateTimeKind.Utc).AddTicks(202),
+                            CreationDate = new DateTime(2022, 9, 28, 2, 36, 6, 849, DateTimeKind.Utc).AddTicks(9810),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -247,7 +247,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "1aca3785-3d09-468e-9b4b-d0ada3ee9977",
+                            ConcurrencyStamp = "70e7f310-7627-4794-a763-cdebba54f23a",
                             Description = "Default admin role for new tenant owners",
                             IsGlobal = true,
                             IsGlobalAdminDefault = true,
@@ -259,7 +259,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "4d0d91a3-8969-4946-9f1d-411559daa5dc",
+                            ConcurrencyStamp = "5f91c305-f8dd-4937-bfa2-5240b2eb4c2d",
                             Description = "Default user role with minimal permissions",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -271,7 +271,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         new
                         {
                             Id = new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "2293a590-529b-4a56-8d86-419343c0299b",
+                            ConcurrencyStamp = "2559330e-5148-424b-b4da-2c8ff3e99c68",
                             Description = "Role for creating new aircraft",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -419,7 +419,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a05abe5c-9179-4152-8def-db1dea384c2b",
+                            ConcurrencyStamp = "c4690d12-ca2b-4f6c-bfc7-ee420b61139a",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -427,7 +427,7 @@ namespace CoreMultiTenancy.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHGGEmyvEo5KFS0+X8x/nyK2C7NLh+P9zHPaVn58fFEtz4R+a/jPHksLhsN+s24wgQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE0m920wLJdOZ1mPnJgnjj8Ak6W0w2Gt+pkYlYksdcQ625S82/mr1gtmTcJ9W491Qg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -437,13 +437,13 @@ namespace CoreMultiTenancy.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a6c10e37-622b-40fa-a643-225352c5fc76",
+                            ConcurrencyStamp = "b6edbcbe-16b2-4aed-abe8-c93839e7e048",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOVtJmlWWy41JTrgaMZDFSVTQPFB11uDPHFwl9R/uKSB4IZInp1HxQL1i9vL7kEyDw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFiAUanrEdLgV7xbqLpEMct3NZ6jBZjOpL2IRKRX3pOS3+DY/zomqGulu/HdhPxPFQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
