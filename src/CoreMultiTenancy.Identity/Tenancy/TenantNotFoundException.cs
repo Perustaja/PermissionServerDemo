@@ -1,4 +1,4 @@
-namespace CoreMultiTenancy.Api.Tenancy
+namespace CoreMultiTenancy.Identity.Tenancy
 {
     public class TenantNotFoundException : Exception
     {

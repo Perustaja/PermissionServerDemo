@@ -1,4 +1,6 @@
 using AutoMapper;
+using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Identity.Attributes;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
@@ -27,30 +29,26 @@ namespace CoreMultiTenancy.Identity.Controllers
         }
 
         [HttpGet("organizations/{orgId}/roles")]
+        [TenantedAuthorize]
         public async Task<IActionResult> GetOrganizationRoles(Guid orgId)
         {
-            var userId = new Guid(User.GetSubjectId());
-            if (await _orgManager.UserHasAccessAsync(userId, orgId))
+            var roles = await _orgManager.GetRolesOfOrgAsync(orgId);
+            if (roles.Count > 0)
             {
-                var roles = await _orgManager.GetRolesOfOrgAsync(orgId);
-                if (roles.Count > 0)
-                {
-                    var mappedRoles = _mapper.Map<List<RoleGetDto>>(roles);
-                    return Ok(mappedRoles);
-                }
-                throw new Exception($"Found no roles, org:{orgId}");
+                var mappedRoles = _mapper.Map<List<RoleGetDto>>(roles);
+                return Ok(mappedRoles);
             }
-
-            return BadRequest($"Organization {orgId} doesn't exist or user {userId} does not have access.");
+            throw new Exception($"Found no roles, org:{orgId}");
         }
 
         [HttpDelete("organizations/{orgId}/users/{userId}/roles/{roleId}")]
+        [TenantedAuthorize(PermissionEnum.UsersManageRoles)]
         public async Task<IActionResult> RemoveRoleFromUser(Guid orgId, Guid userId, Guid roleId)
         {
             // need some permission check that the user has access & permissions
             var errOpt = await _orgManager.RemoveRoleFromUserAsync(userId, orgId, roleId);
             if (errOpt.IsSome())
-            {  
+            {
                 var e = errOpt.Unwrap();
                 if (e.ErrorType == Results.Errors.ErrorType.DomainLogic)
                     return BadRequest(e.Description);

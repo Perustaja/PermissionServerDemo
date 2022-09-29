@@ -36,8 +36,8 @@ namespace CoreMultiTenancy.Api.Controllers
         }
 
         [HttpPost]
-        [TenantedAuthorize(PermissionEnum.AircraftCreate)]
         [Route("{tenantId}/aircraft")]
+        [TenantedAuthorize(PermissionEnum.AircraftCreate)]
         public async Task<IActionResult> Post(Guid tenantId, Aircraft aircraft)
         {
             if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == aircraft.RegNumber))

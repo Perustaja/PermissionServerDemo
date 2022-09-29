@@ -1,8 +1,8 @@
 using System.Reflection;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Api.Data;
-using CoreMultiTenancy.Api.Interfaces;
 using CoreMultiTenancy.Api.Tenancy;
+using CoreMultiTenancy.Core.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -56,7 +56,7 @@ internal static class ServiceExtensions
 
     public static void AddGrpcClients(this IServiceCollection sc)
     {
-        sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeClient>(o =>
+        sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient>(o =>
         {
             o.Address = new Uri("https://localhost:5100");
         });

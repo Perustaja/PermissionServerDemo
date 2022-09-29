@@ -1,6 +1,6 @@
 using CoreMultiTenancy.Core.Tenancy;
 
-namespace CoreMultiTenancy.Api.Tenancy
+namespace CoreMultiTenancy.Identity.Tenancy
 {
     public class RouteDataTenantProvider : ITenantProvider
     {

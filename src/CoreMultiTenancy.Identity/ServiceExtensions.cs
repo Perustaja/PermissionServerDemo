@@ -1,6 +1,7 @@
 using System.Reflection;
 using Cmt.Protobuf;
 using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Core.Tenancy;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection;
@@ -13,6 +14,7 @@ using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Mapping;
 using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
+using CoreMultiTenancy.Identity.Tenancy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,8 +71,9 @@ internal static class ServiceExtensions
         builder.Services.AddScoped<IOrganizationManager, OrganizationManager>();
         builder.Services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
         builder.Services.AddScoped<IAccountEmailService, AccountEmailService>();
-        builder.Services.AddScoped<IRemoteAuthorizationEvaluator, RemoteAuthorizationEvaluator>();
+        builder.Services.AddScoped<IAuthorizationEvaluator, AuthorizationEvaluator>();
         builder.Services.AddScoped<IPermissionService, PermissionService>();
+        builder.Services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
         // Repositories
         builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -139,13 +142,13 @@ internal static class ServiceExtensions
 
     public static IEndpointRouteBuilder MapGrpcAuthorizationServices(this IEndpointRouteBuilder e)
     {
-        e.MapGrpcService<PermissionAuthorizeService>();
+        e.MapGrpcService<RemotePermissionAuthorizeService>();
         return e;
     }
 
     private static void AddGrpcClients(this IServiceCollection sc)
     {
-        sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeBase>(o =>
+        sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeBase>(o =>
         {
             o.Address = new Uri("https://localhost:6100");
         });

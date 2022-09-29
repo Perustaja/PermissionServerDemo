@@ -1,4 +1,5 @@
 using AutoMapper;
+using CoreMultiTenancy.Identity.Attributes;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
@@ -27,26 +28,21 @@ namespace CoreMultiTenancy.Identity.Controllers
         }
 
         [HttpGet("{orgId}/users")]
+        [TenantedAuthorize]
         public async Task<IActionResult> GetOrganizationUsers(Guid orgId)
         {
-            var userId = new Guid(User.GetSubjectId());
-            if (await _orgManager.UserHasAccessAsync(userId, orgId))
-            {
-                var userOrgs = await _orgManager.GetUsersOfOrgAsync(orgId);
-                var users = userOrgs.Select(uo =>
-                    new UsersGetDto()
-                    {
-                        FirstName = uo.User.FirstName,
-                        LastName = uo.User.LastName,
-                        UserOrganization = _mapper.Map<UserOrganizationGetDto>(uo),
-                        Roles = _mapper.Map<List<RoleGetDto>>(uo.User.UserOrganizationRoles.Select(uor => uor.Role).ToList())
-                    }
-                );
+            var userOrgs = await _orgManager.GetUsersOfOrgAsync(orgId);
+            var users = userOrgs.Select(uo =>
+                new UsersGetDto()
+                {
+                    FirstName = uo.User.FirstName,
+                    LastName = uo.User.LastName,
+                    UserOrganization = _mapper.Map<UserOrganizationGetDto>(uo),
+                    Roles = _mapper.Map<List<RoleGetDto>>(uo.User.UserOrganizationRoles.Select(uor => uor.Role).ToList())
+                }
+            );
 
-                return Ok(users);
-            }
-
-            return BadRequest($"Organization {orgId} doesn't exist or user {userId} does not have access.");
+            return Ok(users);
         }
     }
 }

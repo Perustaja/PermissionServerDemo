@@ -1,11 +1,11 @@
 using System.Security.Claims;
-using Cmt.Protobuf;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Core.Tenancy;
+using CoreMultiTenancy.Identity.Interfaces;
 
-namespace CoreMultiTenancy.Api.Authorization
+namespace CoreMultiTenancy.Identity.Authorization
 {
     public class TenantedAuthorizeFilter : IAsyncAuthorizationFilter
     {
@@ -18,48 +18,39 @@ namespace CoreMultiTenancy.Api.Authorization
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var logger = GetLogger(context.HttpContext);
-            logger.LogInformation("Beginning authorization request from Api to Idp.");
+            var tenantId = GetTenantProvider(context.HttpContext).GetCurrentRequestTenant().Id.ToString();
+            var evaulator = GetEvaluator(context.HttpContext);
+
+            logger.LogInformation("Beginning local authorization request.");
 
             // If user is somehow is an invalid state, challenge
             if (context.HttpContext.User?.Identity.IsAuthenticated == false)
             {
-                logger.LogWarning("User was not authenticated for GRPC authorization. Returning challenge.");
+                logger.LogWarning("User was not authenticated for authorization. Returning challenge.");
                 context.Result = new ChallengeResult();
                 return;
             }
+            var userId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            // Retrieve client and tenantId from DI
-            var client = GetGrpcClient(context.HttpContext);
-            var tenantId = GetTenantProvider(context.HttpContext).GetCurrentRequestTenant().Id;
-
-            var request = new GrpcPermissionAuthorizeRequest()
-            {
-                UserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                TenantId = tenantId.ToString(),
-            };
-
-            if (_permissions != null)
-                request.Perms.AddRange(_permissions);
-
-            // Send and set context.Result based on reply
-            logger.LogInformation($"Authorization request to be sent via GRPC: {request}");
-            var reply = await client.AuthorizeAsync(request);
-            SetContextResultOnReply(context, reply);
+            // Evaluate and set context.Result based on decision
+            logger.LogInformation($"Authorizing local request: user {userId}, tenant {tenantId}, perms {_permissions}");
+            var decision = await evaulator.EvaluateAsync(userId, tenantId, _permissions);
+            SetContextResultOnDecision(context, decision);
         }
 
-        private void SetContextResultOnReply(AuthorizationFilterContext context, GrpcAuthorizeDecision reply)
+        private void SetContextResultOnDecision(AuthorizationFilterContext context, AuthorizeDecision decision)
         {
             var logger = GetLogger(context.HttpContext);
-            logger.LogInformation($"Remote authorization result: {reply}");
-            if (!reply.Allowed)
+            logger.LogInformation($"Remote authorization result: {decision}");
+            if (!decision.Allowed)
             {
-                switch (reply.FailureReason)
+                switch (decision.FailureReason)
                 {
-                    case (failureReason.Permissionformat):
-                        logger.LogCritical($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {_permissions}");
+                    case (AuthorizeFailureReason.PermissionFormat):
+                        logger.LogCritical($"Unable to parse permissions from local attribute. {decision.FailureMessage}, {_permissions}");
                         context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                         break;
-                    case (failureReason.Tenantnotfound):
+                    case (AuthorizeFailureReason.TenantNotFound):
                         context.Result = new NotFoundResult(); break;
                     default:
                         context.Result = new UnauthorizedResult(); break;
@@ -69,13 +60,6 @@ namespace CoreMultiTenancy.Api.Authorization
 
         // It seems like there is still no easy way to use DI with action filters in .NET Core 6.0,
         // figuring out how to do this in a more normal way would be nice but is low prio
-        private GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient GetGrpcClient(HttpContext context)
-        {
-            return context.RequestServices
-                .GetRequiredService(typeof(GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient))
-                as GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient;
-        }
-
         private ITenantProvider GetTenantProvider(HttpContext context)
         {
             return context.RequestServices
@@ -88,6 +72,13 @@ namespace CoreMultiTenancy.Api.Authorization
             return context.RequestServices
                 .GetRequiredService(typeof(ILogger<TenantedAuthorizeFilter>))
                 as ILogger<TenantedAuthorizeFilter>;
+        }
+
+        private IAuthorizationEvaluator GetEvaluator(HttpContext context)
+        {
+            return context.RequestServices
+                .GetRequiredService(typeof(IAuthorizationEvaluator))
+                as IAuthorizationEvaluator;
         }
     }
 }
