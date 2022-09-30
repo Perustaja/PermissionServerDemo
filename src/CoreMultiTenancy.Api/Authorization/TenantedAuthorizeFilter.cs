@@ -34,7 +34,7 @@ namespace CoreMultiTenancy.Api.Authorization
 
             var request = new GrpcPermissionAuthorizeRequest()
             {
-                UserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                UserId = context.HttpContext.User.FindFirstValue("sub"),
                 TenantId = tenantId.ToString(),
             };
 

@@ -41,11 +41,11 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public async Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId)
         {
-            var res = from uor in _applicationContext.Set<UserOrganizationRole>()
+            var res = (from uor in _applicationContext.Set<UserOrganizationRole>()
                       where uor.UserId == userId && uor.OrgId == orgId
                       join rp in _applicationContext.Set<RolePermission>()
                         on uor.RoleId equals rp.RoleId
-                      select rp.PermissionId;
+                      select rp.PermissionId).Distinct();
             return await res.Select(r => Enum.Parse<PermissionEnum>(r)).ToListAsync();
         }
 

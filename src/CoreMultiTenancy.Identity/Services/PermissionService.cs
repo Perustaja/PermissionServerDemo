@@ -17,12 +17,9 @@ namespace CoreMultiTenancy.Identity.Services
         }
 
         public async Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId)
-        {
-            var perms = await _permRepo.GetUsersPermissionsAsync(userId, orgId);
-            return perms;
-        }
+            => await _permRepo.GetUsersPermissionsAsync(userId, orgId);
 
-        public async Task<List<Permission>> GetAllPermissionsAsync() => 
+        public async Task<List<Permission>> GetAllPermissionsAsync() =>
             await _permRepo.GetAllPermissionsAsync();
 
         public async Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params string[] perms)

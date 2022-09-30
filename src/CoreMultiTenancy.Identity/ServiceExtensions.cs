@@ -77,6 +77,7 @@ internal static class ServiceExtensions
         // Repositories
         builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+        builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
         builder.Services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
         builder.Services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();

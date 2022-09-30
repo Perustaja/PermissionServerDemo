@@ -30,7 +30,7 @@ namespace CoreMultiTenancy.Identity.Authorization
                 context.Result = new ChallengeResult();
                 return;
             }
-            var userId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = context.HttpContext.User.FindFirstValue("sub");
 
             // Evaluate and set context.Result based on decision
             logger.LogInformation($"Authorizing local request: user {userId}, tenant {tenantId}, perms {_permissions}");

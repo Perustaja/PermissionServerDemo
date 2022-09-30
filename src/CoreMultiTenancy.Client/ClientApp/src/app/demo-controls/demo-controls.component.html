@@ -1,0 +1,53 @@
+<div class="wrapper">
+    <app-sidebar></app-sidebar>
+    <div class="content">
+        <div class="content-main">
+            <div class="demo-controls">
+                <div class="demo-control">
+                    <div class="demo-button">
+                        <button type="button" class="btn btn-primary">Create random aircraft</button>
+                    </div>
+                    <div class="demo-label">
+                        This button will generate a random aircraft to add to the tenant.
+                    </div>
+                </div>
+                <div class="demo-control">
+                    <div class="demo-button">
+                        <button type="button" class="btn btn-primary">Remove my "Create Aircraft" Role</button>
+                    </div>
+                    <div class="demo-label">
+                        This will remove the "Create Aircraft" role from yourself. Afterwards, you will not be able to use the 
+                        button above this. This showcases immediate updating of permissions and roles when changed.
+                    </div>
+                </div>
+                <div class="demo-control">
+                    <div class="demo-button">
+                        <button type="button" class="btn btn-primary">Create a custom role</button>
+                    </div>
+                    <div class="demo-label">
+                        This button will open a modal window that allows you to create a custom role with specific permissions, 
+                        showcasing how customizable roles are for each tenant.
+                    </div>
+                </div>
+                <div class="demo-control">
+                    <div class="demo-button">
+                        <button type="button" class="btn btn-danger">Revoke my access to this tenant</button>
+                    </div>
+                    <div class="demo-label">
+                        This button will revoke your access to the current tenant. It will be disabled if you are the owner of
+                        the current tenant. Note that this is irreversable without reseeding the database!
+                    </div>
+                </div>
+            </div>
+            <div class="identity-dashboard">
+                <h5>My Identity</h5>
+                <div class="identity-labels">
+                    <div><span class="identity-label">Subject Id:</span> {{subId | async}}</div>
+                    <div><span class="identity-label">Tenant Id:</span> {{tenantId}}</div>
+                    <div><span class="identity-label">Permissions:</span> {{permissions | json}}</div>
+                    <div><span class="identity-label">JWT:</span> {{token | async}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

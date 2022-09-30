@@ -20,6 +20,7 @@ internal static class ServiceExtensions
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer("Bearer", o =>
             {
+                o.MapInboundClaims = false;
                 o.Authority = "https://localhost:5100";
                 o.TokenValidationParameters = new TokenValidationParameters
                 {

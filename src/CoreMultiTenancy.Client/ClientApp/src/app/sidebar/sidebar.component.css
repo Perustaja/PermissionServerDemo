@@ -1,8 +1,10 @@
 .sidebar {
     min-width: 280px;
     max-width: 280px;
-    height: 100vh;
     padding: 0px 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .sidebar-header {
     display: flex;
@@ -14,6 +16,7 @@
     flex-direction: column;
     height: calc(80vh - 4rem);
     justify-content: space-between;
+    flex-grow: 1;
 }
 .sidebar-footer {
     height: 10vh;

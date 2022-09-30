@@ -9,6 +9,7 @@
                         <ngb-panel *ngFor="let role of globalRoles" title="{{role.name}}: {{role.description}}">
                             <ng-template ngbPanelContent>
                                 <div class="perm-list">
+                                    <h5>Permissions</h5>
                                     <div *ngFor="let cat of permCats">
                                         <h6>{{cat.name}}</h6>
                                         <span *ngFor="let perm of cat.permissions">
