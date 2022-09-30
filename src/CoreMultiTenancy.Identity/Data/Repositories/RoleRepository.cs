@@ -40,13 +40,32 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<Role>.None;
         }
 
-        public Role AddRoleToOrg(Guid orgId, Role role)
+        public Task<Role> GetGlobalDefaultOwnerRoleAsync()
+        {
+            var r = _applicationContext.Set<Role>()
+                .Where(r => r.IsGlobalAdminDefault)
+                .FirstOrDefaultAsync();
+            if (r != null)
+                throw new Exception("Global default owner/admin role not registed in DI.");
+            return r;
+        }
+
+        public Task<Role> GetGlobalDefaultNewUserRoleAsync()
+        {
+            var r = _applicationContext.Set<Role>()
+                .Where(r => r.IsGlobalDefaultForNewUsers)
+                .FirstOrDefaultAsync();
+            if (r != null)
+                throw new Exception("Global default new user role not registed in DI.");
+            return r;        }
+
+        public Role Add(Guid orgId, Role role)
             => _applicationContext.Set<Role>().Add(role).Entity;
 
-        public Role UpdateRoleOfOrg(Role role)
+        public Role Update(Role role)
             => _applicationContext.Set<Role>().Update(role).Entity;
 
-        public void DeleteRoleOfOrg(Role role)
+        public void Delete(Role role)
             => _applicationContext.Remove(role);
     }
 }

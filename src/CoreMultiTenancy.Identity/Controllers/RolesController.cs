@@ -4,7 +4,6 @@ using CoreMultiTenancy.Identity.Attributes;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
-using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -41,11 +40,19 @@ namespace CoreMultiTenancy.Identity.Controllers
             throw new Exception($"Found no roles, org:{orgId}");
         }
 
+        [HttpPost("organizations/{orgId}/roles")]
+        [TenantedAuthorize(PermissionEnum.RolesCreate)]
+        public async Task<IActionResult> CreateOrganizationRole(Guid orgId, [FromBody] RoleCreateDto dto)
+        {
+            var r = new Role(dto.Name, dto.Description);
+            var trackedR = await _orgManager.AddRoleToOrgAsync(orgId, r, dto.Permissions);
+            return Created(String.Empty, trackedR);
+        }
+
         [HttpDelete("organizations/{orgId}/users/{userId}/roles/{roleId}")]
         [TenantedAuthorize(PermissionEnum.UsersManageRoles)]
         public async Task<IActionResult> RemoveRoleFromUser(Guid orgId, Guid userId, Guid roleId)
         {
-            // need some permission check that the user has access & permissions
             var errOpt = await _orgManager.RemoveRoleFromUserAsync(userId, orgId, roleId);
             if (errOpt.IsSome())
             {

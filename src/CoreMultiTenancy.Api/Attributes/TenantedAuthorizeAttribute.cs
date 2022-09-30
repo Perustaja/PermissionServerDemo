@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Api.Authorization;
 
-namespace CoreMultiTenancy.Api.Authorization
+namespace CoreMultiTenancy.Api.Attributes
 {
     /// <summary>
     /// Actions marked with this attribute must have a kvp in RouteData that has a key matching

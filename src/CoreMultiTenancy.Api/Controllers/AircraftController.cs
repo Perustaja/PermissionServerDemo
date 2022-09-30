@@ -1,5 +1,5 @@
 using AutoMapper;
-using CoreMultiTenancy.Api.Authorization;
+using CoreMultiTenancy.Api.Attributes;
 using CoreMultiTenancy.Api.Data;
 using CoreMultiTenancy.Api.Entities;
 using CoreMultiTenancy.Api.Entities.Dtos;

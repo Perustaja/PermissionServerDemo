@@ -49,11 +49,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
             return await res.Select(r => Enum.Parse<PermissionEnum>(r)).ToListAsync();
         }
 
-        public Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<List<Permission>> GetAllPermissionsAsync()
         {
             return await _applicationContext.Set<Permission>()

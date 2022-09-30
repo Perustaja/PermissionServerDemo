@@ -1,8 +1,10 @@
 using AutoMapper;
+using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Attributes;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
+using CoreMultiTenancy.Identity.Results.Errors;
 using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -43,6 +45,23 @@ namespace CoreMultiTenancy.Identity.Controllers
             );
 
             return Ok(users);
+        }
+
+        [HttpDelete("{orgId}/users/{userId}")]
+        [TenantedAuthorize(PermissionEnum.UsersManageAccess)]
+        public async Task<IActionResult> RevokeTenantAccessForUser(Guid orgId, Guid userId)
+        {
+            var errOpt = await _orgManager.RevokeAccessAsync(userId, orgId);
+            if (errOpt.IsSome())
+            {
+                var err = errOpt.Unwrap();
+                if (err.ErrorType == ErrorType.NotFound)
+                    return NotFound(err.Description);
+                else
+                    return BadRequest(err.Description);
+            }
+            else
+                return NoContent();
         }
     }
 }

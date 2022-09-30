@@ -31,9 +31,8 @@ namespace CoreMultiTenancy.Identity.Entities
         /// <summary>
         /// Creates a new role specific to a tenant.
         /// </summary>
-        public Role(Guid orgId, string name, string desc)
+        public Role(string name, string desc)
         {
-            OrgId = orgId;
             Name = name;
             NormalizedName = name.ToUpper();
             IsGlobal = false;
@@ -78,7 +77,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public void SetAsGlobalAdminRole() => IsGlobalAdminDefault =true;
         public void SetAsTenantDefaultNewUserRole() => IsTenantDefaultForNewUsers = true;
         public void SetAsGlobalDefaultNewUserRole() => IsGlobalDefaultForNewUsers = true;
-
 
         /// <summary>
         /// Sets this Role as belonging to the given Organization. Silently fails if this Role is global.
