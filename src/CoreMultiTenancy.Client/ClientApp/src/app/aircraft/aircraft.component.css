@@ -3,9 +3,6 @@
     height: 15vw;
     object-fit: cover;
 }
-.card-deck {
-    width: 100%;
-}
 .card-title {
     margin: 0px;
 }

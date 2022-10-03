@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
+import { map, Observable } from "rxjs";
 import { TenantManagerService } from '../../tenancy/tenantManager.service';
 import { AuthorizeService } from "src/api-authorization/authorize.service";
-import { map, Observable } from "rxjs";
 
 @Component({
     selector: 'demo-controls-component',
@@ -13,7 +13,7 @@ import { map, Observable } from "rxjs";
 export class DemoControlsComponent implements OnInit {
     aircraft: Aircraft[] = [];
     apiUrl: string;
-    apiBaseUrl: string;
+    idpApiUrl: string;
     token?: Observable<string | null>;
     subId?: Observable<string | null | undefined>;
     tenantId: string | null;
@@ -23,9 +23,9 @@ export class DemoControlsComponent implements OnInit {
         private authorizeSvc: AuthorizeService,
         private tenantManager: TenantManagerService,
         @Inject('API_URL') apiUrl: string,
-        @Inject('API_BASE_URL') apiBaseUrl: string) {
+        @Inject('IDP_API_URL') idpApiUrl: string) {
         this.apiUrl = apiUrl;
-        this.apiBaseUrl = apiBaseUrl;
+        this.idpApiUrl = idpApiUrl;
         this.token = authorizeSvc.getAccessToken().pipe(map(t => t));
         this.subId = authorizeSvc.getUser().pipe(map(u => u && u.sub));
         this.permissions = tenantManager.permissions;
@@ -34,10 +34,25 @@ export class DemoControlsComponent implements OnInit {
 
     ngOnInit() {
     }
+
+    createDemoAircraft() {
+        const ac = <Aircraft>({
+            RegNumber: "N555YS",
+            Model: "Cessna 172S",
+            ThumbnailUri: "N555YS.jpg"
+        });
+        this.http.post<Aircraft>(this.apiUrl + `/organizations/${this.tenantManager.tenantId}/aircraft`, ac)
+            .subscribe({
+                next: (res) => alert(JSON.stringify(res)),
+                error: (err) => {
+                    if (err.status == 409)
+                        alert("The demo aircraft has already been created. Navigate to the Aircraft page to view it.")
+                }
+            });
+    }
 }
 export interface Aircraft {
-    regNumber: string,
-    model: string,
-    thumbnailUri: string,
-    isGrounded: boolean
+    RegNumber: string,
+    Model: string,
+    ThumbnailUri: string
 }

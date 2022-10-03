@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace CoreMultiTenancy.Api.Controllers
 {
     [Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/organizations")]
     public class AircraftController : ControllerBase
@@ -38,14 +39,15 @@ namespace CoreMultiTenancy.Api.Controllers
         [HttpPost]
         [Route("{tenantId}/aircraft")]
         [TenantedAuthorize(PermissionEnum.AircraftCreate)]
-        public async Task<IActionResult> Post(Guid tenantId, Aircraft aircraft)
+        public async Task<IActionResult> Post(Guid tenantId, [FromBody] AircraftCreateDto dto)
         {
-            if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == aircraft.RegNumber))
-                return Conflict($"Aircraft already exists with registration number: {aircraft.RegNumber}");
+            if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == dto.RegNumber))
+                return Conflict($"Aircraft already exists with registration number: {dto.RegNumber}");
 
-            _dbContext.Set<Aircraft>().Add(aircraft);
+            var ac = new Aircraft(dto.RegNumber, tenantId, dto.ThumbnailUri, dto.Model);
+            _dbContext.Set<Aircraft>().Add(ac);
             await _dbContext.Commit();
-            return CreatedAtAction(nameof(aircraft), new { RegNumber = aircraft.RegNumber }, aircraft);
+            return Created("api/v{version:apiVersion}/organizations/aircraft/" + ac.RegNumber, ac);
         }
     }
 }

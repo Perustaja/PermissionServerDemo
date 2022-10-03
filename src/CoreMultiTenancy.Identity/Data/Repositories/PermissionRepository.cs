@@ -26,16 +26,16 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         {
             using (var conn = new SqliteConnection(_connectionString))
             {
-                var res = await conn.QuerySingleOrDefaultAsync(
+                var res = await conn.ExecuteScalarAsync<int>(
                     @"SELECT COUNT(*) 
                     FROM UserOrganizationRoles uor
-                    WHERE UserId = @UserId AND OrgId = @OrgId
                     JOIN RolePermissions rp ON uor.RoleId = rp.RoleId
-                    JOIN Permissions p ON p.Id = rp.PermissionId AND p.Id IN @PermIds",
+                    JOIN Permissions p ON p.Id = rp.PermissionId AND p.Id IN @PermIds
+                    WHERE UserId = @UserId AND OrgId = @OrgId",
                     new { UserId = userId, OrgId = orgId, PermIds = perms }
                 );
 
-                return res == perms.Count();
+                return res >= perms.Count();
             }
         }
 

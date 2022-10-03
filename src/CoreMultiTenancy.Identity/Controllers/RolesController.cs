@@ -12,6 +12,7 @@ using static Duende.IdentityServer.IdentityServerConstants;
 namespace CoreMultiTenancy.Identity.Controllers
 {
     [ApiVersion("1.0")]
+    [ApiController]
     [Route("api/v{version:apiVersion}/")]
     [Authorize(LocalApi.PolicyName)]
     public class RolesController : ControllerBase
