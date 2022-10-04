@@ -15,7 +15,7 @@
                                         <span *ngFor="let perm of cat.permissions">
                                             <div class="form-check">
                                                 <input class="form-check-input checkbox-decoration" type="checkbox" [checked]="roleHasPermission(role, perm)">
-                                                {{ perm.name }}
+                                                {{perm.name}}
                                               </div>
                                         </span>
                                     </div>
@@ -29,9 +29,20 @@
                 <h4>User-defined Roles</h4>
                 <div class="accordion" id="accordionGlobalRoles">
                     <ngb-accordion *ngIf="userRoles.length > 0" #acc="ngbAccordion">
-                        <ngb-panel *ngFor="let role of userRoles" title="{{ role.name }}">
+                        <ngb-panel *ngFor="let role of userRoles" title="{{role.name}}: {{role.description}}">
                             <ng-template ngbPanelContent>
-                                {{ role | json }}
+                                <div class="perm-list">
+                                    <h5>Permissions</h5>
+                                    <div *ngFor="let cat of permCats">
+                                        <h6>{{cat.name}}</h6>
+                                        <span *ngFor="let perm of cat.permissions">
+                                            <div class="form-check">
+                                                <input class="form-check-input checkbox-decoration" type="checkbox" [checked]="roleHasPermission(role, perm)">
+                                                {{perm.name}}
+                                              </div>
+                                        </span>
+                                    </div>
+                                </div>
                             </ng-template>
                         </ngb-panel>
                     </ngb-accordion>

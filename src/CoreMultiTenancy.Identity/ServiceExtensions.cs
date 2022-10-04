@@ -32,8 +32,6 @@ internal static class ServiceExtensions
             .AddSignInManager<UserSignInManager>()
             .AddDefaultTokenProviders();
 
-        builder.AddDemoGlobalRoles();
-
         builder.Services.AddApiVersioning();
 
         builder.Services.AddCors(options =>
@@ -119,6 +117,7 @@ internal static class ServiceExtensions
         builder.Services.AddGrpcClients();
         builder.Services.AddLocalApiAuthentication();
         builder.Services.AddAutoMapperWithTypeConverters();
+        builder.AddDemoGlobalRoles();
 
         return builder.Build();
     }
@@ -181,7 +180,7 @@ internal static class ServiceExtensions
             {
                 role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
                     .AsDefaultAdminRole()
-                    .GrantAllPermissions();
+                    .GrantAllPermissionsExcept(PermissionEnum.AircraftCreate);
             });
             options.AddGlobalRole(role =>
             {

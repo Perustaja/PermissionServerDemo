@@ -45,9 +45,18 @@ namespace CoreMultiTenancy.Identity.Controllers
         [TenantedAuthorize(PermissionEnum.RolesCreate)]
         public async Task<IActionResult> CreateOrganizationRole(Guid orgId, [FromBody] RoleCreateDto dto)
         {
+            var perms = new List<PermissionEnum>();
+            foreach (var p in dto.Permissions)
+            {
+                if (Enum.TryParse<PermissionEnum>(p, out var perm))
+                    perms.Add(perm);
+                else
+                    return BadRequest($"Unable to parse ${p} to a permission.");
+            }
+
             var r = new Role(dto.Name, dto.Description);
-            var trackedR = await _orgManager.AddRoleToOrgAsync(orgId, r, dto.Permissions);
-            return Created(String.Empty, trackedR);
+            await _orgManager.AddRoleToOrgAsync(orgId, r, perms);
+            return Created("api/v{version:apiVersion}/" + $"organizations/{orgId}/roles", null);
         }
 
         [HttpDelete("organizations/{orgId}/users/{userId}/roles/{roleId}")]

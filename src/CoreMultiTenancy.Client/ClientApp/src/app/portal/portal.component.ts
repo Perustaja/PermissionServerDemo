@@ -33,7 +33,7 @@ export class PortalComponent implements OnInit{
     this.authorizeSvc.getUser()
       .pipe(map(u => u && u.sub))
       .subscribe(userId => 
-        this.http.get<UserOrganization[]>(this.idpApiUrl + `/users/${userId}/organizations`).subscribe({
+        this.http.get<UserOrganization[]>(`${this.idpApiUrl}/users/${userId}/organizations`).subscribe({
           next: (res) => this.userOrganizations = res,
           error: (e) => console.log(e)})
       )

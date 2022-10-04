@@ -57,11 +57,11 @@ namespace CoreMultiTenancy.Identity.Authorization
             }
             else if (permsSet.Count > 0 && await _permSvc.UserHasPermissionsAsync(userIdGuid, orgIdGuid, permsSet.ToArray()))
             {
-                _logger.LogInformation($"Authorization successful. user:{userIdGuid} org:{orgIdGuid} {permsSet}.");
+                _logger.LogInformation($"Authorization successful. user:{userIdGuid} org:{orgIdGuid} {(object)permsSet}.");
                 return Ok();
             }
 
-            _logger.LogInformation($"Authorization failed. user:{userIdGuid} org:{orgIdGuid} {permsSet}.");
+            _logger.LogInformation($"Authorization failed. user:{userIdGuid} org:{orgIdGuid} {(object)permsSet}.");
             return UnAuthorized();
         }
 

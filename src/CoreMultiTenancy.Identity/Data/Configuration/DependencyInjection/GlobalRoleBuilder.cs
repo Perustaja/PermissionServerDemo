@@ -44,7 +44,6 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
         public GlobalRoleBuilder GrantAllPermissions()
         {
             ensureBaseRoleCreated();
-            // add permissions to be saved into the db later
             foreach (PermissionEnum p in Enum.GetValues(typeof(PermissionEnum)))
                 _rolePermissions.Add(new RolePermission(_role.Id, p));
             return this;
@@ -53,9 +52,17 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
         public GlobalRoleBuilder GrantPermissions(params PermissionEnum[] perms)
         {
             ensureBaseRoleCreated();
-            // add permissions to be saved into the db later
             foreach (PermissionEnum p in perms)
                 _rolePermissions.Add(new RolePermission(_role.Id, p));
+            return this;
+        }
+
+        public GlobalRoleBuilder GrantAllPermissionsExcept(params PermissionEnum[] perms)
+        {
+            ensureBaseRoleCreated();
+            foreach (PermissionEnum p in Enum.GetValues(typeof(PermissionEnum)))
+                if (!perms.Any(perm => perm == p))
+                    _rolePermissions.Add(new RolePermission(_role.Id, p));
             return this;
         }
 

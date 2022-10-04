@@ -30,8 +30,8 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         public void Update(List<UserOrganizationRole> uors)
             => _applicationContext.Set<UserOrganizationRole>().UpdateRange(uors);
 
-        public void Delete(params UserOrganizationRole[] uors)
-            => _applicationContext.Set<UserOrganizationRole>().RemoveRange(uors);
+        public void Delete(UserOrganizationRole uors)
+            => _applicationContext.Set<UserOrganizationRole>().Remove(uors);
 
         public async Task<bool> RoleIsOnlyRoleForAnyUserAsync(Role role)
         {

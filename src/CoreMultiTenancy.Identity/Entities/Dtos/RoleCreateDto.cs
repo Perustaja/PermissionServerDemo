@@ -8,6 +8,6 @@ namespace CoreMultiTenancy.Identity.Entities.Dtos
         [MinLength(1)]
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<PermissionEnum> Permissions { get; set; }
+        public List<string> Permissions { get; set; }
     }
 }

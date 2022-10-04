@@ -4,7 +4,6 @@ using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
 using Perustaja.Polyglot.Option;
 using CoreMultiTenancy.Identity.Results.Errors;
-using CoreMultiTenancy.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
 using CoreMultiTenancy.Core.Authorization;
 

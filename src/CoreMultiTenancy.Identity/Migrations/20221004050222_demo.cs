@@ -305,37 +305,37 @@ namespace CoreMultiTenancy.Identity.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "IsGlobal", "IsGlobalAdminDefault", "IsGlobalDefaultForNewUsers", "IsTenantDefaultForNewUsers", "Name", "NormalizedName", "OrgId" },
-                values: new object[] { new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d"), "2559330e-5148-424b-b4da-2c8ff3e99c68", "Role for creating new aircraft", true, false, false, false, "Create Aircraft", "CREATE AIRCRAFT", null });
+                values: new object[] { new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d"), "ec2c3742-515d-43c0-810c-e111a38f9ce0", "Role for creating new aircraft", true, false, false, false, "Create Aircraft", "CREATE AIRCRAFT", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "IsGlobal", "IsGlobalAdminDefault", "IsGlobalDefaultForNewUsers", "IsTenantDefaultForNewUsers", "Name", "NormalizedName", "OrgId" },
-                values: new object[] { new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"), "5f91c305-f8dd-4937-bfa2-5240b2eb4c2d", "Default user role with minimal permissions", true, false, true, false, "User", "USER", null });
+                values: new object[] { new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"), "6323c850-4003-4c59-97c2-d5b8c71b970e", "Default user role with minimal permissions", true, false, true, false, "User", "USER", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "IsGlobal", "IsGlobalAdminDefault", "IsGlobalDefaultForNewUsers", "IsTenantDefaultForNewUsers", "Name", "NormalizedName", "OrgId" },
-                values: new object[] { new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), "70e7f310-7627-4794-a763-cdebba54f23a", "Default admin role for new tenant owners", true, true, false, false, "Owner", "OWNER", null });
+                values: new object[] { new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"), "aed30823-532e-4bd2-9375-1cdbc4fb5cc3", "Default admin role for new tenant owners", true, true, false, false, "Owner", "OWNER", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), 0, "b6edbcbe-16b2-4aed-abe8-c93839e7e048", "shadow@mydomain.com", true, null, null, false, null, "SHADOW@MYDOMAIN.COM", "SHADOW@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEFiAUanrEdLgV7xbqLpEMct3NZ6jBZjOpL2IRKRX3pOS3+DY/zomqGulu/HdhPxPFQ==", null, false, "00000000-0000-0000-0000-000000000000", false, "shadow@mydomain.com" });
+                values: new object[] { new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), 0, "ec146630-5022-401e-9e92-81a4d8990a9e", "shadow@mydomain.com", true, null, null, false, null, "SHADOW@MYDOMAIN.COM", "SHADOW@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEHx7bbDsh6l7jIokX3qGXQDoZDmbCxdSJVddlMiBI3CYE6lmgRZb2uI/Y1GCUHtLVg==", null, false, "00000000-0000-0000-0000-000000000000", false, "shadow@mydomain.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), 0, "c4690d12-ca2b-4f6c-bfc7-ee420b61139a", "admin@mydomain.com", true, "Admin", "Admin", false, null, "ADMIN@MYDOMAIN.COM", "ADMIN@MYDOMAIN.COM", "AQAAAAEAACcQAAAAEE0m920wLJdOZ1mPnJgnjj8Ak6W0w2Gt+pkYlYksdcQ625S82/mr1gtmTcJ9W491Qg==", null, false, "00000000-0000-0000-0000-000000000000", false, "admin@mydomain.com" });
+                values: new object[] { new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), 0, "dd30f7ba-d15a-4dd7-82a5-07c57a632585", "admin@mydomain.com", true, "Admin", "Admin", false, null, "ADMIN@MYDOMAIN.COM", "ADMIN@MYDOMAIN.COM", "AQAAAAEAACcQAAAAELjkYv0NC5GCxVAe8tD6cBDoay//h9dXKtcUTzoInY1YjuLPGWKVriZfZUuku0B1sQ==", null, false, "00000000-0000-0000-0000-000000000000", false, "admin@mydomain.com" });
 
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "CreationDate", "IsActive", "LogoUri", "OwnerUserId", "RequiresConfirmationForNewUsers", "Title" },
-                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 9, 28, 2, 36, 6, 849, DateTimeKind.Utc).AddTicks(9806), true, "tenantlogo1.jpg", new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, "MyCompany" });
+                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 10, 4, 5, 2, 21, 487, DateTimeKind.Utc).AddTicks(6912), true, "tenantlogo1.jpg", new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, "MyCompany" });
 
             migrationBuilder.InsertData(
                 table: "Organizations",
                 columns: new[] { "Id", "CreationDate", "IsActive", "LogoUri", "OwnerUserId", "RequiresConfirmationForNewUsers", "Title" },
-                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 9, 28, 2, 36, 6, 849, DateTimeKind.Utc).AddTicks(9810), true, "tenantlogo2.jpg", new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), false, "OtherCompany" });
+                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new DateTime(2022, 10, 4, 5, 2, 21, 487, DateTimeKind.Utc).AddTicks(6922), true, "tenantlogo2.jpg", new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"), false, "OtherCompany" });
 
             migrationBuilder.InsertData(
                 table: "PermissionCategories",
@@ -415,22 +415,17 @@ namespace CoreMultiTenancy.Identity.Migrations
             migrationBuilder.InsertData(
                 table: "UserOrganizations",
                 columns: new[] { "OrgId", "UserId", "AwaitingApproval", "Blacklisted", "DateApproved", "DateBlacklisted", "DateSubmitted", "InternalNotes" },
-                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, false, new DateTime(2022, 9, 27, 0, 0, 0, 0, DateTimeKind.Local), null, new DateTime(2022, 9, 27, 0, 0, 0, 0, DateTimeKind.Local), null });
+                values: new object[] { new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, false, new DateTime(2022, 10, 3, 0, 0, 0, 0, DateTimeKind.Local), null, new DateTime(2022, 10, 3, 0, 0, 0, 0, DateTimeKind.Local), null });
 
             migrationBuilder.InsertData(
                 table: "UserOrganizations",
                 columns: new[] { "OrgId", "UserId", "AwaitingApproval", "Blacklisted", "DateApproved", "DateBlacklisted", "DateSubmitted", "InternalNotes" },
-                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, false, new DateTime(2022, 9, 27, 0, 0, 0, 0, DateTimeKind.Local), null, new DateTime(2022, 9, 27, 0, 0, 0, 0, DateTimeKind.Local), null });
+                values: new object[] { new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"), new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"), false, false, new DateTime(2022, 10, 3, 0, 0, 0, 0, DateTimeKind.Local), null, new DateTime(2022, 10, 3, 0, 0, 0, 0, DateTimeKind.Local), null });
 
             migrationBuilder.InsertData(
                 table: "RolePermissions",
                 columns: new[] { "PermissionId", "RoleId" },
                 values: new object[] { "AircraftCreate", new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d") });
-
-            migrationBuilder.InsertData(
-                table: "RolePermissions",
-                columns: new[] { "PermissionId", "RoleId" },
-                values: new object[] { "AircraftCreate", new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d") });
 
             migrationBuilder.InsertData(
                 table: "RolePermissions",

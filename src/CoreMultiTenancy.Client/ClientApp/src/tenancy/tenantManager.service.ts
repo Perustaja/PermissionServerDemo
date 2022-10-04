@@ -40,6 +40,11 @@ export class TenantManagerService {
         this.setPermissionsForTenant(tenantId);
     }
 
+    permissionsAffected() {
+        if (this.tenantId)
+            this.setPermissionsForTenant(this.tenantId);
+    }
+
     private setPermissionsForTenant(tenantId: string) {
         this.authorizeSvc.getUser()
             .pipe(map(u => u && u.sub))

@@ -33,7 +33,7 @@ namespace CoreMultiTenancy.Identity.Authorization
             var userId = context.HttpContext.User.FindFirstValue("sub");
 
             // Evaluate and set context.Result based on decision
-            logger.LogInformation($"Authorizing local request: user {userId}, tenant {tenantId}, perms {_permissions}");
+            logger.LogInformation($"Authorizing local request: user {userId}, tenant {tenantId}, perms {(object)_permissions}");
             var decision = await evaulator.EvaluateAsync(userId, tenantId, _permissions);
             SetContextResultOnDecision(context, decision);
         }

@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Core.Interfaces;
 using CoreMultiTenancy.Identity.Data.Configuration;
 using CoreMultiTenancy.Identity.Entities;
@@ -9,7 +6,6 @@ using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoreMultiTenancy.Identity.Data
 {
