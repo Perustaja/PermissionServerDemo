@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Cmt.Protobuf;
-using CoreMultiTenancy.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Core.Tenancy;
 
 namespace CoreMultiTenancy.Api.Authorization
 {
@@ -32,9 +32,9 @@ namespace CoreMultiTenancy.Api.Authorization
             var client = GetGrpcClient(context.HttpContext);
             var tenantId = GetTenantProvider(context.HttpContext).GetCurrentRequestTenant().Id;
 
-            var request = new PermissionAuthorizeRequest()
+            var request = new GrpcPermissionAuthorizeRequest()
             {
-                UserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                UserId = context.HttpContext.User.FindFirstValue("sub"),
                 TenantId = tenantId.ToString(),
             };
 
@@ -47,7 +47,7 @@ namespace CoreMultiTenancy.Api.Authorization
             SetContextResultOnReply(context, reply);
         }
 
-        private void SetContextResultOnReply(AuthorizationFilterContext context, AuthorizeDecision reply)
+        private void SetContextResultOnReply(AuthorizationFilterContext context, GrpcAuthorizeDecision reply)
         {
             var logger = GetLogger(context.HttpContext);
             logger.LogInformation($"Remote authorization result: {reply}");
@@ -67,12 +67,13 @@ namespace CoreMultiTenancy.Api.Authorization
             }
         }
 
-        // TODO: Figure out how to make DI work with action filters in a non-annoying way to test this
-        private PermissionAuthorize.PermissionAuthorizeClient GetGrpcClient(HttpContext context)
+        // It seems like there is still no easy way to use DI with action filters in .NET Core 6.0,
+        // figuring out how to do this in a more normal way would be nice but is low prio
+        private GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient GetGrpcClient(HttpContext context)
         {
             return context.RequestServices
-                .GetRequiredService(typeof(PermissionAuthorize.PermissionAuthorizeClient))
-                as PermissionAuthorize.PermissionAuthorizeClient;
+                .GetRequiredService(typeof(GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient))
+                as GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient;
         }
 
         private ITenantProvider GetTenantProvider(HttpContext context)

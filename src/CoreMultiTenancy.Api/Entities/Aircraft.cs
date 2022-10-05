@@ -18,6 +18,7 @@ namespace CoreMultiTenancy.Api.Entities
             Model = model;
             TenantId = tenantId;
             ThumbnailUri = thumbUri;
+            IsGrounded = false;
         }
         public void Ground() => IsGrounded = true;
     }

@@ -17,7 +17,7 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// Whether the User has all of the given Permissions, 
         /// or false if either doesn't exist or the User has no access.
         /// </returns>
-        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params PermissionEnum[] perms);
+        Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params string[] perms);
 
         Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
 
@@ -25,11 +25,5 @@ namespace CoreMultiTenancy.Identity.Interfaces
         Task<List<Permission>> GetAllPermissionsAsync();
         /// <returns>A list of all PermissionCategories with populated Permissions</returns>
         Task<List<PermissionCategory>> GetAllPermissionCategoriesAsync();
-        
-        /// <summary>
-        /// Sets the User's permissions based on the role id under a specific tenant.
-        /// </summary>
-        /// <returns>An Error on failure.</returns>
-        Task<Option<Error>> SetUsersPermissionsAsync(Guid userId, Guid orgId, Guid roleId);
     }
 }

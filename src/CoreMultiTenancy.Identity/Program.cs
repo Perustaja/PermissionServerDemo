@@ -1,4 +1,4 @@
-using CoreMultiTenancy.Identity;
+﻿using CoreMultiTenancy.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

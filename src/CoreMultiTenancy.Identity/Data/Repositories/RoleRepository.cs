@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Core.Interfaces;
-using Dapper;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Perustaja.Polyglot.Option;
 
@@ -46,28 +40,32 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
                 : Option<Role>.None;
         }
 
-        public Role AddRoleToOrg(Guid orgId, Role role)
+        public Task<Role> GetGlobalDefaultOwnerRoleAsync()
+        {
+            var r = _applicationContext.Set<Role>()
+                .Where(r => r.IsGlobalAdminDefault)
+                .FirstOrDefaultAsync();
+            if (r != null)
+                throw new Exception("Global default owner/admin role not registed in DI.");
+            return r;
+        }
+
+        public Task<Role> GetGlobalDefaultNewUserRoleAsync()
+        {
+            var r = _applicationContext.Set<Role>()
+                .Where(r => r.IsGlobalDefaultForNewUsers)
+                .FirstOrDefaultAsync();
+            if (r != null)
+                throw new Exception("Global default new user role not registed in DI.");
+            return r;        }
+
+        public Role Add(Guid orgId, Role role)
             => _applicationContext.Set<Role>().Add(role).Entity;
 
-        public Role UpdateRoleOfOrg(Role role)
+        public Role Update(Role role)
             => _applicationContext.Set<Role>().Update(role).Entity;
 
-        public void DeleteRoleOfOrg(Role role)
+        public void Delete(Role role)
             => _applicationContext.Remove(role);
-
-        public async Task<bool> RoleIsOnlyRoleForAnyUserAsync(Role role)
-        {
-            using (var conn = new SqliteConnection(_connectionString))
-            {
-                int c = await conn.QueryFirstOrDefaultAsync<int>(
-                    @"SELECT COUNT(*) FROM UserOrganizationRoles
-                    WHERE OrgId = @OrgId
-                    GROUP BY UserId
-                    HAVING COUNT(*) = 1 AND RoleId = @RoleId",
-                    new { RoleId = role.Id, OrgId = role.OrgId }
-                );
-                return c > 0;
-            }
-        }
     }
 }

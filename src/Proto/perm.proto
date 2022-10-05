@@ -6,8 +6,8 @@ package cmt.protobuf;
 /*
     A standard authorization request authorizing based on both tenant id and some optional permission(s).
 */
-service PermissionAuthorize {
-    rpc Authorize(PermissionAuthorizeRequest) returns(AuthorizeDecision);
+service GrpcPermissionAuthorize {
+    rpc Authorize(GrpcPermissionAuthorizeRequest) returns(GrpcAuthorizeDecision);
 }
 
 enum failureReason {
@@ -16,7 +16,7 @@ enum failureReason {
     PERMISSIONFORMAT = 2; // The permissions passed were unsuccessfully parsed
 };
 
-message PermissionAuthorizeRequest {
+message GrpcPermissionAuthorizeRequest {
     string userId = 1;
     string tenantId = 2;
     repeated google.protobuf.StringValue perms = 3; // Optional collection of strings representing permissions
@@ -26,7 +26,7 @@ message PermissionAuthorizeRequest {
     Contains whether the specified user is authorized to perform or access the action associated
     with the given permissions.
 */
-message AuthorizeDecision {
+message GrpcAuthorizeDecision {
     bool allowed = 1;
     failureReason failureReason = 2;
     google.protobuf.StringValue failureMessage = 3; // Optional error message

@@ -4,20 +4,19 @@ using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
 using Perustaja.Polyglot.Option;
 using CoreMultiTenancy.Identity.Results.Errors;
-using CoreMultiTenancy.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
+using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Services
 {
     public class OrganizationManager : IOrganizationManager
     {
         private readonly string _connectionString;
-        private readonly Guid _defaultLowestUserRoleId;
-        private readonly Guid _defaultAdminRoleId;
         private readonly UserManager<User> _userManager;
         private readonly IUserOrganizationRepository _userOrgRepo;
         private readonly IOrganizationRepository _orgRepo;
         private readonly IRoleRepository _roleRepo;
+        private readonly IRolePermissionRepository _rolePermissionRepo;
         private readonly IUserOrganizationRoleRepository _userOrgRoleRepo;
         private readonly IOrganizationInviteService _inviteSvc;
 
@@ -26,16 +25,16 @@ namespace CoreMultiTenancy.Identity.Services
             IUserOrganizationRepository userOrgRepo,
             IOrganizationRepository orgRepo,
             IRoleRepository roleRepo,
+            IRolePermissionRepository rolePermRepo,
             IUserOrganizationRoleRepository userOrgRoleRepo,
             IOrganizationInviteService inviteSvc)
         {
             _connectionString = config.GetConnectionString("IdentityDb");
-            _defaultAdminRoleId = config.GetDefaultAdminRoleId();
-            _defaultLowestUserRoleId = config.GetDefaultAdminRoleId();
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _userOrgRepo = userOrgRepo ?? throw new ArgumentNullException(nameof(userOrgRepo));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
             _roleRepo = roleRepo ?? throw new ArgumentNullException(nameof(roleRepo));
+            _rolePermissionRepo = rolePermRepo ?? throw new ArgumentNullException(nameof(rolePermRepo));
             _userOrgRoleRepo = userOrgRoleRepo ?? throw new ArgumentNullException(nameof(userOrgRoleRepo));
             _inviteSvc = inviteSvc ?? throw new ArgumentNullException(nameof(inviteSvc));
         }
@@ -90,7 +89,7 @@ namespace CoreMultiTenancy.Identity.Services
                 return Option<Error>.Some(new Error("One of the passed Roles was not valid for this Organization.", ErrorType.DomainLogic));
 
             _userOrgRepo.Update(uo);
-            _userOrgRoleRepo.UpdateBulk(uors);
+            _userOrgRoleRepo.Update(uors);
             await _userOrgRepo.UnitOfWork.Commit();
             return Option<Error>.None;
         }
@@ -103,17 +102,19 @@ namespace CoreMultiTenancy.Identity.Services
         public async Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId)
             => await _roleRepo.GetRoleOfOrgByIdsAsync(orgId, roleId);
 
-        public async Task<Role> AddRoleToOrgAsync(Guid orgId, Role role)
+        public async Task<Role> AddRoleToOrgAsync(Guid orgId, Role role, List<PermissionEnum> perms)
         {
-            role.SetOrganization(orgId); // Assign OrgId to Role
-            role = _roleRepo.AddRoleToOrg(orgId, role);
+            role.SetOrganization(orgId);
+            role = _roleRepo.Add(orgId, role);
+            var rps = perms.Select(p => new RolePermission(role.Id, p)).ToArray();
+            _rolePermissionRepo.Add(rps);
             await _roleRepo.UnitOfWork.Commit();
             return role;
         }
 
         public async Task UpdateRoleOfOrgAsync(Guid orgId, Role role)
         {
-            _roleRepo.UpdateRoleOfOrg(role);
+            _roleRepo.Update(role);
             await _roleRepo.UnitOfWork.Commit();
         }
 
@@ -122,15 +123,50 @@ namespace CoreMultiTenancy.Identity.Services
             // verify role is not global or only role for any user before deletion
             if (role.IsGlobal)
                 return Option<Error>.Some(new Error("Cannot delete a global role.", ErrorType.DomainLogic));
-            if (await _roleRepo.RoleIsOnlyRoleForAnyUserAsync(role))
+            if (await _userOrgRoleRepo.RoleIsOnlyRoleForAnyUserAsync(role))
                 return Option<Error>.Some(new Error("This Role cannot be deleted because it is the last Role for at least one User.", ErrorType.DomainLogic));
-            _roleRepo.DeleteRoleOfOrg(role);
+            _roleRepo.Delete(role); // deletion will cascade and remove the role from any users who have it
             await _roleRepo.UnitOfWork.Commit();
             return Option<Error>.None;
         }
 
-        public async Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid userId) {
-            return await _userOrgRepo.GetByUserIdAsync(userId);
+        public async Task<Option<Error>> RemoveRoleFromUserAsync(Guid userId, Guid orgId, Guid roleId)
+        {
+            var uors = await _userOrgRoleRepo.GetUsersRolesAsync(userId, orgId);
+            var roleToRemove = uors.FirstOrDefault(r => r.RoleId == roleId);
+            if (roleToRemove != null)
+                if (uors.Count > 1)
+                {
+                    _userOrgRoleRepo.Delete(roleToRemove);
+                    await _userOrgRoleRepo.UnitOfWork.Commit();
+                    return Option<Error>.None;
+                }
+                else
+                    return Option<Error>.Some(new Error($"Role {roleId} is this user's last role and cannot be deleted.", ErrorType.DomainLogic));
+            else
+                return Option<Error>.Some(new Error("User does not have this role within this tenant.", ErrorType.NotFound));
+        }
+
+        public async Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid userId)
+            => await _userOrgRepo.GetByUserIdAsync(userId);
+
+        public async Task<Option<Error>> RevokeAccessAsync(Guid userId, Guid orgId)
+        {
+            var userOrgsOpt = await _userOrgRepo.GetByIdsAsync(orgId, userId);
+            if (userOrgsOpt.IsSome())
+            {
+                var uo = userOrgsOpt.Unwrap();
+                if (uo.Organization.OwnerUserId != userId)
+                {
+                    _userOrgRepo.Delete(uo);
+                    await _userOrgRepo.UnitOfWork.Commit();
+                    return Option<Error>.None;         
+                }
+                else
+                    return Option<Error>.Some(new Error($"User {userId} cannot have access revoked as it is the owner of the organization.", ErrorType.DomainLogic));
+
+            }
+            return Option<Error>.Some(new Error($"User {userId} does not have access to organization {orgId}", ErrorType.NotFound));
         }
         #endregion
 
@@ -172,16 +208,16 @@ namespace CoreMultiTenancy.Identity.Services
                 : InviteResult.ImmediateSuccess(org.Title);
         }
 
-        private void AddDefaultLowestUserRoleToUserAsync(Guid userId, Guid orgId)
+        private async void AddDefaultLowestUserRoleToUserAsync(Guid userId, Guid orgId)
         {
-            var defaultRole = new UserOrganizationRole(userId, orgId, _defaultLowestUserRoleId);
-            _userOrgRoleRepo.Add(defaultRole);
+            var defaultRole = await _roleRepo.GetGlobalDefaultNewUserRoleAsync();
+            _userOrgRoleRepo.Add(new UserOrganizationRole(userId, orgId, defaultRole.Id));
         }
 
-        private void AddDefaultAdminRoleToUserAsync(Guid userId, Guid orgId)
+        private async void AddDefaultAdminRoleToUserAsync(Guid userId, Guid orgId)
         {
-            var defaultRole = new UserOrganizationRole(userId, orgId, _defaultAdminRoleId);
-            _userOrgRoleRepo.Add(defaultRole);
+            var defaultRole = await _roleRepo.GetGlobalDefaultOwnerRoleAsync();
+            _userOrgRoleRepo.Add(new UserOrganizationRole(userId, orgId, defaultRole.Id));
         }
     }
 }

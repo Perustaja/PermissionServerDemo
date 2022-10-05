@@ -17,7 +17,7 @@ namespace UnitTests
         public async void Returns_Unauthorized_If_Perms_Invalid(string invalidPerm)
         {
             // Enum is not a valid enum, it should be parsed prior and cause an error
-            var expected = new AuthorizeDecision() { Allowed = false, FailureReason = failureReason.Permissionformat };
+            var expected = new AuthorizeDecision() { Allowed = false, FailureReason = AuthorizeFailureReason.PermissionFormat };
 
             // OrganizationManager says that the user has access and the org exists
             var orgManMock = new Mock<IOrganizationManager>();
@@ -26,7 +26,7 @@ namespace UnitTests
             // PermissionService says that the user has permission(s)
             var permSvcMock = AlwaysXPermissionService(true);
 
-            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
+            var evaluator = new AuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), invalidPerm);
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -35,7 +35,7 @@ namespace UnitTests
         [Fact]
         public async void Returns_Unauthorized_If_User_Doesnt_Have_Perms()
         {
-            var expected = new AuthorizeDecision() { Allowed = false, FailureReason = failureReason.Unauthorized };
+            var expected = new AuthorizeDecision() { Allowed = false, FailureReason = AuthorizeFailureReason.Unauthorized };
 
             // OrganizationManager says the user has access and the org exists
             var orgManMock = new Mock<IOrganizationManager>();
@@ -44,7 +44,7 @@ namespace UnitTests
             // but the Permission Service says it does not have permission
             var permSvcMock = AlwaysXPermissionService(false);
 
-            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
+            var evaluator = new AuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.AircraftCreate.ToString());
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -62,7 +62,7 @@ namespace UnitTests
             // And the PermissionService says it has the given permission
             var permSvcMock = AlwaysXPermissionService(true);
 
-            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
+            var evaluator = new AuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr(), PermissionEnum.AircraftCreate.ToString());
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -80,7 +80,7 @@ namespace UnitTests
             // And the PermissionService says it has the given permission
             var permSvcMock = AlwaysXPermissionService(true);
 
-            var evaluator = new RemoteAuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
+            var evaluator = new AuthorizationEvaluator(MockAuthLogger(), orgManMock.Object, permSvcMock.Object);
             var actual = await evaluator.EvaluateAsync(GuidAsStr(), GuidAsStr());
 
             Assert.True(DecisionsAreEqual(expected, actual));
@@ -93,11 +93,11 @@ namespace UnitTests
         private Mock<IPermissionService> AlwaysXPermissionService(bool x)
         {
             var permSvcMock = new Mock<IPermissionService>();
-            permSvcMock.Setup(m => m.UserHasPermissionsAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<PermissionEnum[]>())).ReturnsAsync(x);
+            permSvcMock.Setup(m => m.UserHasPermissionsAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<string[]>())).ReturnsAsync(x);
             return permSvcMock;
         }
 
-        private ILogger<RemoteAuthorizationEvaluator> MockAuthLogger() 
-            => new Mock<ILogger<RemoteAuthorizationEvaluator>>().Object;
+        private ILogger<AuthorizationEvaluator> MockAuthLogger() 
+            => new Mock<ILogger<AuthorizationEvaluator>>().Object;
     }
 }

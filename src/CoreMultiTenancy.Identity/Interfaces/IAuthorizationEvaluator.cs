@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
-using Cmt.Protobuf;
+using CoreMultiTenancy.Identity.Authorization;
 
 namespace CoreMultiTenancy.Identity.Interfaces
 {
-    public interface IRemoteAuthorizationEvaluator
+    public interface IAuthorizationEvaluator
     {
         Task<AuthorizeDecision> EvaluateAsync(string userId, string orgId, params string[] perms);
     }

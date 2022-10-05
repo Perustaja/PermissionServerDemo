@@ -1,6 +1,3 @@
-using System;
-using Microsoft.AspNetCore.Http;
-
 namespace CoreMultiTenancy.Api.Tenancy
 {
     public class TenantNotFoundException : Exception

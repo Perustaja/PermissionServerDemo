@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Results;
@@ -66,10 +67,10 @@ namespace CoreMultiTenancy.Identity.Interfaces
         Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId);
 
         /// <summary>
-        /// Adds a Role to be used by the specified organization.
+        /// Adds a Role to be used by the specified organization with the given permissions, if any.
         /// </summary>
         /// <returns>The Role entity being tracked after add.</returns>
-        Task<Role> AddRoleToOrgAsync(Guid orgId, Role role);
+        Task<Role> AddRoleToOrgAsync(Guid orgId, Role role, List<PermissionEnum> perms);
 
         /// <summary>
         /// Updates the Role.
@@ -83,8 +84,20 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// <returns>An Option containing an Error on failure.</returns>
         Task<Option<Error>> DeleteRoleOfOrgAsync(Role role);
 
+        /// <summary>
+        /// Attempts to remove the role. This will fail if this is the user's last role.
+        /// </summary>
+        /// <returns>An Option containing an Error on failure.</returns>
+        Task<Option<Error>> RemoveRoleFromUserAsync(Guid userId, Guid orgId, Guid roleId);
+
         /// <returns>All UserOrganizations for a User, representing which tenants they have access to, empty list if none exist.</returns>
         Task<List<UserOrganization>> GetUserOrganizationsByUserIdAsync(Guid id);
+
+        /// <summary>
+        /// Attempts to revoke the user's access to the organization.
+        /// </summary>
+        /// <returns>An Error if the user is the owner or does not have access.</returns>
+        public Task<Option<Error>> RevokeAccessAsync(Guid userId, Guid orgId);
         #endregion
 
         #region InvitationManagement

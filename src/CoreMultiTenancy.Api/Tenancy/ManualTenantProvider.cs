@@ -1,4 +1,4 @@
-using CoreMultiTenancy.Api.Interfaces;
+using CoreMultiTenancy.Core.Tenancy;
 
 namespace CoreMultiTenancy.Api.Tenancy
 {

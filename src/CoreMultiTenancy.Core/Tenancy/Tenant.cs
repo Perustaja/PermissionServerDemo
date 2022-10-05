@@ -1,4 +1,6 @@
-namespace CoreMultiTenancy.Api.Tenancy
+using System;
+
+namespace CoreMultiTenancy.Core.Tenancy
 {
     public class Tenant
     {

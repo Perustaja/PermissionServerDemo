@@ -18,7 +18,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         /// <returns>All UserOrganization records awaiting access with populated User, UserOrgRole, and Role NPs.</returns>
         Task<List<UserOrganization>> GetAwaitingAccessByOrgId(Guid orgId);
 
-        /// <returns>An Option containing a UserOrganization with populated User, UserOrgRole, and Role NPs if found.</returns>
+        /// <returns>An Option containing a UserOrganization with populated Organization.</returns>
         Task<Option<UserOrganization>> GetByIdsAsync(Guid orgId, Guid userId);
 
         /// <returns>All UserOrganizations for a given User with populated Organizations</returns>
@@ -29,6 +29,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         /// <returns>The UserOrganization entity being tracked upon add.</returns>
         UserOrganization Update(UserOrganization uo);
+        void Delete(UserOrganization uo);
 
         /// <returns>Whether the Organization has a record of the User, even if awaiting approval or blacklisted.</returns>
         Task<bool> ExistsAsync(Guid userId, Guid orgId);

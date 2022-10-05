@@ -22,7 +22,7 @@ export class AircraftComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.http.get<Aircraft[]>(this.apiUrl + `/organizations/${this.tenantManager.tenantId}/aircraft`).subscribe({
+        this.http.get<Aircraft[]>(`${this.apiUrl}/organizations/${this.tenantManager.tenantId}/aircraft`).subscribe({
             next: (res) => this.aircraft = res,
             error: (e) => console.log(e)
         });

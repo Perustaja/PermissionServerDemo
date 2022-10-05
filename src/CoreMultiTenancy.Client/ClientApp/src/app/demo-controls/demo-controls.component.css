@@ -1,0 +1,30 @@
+.identity-dashboard {
+    font-size: 13px;
+}
+.identity-label {
+    font-weight: 500;
+}
+.identity-labels {
+    font-style: italic;
+    padding-top: 10px;
+    padding-left: 5px;
+}
+.demo-controls {
+    padding-bottom: 50px;
+}
+.demo-control {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+}
+.demo-button {
+    width: 20vw;
+}
+.demo-button button {
+    width: 100%;
+}
+.demo-label {
+    font-size: 16px;
+    padding-left: 10px;
+    width: calc(80vw - 350px);
+}

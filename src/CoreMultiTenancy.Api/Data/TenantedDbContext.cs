@@ -1,12 +1,7 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Api.Entities;
-using CoreMultiTenancy.Api.Interfaces;
-using CoreMultiTenancy.Api.Tenancy;
 using CoreMultiTenancy.Core.Interfaces;
+using CoreMultiTenancy.Core.Tenancy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoreMultiTenancy.Api.Data
 {

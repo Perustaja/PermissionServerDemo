@@ -1,6 +1,4 @@
-using CoreMultiTenancy.Api.Tenancy;
-
-namespace CoreMultiTenancy.Api.Interfaces
+namespace CoreMultiTenancy.Core.Tenancy
 {
     /// <summary>
     /// Provides access to the information of the tenant for a request.

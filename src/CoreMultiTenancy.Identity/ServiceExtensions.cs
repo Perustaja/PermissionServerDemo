@@ -1,5 +1,7 @@
 using System.Reflection;
 using Cmt.Protobuf;
+using CoreMultiTenancy.Core.Authorization;
+using CoreMultiTenancy.Core.Tenancy;
 using CoreMultiTenancy.Identity.Authorization;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection;
@@ -12,6 +14,7 @@ using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Mapping;
 using CoreMultiTenancy.Identity.Options;
 using CoreMultiTenancy.Identity.Services;
+using CoreMultiTenancy.Identity.Tenancy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,25 +24,6 @@ internal static class ServiceExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddGlobalRoles(options =>
-        {
-            // in a normal application you will not need to hardcode these ids, the demo
-            // just seeds some users for brevity
-            var adminRoleId = builder.Configuration.GetDefaultAdminRoleId();
-            var newUserRoleId = builder.Configuration.GetDefaultNewUserRoleId();
-
-            options.AddGlobalRole(role =>
-                {
-                    role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
-                        .AsDefaultAdminRole()
-                        .GrantAllPermissions();
-                });
-            options.AddGlobalRole(role =>
-            {
-                role.WithBaseRoleForDemo(newUserRoleId, "User", "Default user role with minimal permissions")
-                    .AsDefaultNewUserRole();
-            });
-        });
 
         builder.Services.AddDbContext<ApplicationDbContext>();
 
@@ -85,11 +69,13 @@ internal static class ServiceExtensions
         builder.Services.AddScoped<IOrganizationManager, OrganizationManager>();
         builder.Services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
         builder.Services.AddScoped<IAccountEmailService, AccountEmailService>();
-        builder.Services.AddScoped<IRemoteAuthorizationEvaluator, RemoteAuthorizationEvaluator>();
+        builder.Services.AddScoped<IAuthorizationEvaluator, AuthorizationEvaluator>();
         builder.Services.AddScoped<IPermissionService, PermissionService>();
+        builder.Services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
         // Repositories
         builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+        builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
         builder.Services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
         builder.Services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
         builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
@@ -131,6 +117,7 @@ internal static class ServiceExtensions
         builder.Services.AddGrpcClients();
         builder.Services.AddLocalApiAuthentication();
         builder.Services.AddAutoMapperWithTypeConverters();
+        builder.AddDemoGlobalRoles();
 
         return builder.Build();
     }
@@ -155,19 +142,19 @@ internal static class ServiceExtensions
 
     public static IEndpointRouteBuilder MapGrpcAuthorizationServices(this IEndpointRouteBuilder e)
     {
-        e.MapGrpcService<PermissionAuthorizeService>();
+        e.MapGrpcService<RemotePermissionAuthorizeService>();
         return e;
     }
 
-    public static void AddGrpcClients(this IServiceCollection sc)
+    private static void AddGrpcClients(this IServiceCollection sc)
     {
-        sc.AddGrpcClient<PermissionAuthorize.PermissionAuthorizeBase>(o =>
+        sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeBase>(o =>
         {
             o.Address = new Uri("https://localhost:6100");
         });
     }
 
-    public static void AddAutoMapperWithTypeConverters(this IServiceCollection sc)
+    private static void AddAutoMapperWithTypeConverters(this IServiceCollection sc)
     {
         sc.AddTransient<RolePermissionConverter>();
 
@@ -176,6 +163,35 @@ internal static class ServiceExtensions
             cfg.AddMaps(Assembly.GetExecutingAssembly());
             cfg.CreateMap<RolePermission, PermissionGetDto>()
                 .ConvertUsing<RolePermissionConverter>();
+        });
+    }
+
+    private static void AddDemoGlobalRoles(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddGlobalRoles(options =>
+        {
+            // in a normal application you will not need to hardcode these ids, the demo
+            // just seeds some users for brevity
+            var adminRoleId = builder.Configuration.GetDemoRoleId("DefaultAdminRoleId");
+            var newUserRoleId = builder.Configuration.GetDemoRoleId("DefaultNewUserRoleId");
+            var aircraftCreateRoleId = builder.Configuration.GetDemoRoleId("AircraftCreateRoleId");
+
+            options.AddGlobalRole(role =>
+            {
+                role.WithBaseRoleForDemo(adminRoleId, "Owner", "Default admin role for new tenant owners")
+                    .AsDefaultAdminRole()
+                    .GrantAllPermissionsExcept(PermissionEnum.AircraftCreate);
+            });
+            options.AddGlobalRole(role =>
+            {
+                role.WithBaseRoleForDemo(newUserRoleId, "User", "Default user role with minimal permissions")
+                    .AsDefaultNewUserRole();
+            });
+            options.AddGlobalRole(role =>
+            {
+                role.WithBaseRoleForDemo(aircraftCreateRoleId, "Create Aircraft", "Role for creating new aircraft")
+                    .GrantPermissions(PermissionEnum.AircraftCreate);
+            });
         });
     }
 }

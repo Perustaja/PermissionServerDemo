@@ -15,6 +15,7 @@ import { AircraftComponent } from './aircraft/aircraft.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersComponent } from './users/users.component';
 import { RolesComponent } from './roles/roles.component';
+import { DemoControlsComponent } from './demo-controls/demo-controls.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { RolesComponent } from './roles/roles.component';
     PortalComponent,
     AircraftComponent,
     UsersComponent,
-    RolesComponent
+    RolesComponent,
+    DemoControlsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -36,6 +38,7 @@ import { RolesComponent } from './roles/roles.component';
       { path: 'aircraft', component: AircraftComponent, canActivate: [AuthorizeGuard, TenantGuard] },
       { path: 'users', component: UsersComponent, canActivate: [AuthorizeGuard, TenantGuard] },
       { path: 'roles', component: RolesComponent, canActivate: [AuthorizeGuard, TenantGuard] },
+      { path: 'demo-controls', component: DemoControlsComponent, canActivate: [AuthorizeGuard, TenantGuard] },
     ]),
     FontAwesomeModule,
     NgbModule,

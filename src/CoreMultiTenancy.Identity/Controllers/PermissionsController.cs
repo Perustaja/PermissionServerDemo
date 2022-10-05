@@ -1,4 +1,5 @@
 using AutoMapper;
+using CoreMultiTenancy.Identity.Attributes;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using Duende.IdentityServer.Extensions;
@@ -9,6 +10,7 @@ using static Duende.IdentityServer.IdentityServerConstants;
 namespace CoreMultiTenancy.Identity.Controllers
 {
     [ApiVersion("1.0")]
+    [ApiController]
     [Route("api/v{version:apiVersion}")]
     [Authorize(LocalApi.PolicyName)]
     public class PermissionsController : ControllerBase
@@ -35,23 +37,19 @@ namespace CoreMultiTenancy.Identity.Controllers
         }
 
         [HttpGet("users/{userId}/organizations/{orgId}/permissions")]
+        [TenantedAuthorize]
         public async Task<IActionResult> GetPermissionsWithinTenant(Guid userId, Guid orgId)
         {
             var tokenId = new Guid(User.GetSubjectId());
             if (userId == tokenId)
             {
-                if (await _orgManager.UserHasAccessAsync(userId, orgId))
+                var perms = await _permSvc.GetUsersPermissionsAsync(userId, orgId);
+                if (perms.Count > 0)
                 {
-                    var perms = await _permSvc.GetUsersPermissionsAsync(userId, orgId);
-                    if (perms.Count > 0)
-                    {
-                        return Ok(perms.Select(p => p.ToString()));
-                    }
-
-                    throw new Exception($"User: {userId}, Org: {orgId} User has access but no permissions.");
+                    return Ok(perms.Select(p => p.ToString()));
                 }
 
-                return Forbid($"User {userId} does not have access to organization {orgId}");
+                throw new Exception($"User: {userId}, Org: {orgId} User has access but no permissions.");
             }
 
             return BadRequest($"userId in the URI must match the userId within the access token. Token id: {tokenId}");

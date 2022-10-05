@@ -11,16 +11,16 @@ namespace CoreMultiTenancy.Identity.Entities
     public class Permission
     {
         [Key]
-        public PermissionEnum Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsObsolete { get; set; }
-        public PermissionCategoryEnum PermCategoryId { get; set; }
+        public string PermCategoryId { get; set; }
         [ForeignKey("PermCategoryId")]
         public PermissionCategory PermCategory { get; set; }
         public List<RolePermission> RolePermissions { get; set; }
         public Permission() { }
 
-        public Permission(PermissionEnum pEnum) => Id = pEnum;
+        public Permission(PermissionEnum pEnum) => Id = pEnum.ToString();
     }
 }

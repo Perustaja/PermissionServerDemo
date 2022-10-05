@@ -7,7 +7,7 @@ import { faPlaneDeparture, faUsers, faSitemap, faCog, faBuilding } from '@fortaw
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
   faPlaneDeparture = faPlaneDeparture;
   faUsers = faUsers;
   faSitemap = faSitemap;
@@ -16,9 +16,5 @@ export class SidebarComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) {
     route.url
-  }
-
-  ngOnInit() {
-
   }
 }

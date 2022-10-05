@@ -12,29 +12,15 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     {
         /// <returns>A list of Roles including tenant-specific and global roles with populated Permissions.</returns>
         Task<List<Role>> GetRolesOfOrgAsync(Guid orgId);
-
         /// <returns>An Option containing the Role if found.</returns>
         Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId);
+        Task<Role> GetGlobalDefaultOwnerRoleAsync();
+        Task<Role> GetGlobalDefaultNewUserRoleAsync();
 
-        /// <summary>
-        /// Adds a Role to be used by the specified organization.
-        /// </summary>
         /// <returns>The Role entity being tracked after add.</returns>
-        Role AddRoleToOrg(Guid orgId, Role role);
-
-        /// <summary>
-        /// Updates the Role.
-        /// </summary>
+        Role Add(Guid orgId, Role role);
         /// <returns>The Role entity being tracked after update.</returns>
-        Role UpdateRoleOfOrg(Role role);
-
-        /// <summary>
-        /// Attempts to delete the Role. This will fail if any User has
-        /// this Role as their only Role, and will not delete global Roles.
-        /// </summary>
-        void DeleteRoleOfOrg(Role role);
-
-        /// <returns>Whether a User has this Role as their only Role, and deleting it would leave them without one.</returns>
-        Task<bool> RoleIsOnlyRoleForAnyUserAsync(Role role);
+        Role Update(Role role);
+        void Delete(Role role);
     }
 }

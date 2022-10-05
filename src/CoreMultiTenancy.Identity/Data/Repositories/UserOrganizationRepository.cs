@@ -44,6 +44,7 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         {
             var res = await _applicationContext.Set<UserOrganization>()
                 .Where(uo => uo.OrgId == orgId && uo.UserId == userId)
+                .Include(uo => uo.Organization)
                 .FirstOrDefaultAsync();
             return res != null
                 ? Option<UserOrganization>.Some(res)
@@ -63,6 +64,9 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
 
         public UserOrganization Update(UserOrganization uo)
             => _applicationContext.Set<UserOrganization>().Update(uo).Entity;
+
+        public void Delete(UserOrganization uo)
+            => _applicationContext.Set<UserOrganization>().Remove(uo);
 
         public async Task<bool> ExistsAsync(Guid userId, Guid orgId)
         {

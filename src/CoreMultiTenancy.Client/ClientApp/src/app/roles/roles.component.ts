@@ -21,13 +21,13 @@ export class RolesComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.http.get<PermissionCategory[]>(this.idpApiUrl + `/permissionCategories`)
+        this.http.get<PermissionCategory[]>(`${this.idpApiUrl}/permissionCategories`)
             .subscribe({
                 next: (res) => this.permCats = res,
                 error: (e) => console.log(e)
             })
 
-        this.http.get<Role[]>(this.idpApiUrl + `/organizations/${this.tenantManager.tenantId}/roles`)
+        this.http.get<Role[]>(`${this.idpApiUrl}/organizations/${this.tenantManager.tenantId}/roles`)
             .subscribe({
                 next: (res) => res.forEach(r => r.isGlobal ? this.globalRoles.push(r) : this.userRoles.push(r)),
                 error: (e) => console.log(e)
