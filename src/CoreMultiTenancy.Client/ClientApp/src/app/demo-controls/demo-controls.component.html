@@ -36,7 +36,7 @@
                 </div>
                 <div class="demo-control">
                     <div class="demo-button">
-                        <button type="button" class="btn btn-danger">Revoke my access to this tenant</button>
+                        <button type="button" class="btn btn-danger" (click)="revokeAccess()">Revoke my access to this tenant</button>
                     </div>
                     <div class="demo-label">
                         This button will revoke your access to the current tenant. It will be disabled if you are the
@@ -48,10 +48,10 @@
             <div class="identity-dashboard">
                 <h4>My Identity</h4>
                 <div class="identity-labels">
-                    <div><span class="identity-label">Subject Id:</span> {{subId | async}}</div>
+                    <div><span class="identity-label">Subject Id:</span> {{subId}}</div>
                     <div><span class="identity-label">Tenant Id:</span> {{tenantId}}</div>
                     <div><span class="identity-label">Permissions:</span> {{permissions | json}}</div>
-                    <div><span class="identity-label">JWT:</span> {{token | async}}</div>
+                    <div><span class="identity-label">JWT:</span> {{token}}</div>
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" [disabled]="!roleModalForm.form.valid" (click)="modal.close()">Submit</button>
+            <button type="submit" class="btn btn-success" [disabled]="!roleModalForm.form.valid">Submit</button>
         </div>
     </form>
 

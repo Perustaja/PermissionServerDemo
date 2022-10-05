@@ -5,7 +5,6 @@ using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Entities.Dtos;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Results.Errors;
-using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
