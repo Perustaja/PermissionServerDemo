@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-
 namespace CoreMultiTenancy.Identity.Extensions
 {
     public static class LinkGeneratorExtensions

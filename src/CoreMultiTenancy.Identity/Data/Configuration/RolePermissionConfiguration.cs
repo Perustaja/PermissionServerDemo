@@ -1,5 +1,3 @@
-using System;
-using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.EntityFrameworkCore;

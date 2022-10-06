@@ -1,4 +1,3 @@
-using System;
 using AutoMapper;
 
 namespace CoreMultiTenancy.Identity.Entities.Dtos

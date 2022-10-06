@@ -20,7 +20,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public PermissionCategory PermCategory { get; set; }
         public List<RolePermission> RolePermissions { get; set; }
         public Permission() { }
-
         public Permission(PermissionEnum pEnum) => Id = pEnum.ToString();
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
 using Microsoft.EntityFrameworkCore;

@@ -19,7 +19,6 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IRolePermissionRepository _rolePermissionRepo;
         private readonly IUserOrganizationRoleRepository _userOrgRoleRepo;
         private readonly IOrganizationInviteService _inviteSvc;
-
         public OrganizationManager(IConfiguration config,
             UserManager<User> userManager,
             IUserOrganizationRepository userOrgRepo,
@@ -125,7 +124,10 @@ namespace CoreMultiTenancy.Identity.Services
                 return Option<Error>.Some(new Error("Cannot delete a global role.", ErrorType.DomainLogic));
             if (await _userOrgRoleRepo.RoleIsOnlyRoleForAnyUserAsync(role))
                 return Option<Error>.Some(new Error("This Role cannot be deleted because it is the last Role for at least one User.", ErrorType.DomainLogic));
-            _roleRepo.Delete(role); // deletion will cascade and remove the role from any users who have it
+            _roleRepo.Delete(role);
+            // TODO: setting up a cascade delete here isn't super simple, so ideally 
+            // all UserOrganizationRoles need to be deleted here with this role id so no users have 
+            // this role. This is trivial but not necessary for this demo so it is left omitted.
             await _roleRepo.UnitOfWork.Commit();
             return Option<Error>.None;
         }

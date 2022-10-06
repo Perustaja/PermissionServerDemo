@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +25,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public List<RolePermission> RolePermissions { get; set; }
         public List<UserOrganizationRole> UserOrganizationRoles { get; set; }
         public Role() { }
-
         /// <summary>
         /// Creates a new role specific to a tenant.
         /// </summary>

@@ -27,7 +27,6 @@ namespace CoreMultiTenancy.Identity.Data
         private readonly Guid _demoShadowAdminId;
         private readonly Guid _demoMyTenantId;
         private readonly Guid _demoOtherTenantId;
-
         public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options,
             IGlobalRoleProvider globalRoleProvider)
             : base(options)

@@ -9,7 +9,6 @@ namespace CoreMultiTenancy.Identity.Grpc
     {
         private readonly ILogger<RemotePermissionAuthorizeService> _logger;
         private readonly IAuthorizationEvaluator _authEvaluator;
-
         public RemotePermissionAuthorizeService(ILogger<RemotePermissionAuthorizeService> logger,
             IAuthorizationEvaluator authEvaluator)
         {

@@ -7,8 +7,6 @@ namespace CoreMultiTenancy.Identity.Mapping
     public class RolePermissionConverter : ITypeConverter<RolePermission, PermissionGetDto>
     {
         public PermissionGetDto Convert(RolePermission source, PermissionGetDto destination, ResolutionContext context)
-        {
-            return context.Mapper.Map<Permission, PermissionGetDto>(source.Permission);
-        }
+            => context.Mapper.Map<Permission, PermissionGetDto>(source.Permission);
     }
 }

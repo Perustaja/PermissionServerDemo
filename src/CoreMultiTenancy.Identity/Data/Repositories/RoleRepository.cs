@@ -11,7 +11,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         private readonly ILogger<RoleRepository> _logger;
         private readonly ApplicationDbContext _applicationContext;
         public IUnitOfWork UnitOfWork { get => _applicationContext; }
-
         public RoleRepository(IConfiguration config,
             ILogger<RoleRepository> logger, ApplicationDbContext context)
         {

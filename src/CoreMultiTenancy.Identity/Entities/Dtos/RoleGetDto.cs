@@ -9,7 +9,6 @@ namespace CoreMultiTenancy.Identity.Entities.Dtos
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsGlobal { get; set; }
-        
         [SourceMember(nameof(Role.RolePermissions))]
         public List<PermissionGetDto> Permissions { get; set; }
     }

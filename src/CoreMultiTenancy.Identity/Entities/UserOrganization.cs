@@ -1,5 +1,3 @@
-using System;
-
 namespace CoreMultiTenancy.Identity.Entities
 {
     /// <summary>
@@ -19,7 +17,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public User User { get; set; }
         public Organization Organization { get; set; }
         public UserOrganization() { }
-
         public UserOrganization(Guid userId, Guid orgId)
         {
             UserId = userId;

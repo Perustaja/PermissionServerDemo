@@ -19,7 +19,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public List<UserOrganizationRole> UserOrganizationRoles { get; set; }
         public List<Role> Roles { get; set; }
         public Organization() { }
-
         public Organization(string title, bool requiresConf, Guid ownerId, string logoUri)
         {
             Id = new Guid();

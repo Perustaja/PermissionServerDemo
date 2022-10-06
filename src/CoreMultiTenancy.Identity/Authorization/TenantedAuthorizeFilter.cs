@@ -33,7 +33,7 @@ namespace CoreMultiTenancy.Identity.Authorization
             var userId = context.HttpContext.User.FindFirstValue("sub");
 
             // Evaluate and set context.Result based on decision
-            logger.LogInformation($"Authorizing local request: user {userId}, tenant {tenantId}, perms {(object)_permissions}");
+            logger.LogInformation("Authorizing local request: {UserId}, {TenantId}, {Permissions}", userId, tenantId, _permissions);
             var decision = await evaulator.EvaluateAsync(userId, tenantId, _permissions);
             SetContextResultOnDecision(context, decision);
         }
@@ -41,7 +41,7 @@ namespace CoreMultiTenancy.Identity.Authorization
         private void SetContextResultOnDecision(AuthorizationFilterContext context, AuthorizeDecision decision)
         {
             var logger = GetLogger(context.HttpContext);
-            logger.LogInformation($"Remote authorization result: {decision}");
+            logger.LogInformation("Authorization result: {Decision}", decision);
             if (!decision.Allowed)
             {
                 switch (decision.FailureReason)

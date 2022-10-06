@@ -1,5 +1,4 @@
-﻿using System;
-namespace CoreMultiTenancy.Identity.Options
+﻿namespace CoreMultiTenancy.Identity.Options
 {
     /// <summary>
     /// Oidc specific account options used as defaults. External idps take precedence.

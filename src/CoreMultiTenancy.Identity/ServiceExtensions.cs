@@ -32,7 +32,9 @@ internal static class ServiceExtensions
             .AddSignInManager<UserSignInManager>()
             .AddDefaultTokenProviders();
 
-        builder.Services.AddApiVersioning();
+        builder.Services.AddApiVersioning(options => {
+            options.AssumeDefaultVersionWhenUnspecified = true;
+        });
 
         builder.Services.AddCors(options =>
         {

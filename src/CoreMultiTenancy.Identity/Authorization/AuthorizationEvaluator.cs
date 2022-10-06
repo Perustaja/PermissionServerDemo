@@ -8,7 +8,6 @@ namespace CoreMultiTenancy.Identity.Authorization
         private readonly ILogger<AuthorizationEvaluator> _logger;
         private readonly IOrganizationManager _orgManager;
         private readonly IPermissionService _permSvc;
-
         public AuthorizationEvaluator(ILogger<AuthorizationEvaluator> logger,
             IOrganizationManager orgManager,
             IPermissionService permSvc)
@@ -57,11 +56,11 @@ namespace CoreMultiTenancy.Identity.Authorization
             }
             else if (permsSet.Count > 0 && await _permSvc.UserHasPermissionsAsync(userIdGuid, orgIdGuid, permsSet.ToArray()))
             {
-                _logger.LogInformation($"Authorization successful. user:{userIdGuid} org:{orgIdGuid} {(object)permsSet}.");
+                _logger.LogInformation("Authorization successful. user:{UserId} org:{OrgId} {Permissions}.", userIdGuid, orgIdGuid, permsSet);
                 return Ok();
             }
 
-            _logger.LogInformation($"Authorization failed. user:{userIdGuid} org:{orgIdGuid} {(object)permsSet}.");
+            _logger.LogInformation("Authorization failed. user:{UserId} org:{OrgId} {Permissions}.", userIdGuid, orgIdGuid, permsSet);
             return UnAuthorized();
         }
 
