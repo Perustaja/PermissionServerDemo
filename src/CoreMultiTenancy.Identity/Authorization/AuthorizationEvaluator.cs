@@ -8,7 +8,6 @@ namespace CoreMultiTenancy.Identity.Authorization
         private readonly ILogger<AuthorizationEvaluator> _logger;
         private readonly IOrganizationManager _orgManager;
         private readonly IPermissionService _permSvc;
-
         public AuthorizationEvaluator(ILogger<AuthorizationEvaluator> logger,
             IOrganizationManager orgManager,
             IPermissionService permSvc)

@@ -56,7 +56,7 @@ namespace CoreMultiTenancy.Identity.Controllers
 
             var r = new Role(dto.Name, dto.Description);
             await _orgManager.AddRoleToOrgAsync(orgId, r, perms);
-            return Created("api/v{version:apiVersion}/" + $"organizations/{orgId}/roles", null);
+            return Created($"organizations/{orgId}/roles", null);
         }
 
         [HttpDelete("organizations/{orgId}/users/{userId}/roles/{roleId}")]

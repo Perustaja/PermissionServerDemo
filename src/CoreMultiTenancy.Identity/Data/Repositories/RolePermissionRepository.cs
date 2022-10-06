@@ -7,7 +7,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
     {
         private readonly ApplicationDbContext _applicationContext;
         public IUnitOfWork UnitOfWork { get => _applicationContext; }
-
         public RolePermissionRepository(IConfiguration config,
             ILogger<RoleRepository> logger, ApplicationDbContext context)
         {

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities.Dtos
 {

@@ -13,7 +13,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         private readonly ILogger<OrganizationRepository> _logger;
         private readonly ApplicationDbContext _applicationContext;
         public IUnitOfWork UnitOfWork { get => _applicationContext; }
-
         public OrganizationRepository(IConfiguration config, ILogger<OrganizationRepository> logger,
             ApplicationDbContext applicationContext)
         {

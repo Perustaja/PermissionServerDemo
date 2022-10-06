@@ -1,10 +1,7 @@
-using System;
 using CoreMultiTenancy.Identity.Data;
 using CoreMultiTenancy.Identity.Entities;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace CoreMultiTenancy.Identity.Services
@@ -17,7 +14,6 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _contextAccessor;
-
         public UserSignInManager(
         UserManager<User> userManager,
             IHttpContextAccessor contextAccessor,

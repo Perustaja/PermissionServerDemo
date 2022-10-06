@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace CoreMultiTenancy.Identity.Interfaces
 {
     public interface IEmailSender

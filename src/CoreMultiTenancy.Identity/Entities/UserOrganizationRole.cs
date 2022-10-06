@@ -1,4 +1,3 @@
-using System;
 using CoreMultiTenancy.Identity.Entities;
 
 namespace CoreMultiTenancy.Identity
@@ -15,7 +14,6 @@ namespace CoreMultiTenancy.Identity
         public Organization Organization { get; set; }
         public Role Role { get; set; }
         public UserOrganizationRole() { }
-        
         public UserOrganizationRole(Guid userId, Guid orgId, Guid roleId)
         {
             UserId = userId;

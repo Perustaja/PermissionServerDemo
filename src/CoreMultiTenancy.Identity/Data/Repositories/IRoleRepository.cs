@@ -16,7 +16,6 @@ namespace CoreMultiTenancy.Identity.Data.Repositories
         Task<Option<Role>> GetRoleOfOrgByIdsAsync(Guid orgId, Guid roleId);
         Task<Role> GetGlobalDefaultOwnerRoleAsync();
         Task<Role> GetGlobalDefaultNewUserRoleAsync();
-
         /// <returns>The Role entity being tracked after add.</returns>
         Role Add(Guid orgId, Role role);
         /// <returns>The Role entity being tracked after update.</returns>

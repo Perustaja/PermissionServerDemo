@@ -6,7 +6,6 @@ namespace CoreMultiTenancy.Identity.Tenancy
     {
         private readonly string _routeDataIdentifier;
         private readonly HttpContext _httpContext;
-
         public RouteDataTenantProvider(IConfiguration config, IHttpContextAccessor contextAccessor)
         {
             _routeDataIdentifier = config["TenantIdentifiers:RouteData"] ?? throw new ArgumentNullException("Unable to source route data tenant identifier.");

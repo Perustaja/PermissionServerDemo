@@ -2,15 +2,12 @@ using CoreMultiTenancy.Core.Authorization;
 using CoreMultiTenancy.Identity.Data.Repositories;
 using CoreMultiTenancy.Identity.Entities;
 using CoreMultiTenancy.Identity.Interfaces;
-using CoreMultiTenancy.Identity.Results.Errors;
-using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Services
 {
     public class PermissionService : IPermissionService
     {
         private readonly IPermissionRepository _permRepo;
-
         public PermissionService(IPermissionRepository permRepo)
         {
             _permRepo = permRepo ?? throw new ArgumentNullException(nameof(permRepo));

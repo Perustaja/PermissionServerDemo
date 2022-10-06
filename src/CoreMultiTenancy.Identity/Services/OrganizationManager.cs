@@ -19,7 +19,6 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IRolePermissionRepository _rolePermissionRepo;
         private readonly IUserOrganizationRoleRepository _userOrgRoleRepo;
         private readonly IOrganizationInviteService _inviteSvc;
-
         public OrganizationManager(IConfiguration config,
             UserManager<User> userManager,
             IUserOrganizationRepository userOrgRepo,

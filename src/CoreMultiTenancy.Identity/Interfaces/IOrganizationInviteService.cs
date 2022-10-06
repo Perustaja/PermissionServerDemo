@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace CoreMultiTenancy.Identity.Interfaces
 {
     public interface IOrganizationInviteService
@@ -9,7 +6,6 @@ namespace CoreMultiTenancy.Identity.Interfaces
         /// Returns a permanent invitation link based on the id passed.
         /// <summary>
         Task<string> CreatePermanentInviteLinkAsync(Guid orgId);
-
         /// <summary>
         /// Attempts to decode a permanent invitation link, returning true if the invitation code was valid.
         /// </summary>

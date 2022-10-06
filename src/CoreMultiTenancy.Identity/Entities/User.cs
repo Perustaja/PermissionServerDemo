@@ -11,7 +11,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public List<UserOrganization> UserOrganizations { get; set; }
         public List<UserOrganizationRole> UserOrganizationRoles { get; set; }
         public User() { }
-
         public User(string fName, string lName, string email)
         {
             Id = Guid.NewGuid();

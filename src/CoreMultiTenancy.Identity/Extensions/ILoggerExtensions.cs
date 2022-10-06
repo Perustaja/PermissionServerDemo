@@ -1,5 +1,4 @@
 using CoreMultiTenancy.Identity.Entities;
-using Microsoft.Extensions.Logging;
 
 namespace CoreMultiTenancy.Identity.Extensions
 {

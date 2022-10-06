@@ -1,11 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using CoreMultiTenancy.Identity.Extensions;
 using CoreMultiTenancy.Identity.Interfaces;
 using CoreMultiTenancy.Identity.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Perustaja.Polyglot.Option;
 
 namespace CoreMultiTenancy.Identity.Services
@@ -16,7 +12,6 @@ namespace CoreMultiTenancy.Identity.Services
         private readonly IEmailSender _emailSender;
         private readonly HttpContext _httpContext;
         private readonly LinkGenerator _linkGen;
-
         public AccountEmailService(UserManager<User> userManager, IEmailSender emailSender,
             IHttpContextAccessor httpContextAccessor, LinkGenerator linkGen)
         {

@@ -1,4 +1,3 @@
-using System;
 using CoreMultiTenancy.Core.Authorization;
 
 namespace CoreMultiTenancy.Identity.Entities
@@ -13,7 +12,6 @@ namespace CoreMultiTenancy.Identity.Entities
         public Role Role { get; set; }
         public Permission Permission { get; set; }
         public RolePermission() { }
-        
         public RolePermission(Guid roleId, PermissionEnum permId)
         {
             RoleId = roleId;

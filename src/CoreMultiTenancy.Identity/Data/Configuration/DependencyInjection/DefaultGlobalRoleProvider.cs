@@ -7,7 +7,6 @@ namespace CoreMultiTenancy.Identity.Data.Configuration.DependencyInjection
     public class DefaultGlobalRoleProvider : IGlobalRoleProvider
     {
         private readonly GlobalRolesOptions _options;
-
         public DefaultGlobalRoleProvider(IOptions<GlobalRolesOptions> options)
         {   
             _options = options.Value ?? throw new ArgumentNullException(nameof(options));
