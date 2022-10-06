@@ -19,10 +19,12 @@ export class UsersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.http.get<User[]>(`${this.idpApiUrl}/organizations/${this.tenantManager.tenantId}/users`).subscribe({
-            next: (res) => this.users = res,
-            error: (e) => console.log(e)
-        });
+        this.tenantManager.tenantId$.subscribe(tid => {
+            this.http.get<User[]>(`${this.idpApiUrl}/organizations/${tid}/users`).subscribe({
+                next: (res) => this.users = res,
+                error: (e) => console.log(e)
+            });
+        })
     }
 }
 

@@ -53,7 +53,7 @@ namespace CoreMultiTenancy.Identity.Authorization
                     case (AuthorizeFailureReason.TenantNotFound):
                         context.Result = new NotFoundResult(); break;
                     default:
-                        context.Result = new UnauthorizedResult(); break;
+                        context.Result = new ForbidResult(); break;
                 }
             }
         }

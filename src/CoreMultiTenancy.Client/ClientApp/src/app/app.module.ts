@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule } from '@angular/material/button'
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { PortalComponent } from './portal/portal.component';
@@ -12,14 +15,15 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { TenantGuard } from '../tenancy/tenant.guard';
 import { AircraftComponent } from './aircraft/aircraft.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersComponent } from './users/users.component';
 import { RolesComponent } from './roles/roles.component';
 import { DemoControlsComponent } from './demo-controls/demo-controls.component';
+import { ToastsComponent } from './toasts/toasts.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ToastsComponent,
     SidebarComponent,
     PortalComponent,
     AircraftComponent,
@@ -41,6 +45,7 @@ import { DemoControlsComponent } from './demo-controls/demo-controls.component';
       { path: 'demo-controls', component: DemoControlsComponent, canActivate: [AuthorizeGuard, TenantGuard] },
     ]),
     FontAwesomeModule,
+    MatButtonModule,
     NgbModule,
   ],
   providers: [

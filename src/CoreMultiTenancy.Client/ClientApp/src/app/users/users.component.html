@@ -19,11 +19,11 @@
                         <td>{{i + 1}}</td>
                         <td>{{user.firstName}}</td>
                         <td>{{user.lastName}}</td>
-                        <td>{{ user.userOrganization.awaitingApproval }}</td>
-                        <td>{{ user.userOrganization.blacklisted }}</td>
+                        <td>{{user.userOrganization.awaitingApproval}}</td>
+                        <td>{{user.userOrganization.blacklisted}}</td>
                         <td>
                             <span *ngFor="let role of user.roles, let last = last">
-                                {{ role.name + (last ? "" : ",") }}
+                                {{role.name + (last ? "" : ",")}}
                             </span>
                         </td>
                     </tr>

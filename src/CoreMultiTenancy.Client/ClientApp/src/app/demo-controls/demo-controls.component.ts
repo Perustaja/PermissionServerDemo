@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit, TemplateRef } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { map, take } from "rxjs";
+import { map, Observable, take } from "rxjs";
 import { TenantManagerService } from '../../tenancy/tenantManager.service';
 import { AuthorizeService } from "src/api-authorization/authorize.service";
 import { Router } from "@angular/router";
+import { ToastService } from "../toasts/toasts.service";
 
 @Component({
     selector: 'demo-controls-component',
@@ -16,30 +17,32 @@ export class DemoControlsComponent implements OnInit {
     apiUrl: string;
     idpApiUrl: string;
     token?: string | null;
-    subId?: string | null | undefined;
-    tenantId: string | null;
-    permissions: string[];
+    subId: string | null | undefined;
+    tenantId?: string | null;
     permCats: PermissionCategory[] = [];
     model: RoleCreateDto;
+    permissions$?: Observable<string[]>;
 
     constructor(private http: HttpClient,
         private router: Router,
         private authorizeSvc: AuthorizeService,
         private tenantManager: TenantManagerService,
         private modalSvc: NgbModal,
+        private toastService: ToastService,
         @Inject('API_URL') apiUrl: string,
         @Inject('IDP_API_URL') idpApiUrl: string) {
         this.apiUrl = apiUrl;
         this.idpApiUrl = idpApiUrl;
-
-        this.permissions = tenantManager.permissions;
-        this.tenantId = tenantManager.tenantId;
         this.model = <RoleCreateDto>({});
     }
 
     ngOnInit() {
+        // it doesn't make sense to react to changing user/tenant information, only for permissions
         this.authorizeSvc.getAccessToken().pipe(take(1)).subscribe(t => this.token = t);
         this.authorizeSvc.getUser().pipe(map(u => u && u.sub), take(1)).subscribe(s => this.subId = s);
+        this.tenantManager.tenantId$.pipe(take(1)).subscribe(tid => this.tenantId = tid);
+        this.permissions$ = this.tenantManager.permissions$;
+
         this.http.get<PermissionCategory[]>(this.idpApiUrl + `/permissionCategories`)
             .subscribe({
                 next: (res) => this.permCats = res,
@@ -53,12 +56,16 @@ export class DemoControlsComponent implements OnInit {
             Model: "Cessna 172S",
             ThumbnailUri: "N555YS.jpg"
         });
-        this.http.post<AircraftCreateDto>(`${this.apiUrl}/organizations/${this.tenantManager.tenantId}/aircraft`, ac)
+        this.http.post<AircraftCreateDto>(`${this.apiUrl}/organizations/${this.tenantId}/aircraft`, ac)
             .subscribe({
-                next: (res) => alert(JSON.stringify(res)),
+                next: (res) => this.toastService.pushSuccess("Aircraft 'N555YS' ssuccessfully created."),
                 error: (err) => {
                     if (err.status == 409)
-                        alert("The demo aircraft has already been created. Navigate to the Aircraft page to view it.")
+                        this.toastService.pushWarning("The demo aircraft has already been created. Navigate to the Aircraft page to view it.")
+                    else if (err.status == 403)
+                        this.toastService.pushDanger("User either does not have access to this tenant or lacks permissions.")
+                    else
+                        console.log(err)
                 }
             });
     }
@@ -71,35 +78,44 @@ export class DemoControlsComponent implements OnInit {
     onSubmitRoleModal(test: any) {
         this.model.Permissions = [];
         document.querySelectorAll(".form-check-input:checked")?.forEach(c => this.model.Permissions.push(c.id));
-        this.http.post<RoleCreateDto>(this.idpApiUrl + `/organizations/${this.tenantManager.tenantId}/roles`, this.model).subscribe({
+        this.http.post<RoleCreateDto>(this.idpApiUrl + `/organizations/${this.tenantId}/roles`, this.model).subscribe({
             next: (res) => {
-                alert(JSON.stringify(res));
+                this.toastService.pushSuccess(`Role '${this.model.Name}' successfully created.`);
                 this.modalSvc.dismissAll();
             },
-            error: (err) => alert(JSON.stringify(err))
+            error: (err) => console.log(err)
         });
     }
 
     removeCreateAircraftRole() {
         // role id is hardcoded for demo
-        const url = `${this.idpApiUrl}/organizations/${this.tenantManager.tenantId}/users/${this.subId}/roles/75a7570f-3ce5-48ba-9461-80283ed1d94d`
+        const url = `${this.idpApiUrl}/organizations/${this.tenantId}/users/${this.subId}/roles/75a7570f-3ce5-48ba-9461-80283ed1d94d`
         this.http.delete(url).subscribe({
             next: (res) => {
-                alert(JSON.stringify(res));
-                this.tenantManager.permissionsAffected();
+                this.toastService.pushSuccess("Role successfully removed.");
+                // this is a hacky workaround for handling the updates. A more robust updating 
+                // system would be needed but is kind of out of scope for this project
+                this.tenantManager.updatePermissions();
             },
-            error: (err) => alert(JSON.stringify(err))
+            error: (err) => {
+                if (err.status == 404)
+                    this.toastService.pushWarning("You do not currently have this role.")
+                else
+                    console.log(err);
+            }
         });
     }
 
     revokeAccess() {
-        const url = `${this.idpApiUrl}/organizations/${this.tenantManager.tenantId}/users/${this.subId}`
+        const url = `${this.idpApiUrl}/organizations/${this.tenantId}/users/${this.subId}`
         this.http.delete(url).subscribe({
-            next: (res) => {
-                alert(JSON.stringify(res));
-                this.router.navigate(['/portal']);
-            },
-            error: (err) => alert(JSON.stringify(err))
+            next: (res) => this.router.navigate(['/portal']),
+            error: (err) => {
+                if (err.status == 400)
+                    this.toastService.pushWarning("User is the owner of this tenant and cannot have access revoked.");
+                else
+                    console.log(err)
+            }
         });
     }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from '@angular/core';
-import { map } from "rxjs";
+import { BehaviorSubject, map, Observable } from "rxjs";
 import { AuthorizeService } from "src/api-authorization/authorize.service";
 
 @Injectable({
@@ -9,6 +9,12 @@ import { AuthorizeService } from "src/api-authorization/authorize.service";
 
 export class TenantManagerService {
     private idpApiUrl: string;
+    private isTenantSetSubject = new BehaviorSubject<boolean>((localStorage.getItem('tenantId')?.length ?? 0) > 0);
+    private tenantIdSubject = new BehaviorSubject<string | null>(localStorage.getItem('tenantId'));
+    private permissionsSubject = new BehaviorSubject<string[]>(JSON.parse(localStorage.getItem('permissions') ?? ''));
+    isTenantSet$ = this.isTenantSetSubject.asObservable();
+    tenantId$ = this.tenantIdSubject.asObservable();
+    permissions$ = this.permissionsSubject.asObservable();
 
     constructor(private http: HttpClient,
         private authorizeSvc: AuthorizeService,
@@ -16,33 +22,17 @@ export class TenantManagerService {
         this.idpApiUrl = idpApiUrl;
     }
 
-    get tenantId(): string | null {
-        return localStorage.getItem('tenantId');
-    }
-
-    get permissions(): string[] {
-        if (this.isTenantSet) {
-            const perms = localStorage.getItem('permissions');
-            if (perms === null)
-                throw new Error("Tenant marked as selected but empty user permissions in storage.")
-            else
-                return JSON.parse(perms);
-        }
-        throw new Error("Attempted to access user permissions before tenant was set.")
-    }
-
-    get isTenantSet(): boolean {
-        return (localStorage.getItem('tenantId')?.length ?? 0) > 0;
-    }
-
     updateTenantSelection(tenantId: string) {
         localStorage.setItem('tenantId', tenantId);
+        this.tenantIdSubject.next(tenantId);
+        this.isTenantSetSubject.next(true);
         this.setPermissionsForTenant(tenantId);
     }
-
-    permissionsAffected() {
-        if (this.tenantId)
-            this.setPermissionsForTenant(this.tenantId);
+    
+    // this is a hacky workaround for handling the updates. A more robust updating 
+    // system would be needed but is kind of out of scope for this project
+    updatePermissions() {
+        this.setPermissionsForTenant(localStorage.getItem('tenantId') ?? '')
     }
 
     private setPermissionsForTenant(tenantId: string) {
@@ -54,6 +44,7 @@ export class TenantManagerService {
                         next: (res) => {
                             console.log(`User permissions updated: ${res}`);
                             localStorage.setItem('permissions', JSON.stringify(res));
+                            this.permissionsSubject.next(res)
                         },
                         error: (e) => console.log(e)
                     })
