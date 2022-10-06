@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreMultiTenancy.Api.Interfaces
@@ -17,7 +16,6 @@ namespace CoreMultiTenancy.Api.Interfaces
         /// to true if the tenant's database already exists.
         /// </returns>
         Task<bool> InitializeTenantAsync(string tenantId);
-
         /// <summary>
         /// Removes all infrastructure of a tenant permanently.
         /// </summary>

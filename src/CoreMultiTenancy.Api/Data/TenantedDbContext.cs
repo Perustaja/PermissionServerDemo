@@ -13,7 +13,6 @@ namespace CoreMultiTenancy.Api.Data
         private readonly Tenant _tenant;
         private readonly Guid _demoMyTenantId;
         private readonly Guid _demoOtherTenantId;
-
         public TenantedDbContext(DbContextOptions<TenantedDbContext> options,
             IConfiguration config,
             ITenantProvider tenantProvider)
