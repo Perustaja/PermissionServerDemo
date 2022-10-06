@@ -1,3 +1,4 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 .fw-350 {
     font-weight: 350;
 }
@@ -37,4 +38,20 @@
 .checkbox-decoration {
     pointer-events: none;
     filter: none;
+}
+.mat-blue {
+    background-color: #54A6FF;
+    color: white
+}
+.mat-green {
+    background-color: #6ab190;
+    color: white 
+}
+.mat-warning {
+    background-color: #e47a01;
+    color: white
+}
+.mat-danger {
+    background-color: #d32000;
+    color: white
 }

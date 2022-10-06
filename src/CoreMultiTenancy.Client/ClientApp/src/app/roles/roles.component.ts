@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { TenantManagerService } from '../../tenancy/tenantManager.service';
 
 @Component({
     selector: 'app-roles',
     templateUrl: './roles.component.html',
-    styleUrls: ['./roles.component.css'],
-    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./roles.component.css']
 })
 export class RolesComponent implements OnInit {
     idpApiUrl: string;
@@ -27,11 +26,13 @@ export class RolesComponent implements OnInit {
                 error: (e) => console.log(e)
             })
 
-        this.http.get<Role[]>(`${this.idpApiUrl}/organizations/${this.tenantManager.tenantId}/roles`)
-            .subscribe({
-                next: (res) => res.forEach(r => r.isGlobal ? this.globalRoles.push(r) : this.userRoles.push(r)),
-                error: (e) => console.log(e)
-            })
+        this.tenantManager.tenantId$.subscribe(tid => {
+            this.http.get<Role[]>(`${this.idpApiUrl}/organizations/${tid}/roles`)
+                .subscribe({
+                    next: (res) => res.forEach(r => r.isGlobal ? this.globalRoles.push(r) : this.userRoles.push(r)),
+                    error: (e) => console.log(e)
+                })
+        })
     }
 
     roleHasPermission(role: Role, perm: Permission): boolean {

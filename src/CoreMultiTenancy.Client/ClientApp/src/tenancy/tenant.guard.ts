@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { TenantManagerService } from './tenantManager.service';
 
 @Injectable({
@@ -12,8 +12,12 @@ export class TenantGuard implements CanActivate {
   canActivate(
     _next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        if (!this.tenantManager.isTenantSet)
-            this.router.navigate(['/portal']);
-        return true;
+    return this.tenantManager.isTenantSet$
+      .pipe(tap(isAuthenticated => this.handlePortalRedirection(isAuthenticated, state)));
+  }
+
+  private handlePortalRedirection(isAuthenticated: boolean, state: RouterStateSnapshot) {
+    if (!isAuthenticated)
+      this.router.navigate(['/portal'])
   }
 }

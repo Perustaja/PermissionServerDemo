@@ -1,0 +1,5 @@
+<div class="toast-container end-0">
+    <ngb-toast *ngFor="let toast of toasts"  role="alert" class="{{toast.classType}} toast text-light fade-show" [delay]="10000">
+        {{toast.message}}
+    </ngb-toast>
+</div>

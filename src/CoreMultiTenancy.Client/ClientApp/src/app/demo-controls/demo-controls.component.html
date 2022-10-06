@@ -1,3 +1,4 @@
+<app-toasts></app-toasts>
 <div class="wrapper">
     <app-sidebar></app-sidebar>
     <div class="content">
@@ -6,7 +7,7 @@
             <div class="demo-controls">
                 <div class="demo-control">
                     <div class="demo-button">
-                        <button type="button" class="btn btn-primary" (click)="createDemoAircraft()">Create random
+                        <button mat-raised-button color="blue" (click)="createDemoAircraft()">Create random
                             aircraft</button>
                     </div>
                     <div class="demo-label">
@@ -15,7 +16,7 @@
                 </div>
                 <div class="demo-control">
                     <div class="demo-button">
-                        <button type="button" class="btn btn-primary" (click)="openRoleModal(content)">Create a custom
+                        <button mat-raised-button color="blue" (click)="openRoleModal(content)">Create a custom
                             role</button>
                     </div>
                     <div class="demo-label">
@@ -26,7 +27,7 @@
                 </div>
                 <div class="demo-control">
                     <div class="demo-button">
-                        <button type="button" class="btn btn-warning" (click)="removeCreateAircraftRole()">Remove my "Create Aircraft" Role</button>
+                        <button mat-raised-button color="warning" (click)="removeCreateAircraftRole()">Remove my "Create Aircraft" Role</button>
                     </div>
                     <div class="demo-label">
                         This will remove the "Create Aircraft" role from yourself. Afterwards, you will not be able to
@@ -36,7 +37,7 @@
                 </div>
                 <div class="demo-control">
                     <div class="demo-button">
-                        <button type="button" class="btn btn-danger" (click)="revokeAccess()">Revoke my access to this tenant</button>
+                        <button mat-raised-button color="danger" (click)="revokeAccess()">Revoke my access to this tenant</button>
                     </div>
                     <div class="demo-label">
                         This button will revoke your access to the current tenant. It will be disabled if you are the
@@ -48,10 +49,10 @@
             <div class="identity-dashboard">
                 <h4>My Identity</h4>
                 <div class="identity-labels">
-                    <div><span class="identity-label">Subject Id:</span> {{subId}}</div>
-                    <div><span class="identity-label">Tenant Id:</span> {{tenantId}}</div>
-                    <div><span class="identity-label">Permissions:</span> {{permissions | json}}</div>
-                    <div><span class="identity-label">JWT:</span> {{token}}</div>
+                    <div class="pb-1"><span class="identity-label">Subject Id:</span> {{subId}}</div>
+                    <div class="pb-1"><span class="identity-label">Tenant Id:</span> {{tenantId}}</div>
+                    <div class="pb-1"><span class="identity-label">Permissions:</span> {{permissions$ | async | json}}</div>
+                    <div class="pb-1"><span class="identity-label">JWT:</span> {{token}}</div>
                 </div>
             </div>
         </div>
@@ -91,9 +92,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-success" [disabled]="!roleModalForm.form.valid">Submit</button>
+            <button mat-raised-button color="green" [disabled]="!roleModalForm.form.valid">Submit</button>
         </div>
     </form>
-
-
 </ng-template>
