@@ -9,7 +9,6 @@ namespace CoreMultiTenancy.Api.Tenancy
     public class ManualTenantProvider : ITenantProvider
     {
         private readonly Guid _tenantId;
-
         public ManualTenantProvider(Guid tenantId)
         {
             _tenantId = tenantId;

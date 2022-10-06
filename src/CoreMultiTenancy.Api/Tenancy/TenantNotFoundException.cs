@@ -4,7 +4,6 @@ namespace CoreMultiTenancy.Api.Tenancy
     {
         public readonly string _customMessage;
         public override string Message => _customMessage;
-
         /// <summary>
         /// Represents an exception where the tenant information is sourced through HttpContext RouteData,
         /// and the expected key was not found.
