@@ -42,7 +42,7 @@ namespace CoreMultiTenancy.Api.Authorization
                 request.Perms.AddRange(_permissions);
 
             // Send and set context.Result based on reply
-            logger.LogInformation($"Authorization request to be sent via GRPC: {request}");
+            logger.LogInformation("Authorization request to be sent via GRPC: {Request}", request);
             var reply = await client.AuthorizeAsync(request);
             SetContextResultOnReply(context, reply);
         }
@@ -50,13 +50,13 @@ namespace CoreMultiTenancy.Api.Authorization
         private void SetContextResultOnReply(AuthorizationFilterContext context, GrpcAuthorizeDecision reply)
         {
             var logger = GetLogger(context.HttpContext);
-            logger.LogInformation($"Remote authorization result: {reply}");
+            logger.LogInformation("Remote authorization result: {Reply}", reply);
             if (!reply.Allowed)
             {
                 switch (reply.FailureReason)
                 {
                     case (failureReason.Permissionformat):
-                        logger.LogCritical($"Identity server unable to parse permissions from attribute. {reply.FailureMessage}, {_permissions}");
+                        logger.LogCritical("Identity server unable to parse permissions from attribute. {FailureMessage}, {Permissions}", reply.FailureMessage, _permissions);
                         context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                         break;
                     case (failureReason.Tenantnotfound):
