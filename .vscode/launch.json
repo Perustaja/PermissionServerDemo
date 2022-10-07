@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildApi",
-            "program": "${workspaceFolder}/src/CoreMultiTenancy.Api/bin/Debug/net6.0/CoreMultiTenancy.Api.dll",
+            "program": "${workspaceFolder}/src/PermissionServerDemo.Api/bin/Debug/net6.0/PermissionServerDemo.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Api",
+            "cwd": "${workspaceFolder}/src/PermissionServerDemo.Api",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -31,9 +31,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildIdentity",
-            "program": "${workspaceFolder}/src/CoreMultiTenancy.Identity/bin/Debug/net6.0/CoreMultiTenancy.Identity.dll",
+            "program": "${workspaceFolder}/src/PermissionServerDemo.Identity/bin/Debug/net6.0/PermissionServerDemo.Identity.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Identity",
+            "cwd": "${workspaceFolder}/src/PermissionServerDemo.Identity",
             "stopAtEntry": false,
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -54,9 +54,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildClient",
-            "program": "${workspaceFolder}/src/CoreMultiTenancy.Client/bin/Debug/net6.0/CoreMultiTenancy.Client.dll",
+            "program": "${workspaceFolder}/src/PermissionServerDemo.Client/bin/Debug/net6.0/PermissionServerDemo.Client.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Client",
+            "cwd": "${workspaceFolder}/src/PermissionServerDemo.Client",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -77,9 +77,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildCore",
-            "program": "${workspaceFolder}/src/CoreMultiTenancy.Core/bin/Debug/netcoreapp3.1/CoreMultiTenancy.Core.dll",
+            "program": "${workspaceFolder}/src/PermissionServerDemo.Core/bin/Debug/net6.0/PermissionServerDemo.Core.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/CoreMultiTenancy.Core",
+            "cwd": "${workspaceFolder}/src/PermissionServerDemo.Core",
             "stopAtEntry": false
         },
         {
@@ -93,7 +93,7 @@
             "name": "https://localhost:44459",
             "request": "launch",
             "url": "https://localhost:44459",
-            "webRoot": "${workspaceFolder}/src/CoreMultiTenancy.Client/ClientApp"
+            "webRoot": "${workspaceFolder}/src/PermissionServerDemo.Client/ClientApp"
         }
     ],
     "compounds": [

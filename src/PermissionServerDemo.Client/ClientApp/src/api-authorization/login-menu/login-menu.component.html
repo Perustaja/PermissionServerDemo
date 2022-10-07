@@ -1,0 +1,12 @@
+<div class="btn-group">
+    <div ngbDropdown placement="top-end">
+        <a class="profile-preview dropdown-toggle" id="dropdownConfig" ngbDropdownToggle>
+            <fa-icon [icon]="faUserCircle" size="2x" class="profile-icon"></fa-icon>
+            {{ userName | async }}
+        </a>
+        <div ngbDropdownMenu>
+            <a ngbDropdownItem href="{{idpBaseUrl}}/account/settings/profile">Account</a>
+            <a ngbDropdownItem [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a>
+        </div>
+    </div>
+</div>
