@@ -1,0 +1,61 @@
+@page
+@model LogoutModel
+@{
+    Layout = "~/Pages/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Logout";
+}
+@if (Model.LogoutResult == null) {
+<div class="shadow-sm login-panel">
+    <div class="row m-0">
+        <div class="col-sm-12 login-logo">
+            <img src="https://www.infopulse.com/uploads/media/c-sharp.svg" width="40" height="40">
+            <h3 style="padding-left:8px; margin-bottom:0;">PermissionServerDemo</h3>
+        </div>
+        <hr class="col-sm-12 p-0 m-2" />
+        <div class="col-sm-12">
+            <span>Would you like to sign out of your account?</span>
+        </div>
+        <div class="col-sm-12 pt-3">
+            <form method="post" id="logoutForm">
+                <input type="hidden" name="logoutId" value="@Model.Input.LogoutId"  />
+                <button type="submit" class="btn btn-primary">Yes</button>
+            </form>
+        </div>
+    </div>
+</div>
+} else {
+<div class="shadow-sm login-panel">
+    <div class="row m-0">
+        <div class="col-sm-12 login-logo">
+            <img src="~/img/samplelogo.svg"
+                width="120" height="35" class="d-inline-block align-top">
+        </div>
+        <div class="col-sm-12 login-title">
+            Log out successful
+        </div>
+        <hr class="col-sm-12 p-0 m-2" />
+        @if (Model.LogoutResult.PostLogoutRedirectUri != null)
+        {
+            <div class="col-sm-12">
+                <div>
+                    Click <a class="PostLogoutRedirectUri" href="@Model.LogoutResult.PostLogoutRedirectUri">here</a> to return to the
+                    <span>@Model.LogoutResult.ClientName</span> application.
+                </div>
+            </div>
+        } else {
+            <div class="col-sm-12">
+                    <p>You have been signed out of your account.</p>
+                    <p><a href="~/">Click here to return to the home page</a></p>
+            </div>
+        }
+    </div>
+</div>   
+}
+
+@section scripts
+{
+    @if (Model.LogoutResult?.AutomaticRedirectAfterSignOut == true)
+    {
+        <script src="~/js/signout-redirect.js"></script>
+    }
+}

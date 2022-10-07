@@ -1,7 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 
-package cmt.protobuf;
+package Psd.protobuf;
 
 /*
     A standard authorization request authorizing based on both tenant id and some optional permission(s).

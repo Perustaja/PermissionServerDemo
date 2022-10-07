@@ -1,0 +1,28 @@
+<app-toasts></app-toasts>
+<div class="portal-header pt-2 container-padding">
+    <div class="btn-group">
+        <div ngbDropdown placement="bottom-end">
+            <a class="profile-preview dropdown-toggle" id="dropdownConfig" ngbDropdownToggle>
+                <fa-icon [icon]="faUserCircle" size="2x"></fa-icon>
+            </a>
+            <div ngbDropdownMenu>
+                <a ngbDropdownItem href="{{idpBaseUrl}}/account/settings/profile">Account</a>
+                <a ngbDropdownItem [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <p class="text-center mb-2 display-3 fw-350">PermissionServerDemo - Portal</p>
+    <hr class="mb-2" style="width:75%" />
+    <p class="text-center">This portal serves as the entry point for the application. Select a tenant to continue.</p>
+</div>
+<div class="tenant-card-container">
+    <div *ngFor="let userOrg of userOrganizations" class="tenant-card pointer"
+        (click)="this.selectTenant(userOrg.organization.id)">
+        <div class="logo">
+            <img src="{{idpBaseUrl}}/img/{{userOrg.organization.logoUri}}" />
+        </div>
+        <div class="title">{{userOrg.organization.title}}</div>
+    </div>
+</div>

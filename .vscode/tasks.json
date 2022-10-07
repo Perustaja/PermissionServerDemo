@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/CoreMultiTenancy.Core/CoreMultiTenancy.Core.csproj",
+                "${workspaceFolder}/src/PermissionServerDemo.Core/PermissionServerDemo.Core.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/CoreMultiTenancy.Api/CoreMultiTenancy.Api.csproj",
+                "${workspaceFolder}/src/PermissionServerDemo.Api/PermissionServerDemo.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -31,7 +31,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/CoreMultiTenancy.Identity/CoreMultiTenancy.Identity.csproj",
+                "${workspaceFolder}/src/PermissionServerDemo.Identity/PermissionServerDemo.Identity.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -43,7 +43,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/CoreMultiTenancy.Client/CoreMultiTenancy.Client.csproj",
+                "${workspaceFolder}/src/PermissionServerDemo.Client/PermissionServerDemo.Client.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

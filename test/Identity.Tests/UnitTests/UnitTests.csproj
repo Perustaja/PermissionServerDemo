@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>CoreMultiTenancy.Identity.Tests</RootNamespace>
+    <RootNamespace>PermissionServerDemo.Identity.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\CoreMultiTenancy.Identity\CoreMultiTenancy.Identity.csproj" />
+    <ProjectReference Include="..\..\..\src\PermissionServerDemo.Identity\PermissionServerDemo.Identity.csproj" />
   </ItemGroup>
 
 </Project>

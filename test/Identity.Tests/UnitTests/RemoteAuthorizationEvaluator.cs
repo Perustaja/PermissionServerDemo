@@ -1,8 +1,8 @@
 using System;
-using Cmt.Protobuf;
-using CoreMultiTenancy.Core.Authorization;
-using CoreMultiTenancy.Identity.Authorization;
-using CoreMultiTenancy.Identity.Interfaces;
+using Psd.Protobuf;
+using PermissionServerDemo.Core.Authorization;
+using PermissionServerDemo.Identity.Authorization;
+using PermissionServerDemo.Identity.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;

@@ -1,0 +1,32 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>@ViewData["Title"]</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    @await Html.PartialAsync("_StyleSheetsPartial")
+</head>
+<body>
+    <div class="container-fluid fluid-height">
+        <div class="row panel-parent">
+            @* Header bar *@
+            <div class="row m-0 panel-header-lite pb-1">
+                <div class="d-flex col-4 p-0 align-items-end">
+                    <img src="https://www.infopulse.com/uploads/media/c-sharp.svg"
+                        width="50" height="50" class="d-inline-block align-top">
+                </div>
+                <div class="d-flex col-8 p-0 justify-content-end align-items-center">
+                    @await Html.PartialAsync("_AccountPartial")
+                </div>
+            </div>
+            @* Main panel *@
+            <main>
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    
+    @await Html.PartialAsync("_RequiredScriptsPartial")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
