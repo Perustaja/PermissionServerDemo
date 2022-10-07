@@ -1,4 +1,63 @@
-# Goals
+# Table of Contents
+1. [Demo Setup](#demosetup)
+2. [Features](#features)
+3. [Goals and methodology](#thoughts)
+ 
+# Demo Setup <a name="demosetup"></a>
+#### Minimal setup
+
+Firstly, from the project root build the solution to have npm setup the required modules.
+```
+$ dotnet build
+```
+
+The identity and main api databases need to be generated prior to launch. Migrations are packaged with the repository and do not need to be generated.
+```
+$ cd src/PermissionServerDemo.Identity
+$ dotnet ef database update
+
+$ cd src/PermissionServerDemo.Api
+$ dotnet ef database update
+```
+
+The database has a seeded default user with the following email & password combination:
+
+```
+username: admin@mydomain.com
+password: password
+```
+
+#### Startup
+the tracked .vscode folder contains json files to launch all 3 projects at once. Navigate to the
+debug tab in vscode and select the "Api, Idp, and Client" selection, then click on the Run button. Your browser will automatically launch a window and begin serving the Angular client.
+
+#### Optional Email Configuration (Not Required)
+Email configuration is stored in user secrets and injected via the IOptions<TOptions> interface.
+To set the email configuration, sign up for a free account with SendGrid and enter your credentials into user secrets. <b>This is not necessary for the main demo. Only if you want to test out registration.</b> 
+```
+$ cd src/PermissionServerDemo.Identity
+$ dotnet user-secrets set "Email:SendGridUser" "<your_username>"
+$ dotnet user-secrets set "Email:SendGridKey" "<your_key>"
+```
+
+
+# Features
+## Identity
+1. Fully typesafe permissions to be used throughout the application. These are stored in a class library so both the API and the IDP can have compile-time safety. These work with migrations for updates and tweaks over the life of an application's development cycle.
+2. Custom roles with specific permissions that can be defined by individual tenants. Global defaults are configured as a suggested default and for initial users.
+3. Local and remote authorization using these permissions and gRPC. IDP controller methods can be protected exactly like the API controller methods can be.
+4. Immediate updating of permissions using the above system. The second a permission is updated, it will be reflected throughout the system.
+5. Account management, email confirmation (not required to be setup for the main demo), and tenant invitation management using a placeholder implementation. These are not a part of the main demo, but can be accessed if desired.
+
+## Api
+1. Multitenancy with data segregated by an id in each record.
+2. Typesafe authorization guards on controllers or controller methods.
+
+## Client
+1. A GUI that showcases the backend identity system's customization and immediate reflection of authorization changes.
+
+# Goals and methodology <a name="thoughts"></a>
+## Goals
 This project has three main goals in order of least to greatest difficulty
 #### 1 - To showcase how a client, API, and identity provider can work together despite being entirely separate projects
 #### 2 - To have a multi-tenant structure across this architecture with tenant management handled by the identity provider
@@ -45,33 +104,3 @@ Regardless, using the existing authorization within ASP.NET Core and gRPC leads 
 
 #### User-defined roles
 The last feature of this project is the ability for admins to make their own roles and assign them to their users. Global roles are provided as suggested defaults. This is likely overkill for most projects but is another interesting feature for more complicated designs.
-
-# Setup
-#### Email Configuration (Dummy values may be used if email activity undesired)
-Email configuration is stored in user secrets and injected via the IOptions<TOptions> interface.
-To set the email configuration, sign up for a free account with SendGrid and enter your credentials into user secrets:
-```
-$ cd src/CoreMultiTenancy.Identity
-$ dotnet user-secrets set "Email:SendGridUser" "<your_username>"
-$ dotnet user-secrets set "Email:SendGridKey" "<your_key>"
-```
-
-#### Demo databases
-
-Each database needs to be updated prior to launch. Demo seed data is applied through migrations when the database is made.
-```
-$ cd src/CoreMultiTenancy.Identity
-$ dotnet ef database update
-
-$ cd src/CoreMultiTenancy.Api
-$ dotnet ef database update
-```
-
-The database has a seeded default user with the following email & password combination
-
-admin@mydomain.com
-password
-
-#### Startup
-the tracked .vscode folder contains json files to launch all 3 projects at once. Navigate to the
-debug tab in vscode and select the "Api, Idp, and Client" selection, then click on the Run button. For TS debugging of the Angular client, select the localhost option to launch an attached browser that allows debugging of the Angular application in vscode.
