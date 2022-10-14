@@ -1,4 +1,5 @@
-﻿using PermissionServerDemo.Identity;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using PermissionServerDemo.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,10 @@ var app = builder.ConfigureServices();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
 }
 
 app.UseHttpsRedirection();
