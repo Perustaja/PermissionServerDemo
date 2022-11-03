@@ -44,6 +44,12 @@ internal static class ServiceExtensions
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
+            options.AddPolicy("Grpc", builder => {
+                builder.WithOrigins("https://api.permissionserverdemo.dev", "https://permissionserverdemo.dev")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
+            });
         });
 
         builder.Services
@@ -144,7 +150,9 @@ internal static class ServiceExtensions
 
     public static IEndpointRouteBuilder MapGrpcAuthorizationServices(this IEndpointRouteBuilder e)
     {
-        e.MapGrpcService<RemotePermissionAuthorizeService>();
+        e.MapGrpcService<RemotePermissionAuthorizeService>()
+            .EnableGrpcWeb()
+            .RequireCors("Grpc");
         return e;
     }
 

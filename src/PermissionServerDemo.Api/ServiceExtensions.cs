@@ -5,6 +5,7 @@ using PermissionServerDemo.Api.Tenancy;
 using PermissionServerDemo.Core.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Grpc.Net.Client.Web;
 
 namespace PermissionServerDemo.Api;
 
@@ -60,6 +61,8 @@ internal static class ServiceExtensions
         sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient>(o =>
         {
             o.Address = new Uri("https://permissionserverdemo.dev");
-        });
+        })
+        .ConfigurePrimaryHttpMessageHandler(
+            () => new GrpcWebHandler(new HttpClientHandler()));
     }
 }

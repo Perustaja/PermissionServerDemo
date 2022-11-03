@@ -31,6 +31,7 @@ app.UseCookiePolicy();
 app.UseRazorPagesNotFoundFilter("/error/notfound");
 
 app.UseRouting();
+app.UseGrpcWeb();
 app.UseCors();
 app.UseIdentityServer();
 app.UseAuthorization();
