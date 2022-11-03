@@ -40,7 +40,7 @@ internal static class ServiceExtensions
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://localhost:44459")
+                policy.WithOrigins("https://permissionserverdemo.dev")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -112,7 +112,7 @@ internal static class ServiceExtensions
 
         builder.Services.Configure<CookieTempDataProviderOptions>(options =>
         {
-            options.Cookie.Name = "CMTApp";
+            options.Cookie.Name = "PermissionServerDemo";
             options.Cookie.IsEssential = true;
         });
 
@@ -152,7 +152,7 @@ internal static class ServiceExtensions
     {
         sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeBase>(o =>
         {
-            o.Address = new Uri("https://localhost:6100");
+            o.Address = new Uri("https://api.permissionserverdemo.dev");
         });
     }
 

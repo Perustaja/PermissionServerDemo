@@ -31,11 +31,11 @@ namespace PermissionServerDemo.Identity
                     ClientName = "Test Angular Client",
                     ClientId = "testclient",
                     AllowedGrantTypes = GrantTypes.Code,
-                    AllowedCorsOrigins = { "https://localhost:44459" },
+                    AllowedCorsOrigins = { "https://permissionserverdemo.dev" },
                     RequireConsent = false,
                     AllowAccessTokensViaBrowser = true,
-                    RedirectUris = { "https://localhost:44459/authentication/login-callback" },
-                    PostLogoutRedirectUris = { "https://localhost:44459/authentication/logout-callback" },
+                    RedirectUris = { "https://permissionserverdemo.dev/authentication/login-callback" },
+                    PostLogoutRedirectUris = { "https://permissionserverdemo.dev/authentication/logout-callback" },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

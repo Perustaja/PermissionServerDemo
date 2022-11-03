@@ -21,7 +21,7 @@ internal static class ServiceExtensions
             .AddJwtBearer("Bearer", o =>
             {
                 o.MapInboundClaims = false;
-                o.Authority = "https://localhost:5100";
+                o.Authority = "https://idp.permissionserverdemo.dev";
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = false,
@@ -41,7 +41,7 @@ internal static class ServiceExtensions
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://localhost:44459")
+                policy.WithOrigins("https://permissionserverdemo.dev")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -59,7 +59,7 @@ internal static class ServiceExtensions
     {
         sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient>(o =>
         {
-            o.Address = new Uri("https://localhost:5100");
+            o.Address = new Uri("https://permissionserverdemo.dev");
         });
     }
 }
