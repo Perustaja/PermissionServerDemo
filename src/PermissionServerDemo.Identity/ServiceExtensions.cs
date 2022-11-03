@@ -45,7 +45,7 @@ internal static class ServiceExtensions
                     .AllowAnyMethod();
             });
             options.AddPolicy("Grpc", builder => {
-                builder.WithOrigins("https://api.permissionserverdemo.dev", "https://permissionserverdemo.dev")
+                builder.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader()
                .WithExposedHeaders("Grpc-Status", "Grpc-Message", "Grpc-Encoding", "Grpc-Accept-Encoding");
