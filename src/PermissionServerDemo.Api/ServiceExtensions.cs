@@ -60,7 +60,7 @@ internal static class ServiceExtensions
     {
         sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient>(o =>
         {
-            o.Address = new Uri("https://permissionserverdemo.dev");
+            o.Address = new Uri("https://idp.permissionserverdemo.dev");
         })
         .ConfigurePrimaryHttpMessageHandler(
             () => new GrpcWebHandler(new HttpClientHandler()));
