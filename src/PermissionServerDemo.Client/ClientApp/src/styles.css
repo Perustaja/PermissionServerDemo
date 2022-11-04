@@ -1,4 +1,16 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+@media only screen and (min-width : 0px) {
+}
+@media only screen and (min-width : 768px) {
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .container-padding {
+        padding-right: 10vw;
+        padding-left: 10vw;
+    }
+}
 .fw-350 {
     font-weight: 350;
 }

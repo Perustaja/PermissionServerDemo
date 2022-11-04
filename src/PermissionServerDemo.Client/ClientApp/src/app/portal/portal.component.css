@@ -1,8 +1,23 @@
-.portal-header {
-    display: flex;
-    justify-content: flex-end;
-    align-content: center;
-    padding-bottom: 20vh;
+@media only screen and (min-width : 0px) {
+    .portal-header {
+        display: flex;
+        justify-content: flex-end;
+        align-content: center;
+        padding-bottom: 2vh;
+    }
+}
+@media only screen and (min-width : 768px) {
+    .portal-header {
+        display: flex;
+        justify-content: flex-end;
+        align-content: center;
+        padding-bottom: 20vh;
+        margin-right: 4vh;
+    }
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
 }
 .tenant-card-container {
     display: grid;
