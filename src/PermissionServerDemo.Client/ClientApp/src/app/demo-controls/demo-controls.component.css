@@ -1,5 +1,6 @@
 .identity-dashboard {
     font-size: 13px;
+    padding-bottom: 10px;
 }
 .identity-label {
     font-weight: 500;
@@ -9,22 +10,14 @@
     padding-top: 10px;
     padding-left: 5px;
 }
-.demo-controls {
-    padding-bottom: 50px;
+.content-main {
+    margin: 0px;
 }
-.demo-control {
-    display: flex;
-    align-items: center;
-    padding-top: 10px;
-}
-.demo-button {
-    width: 300px;
-}
-.demo-button button {
-    width: 100%;
-}
-.demo-label {
+mat-panel-title {
     font-size: 16px;
-    padding-left: 10px;
-    width: calc(80vw - 350px);
+    font-weight: 500;
+}
+
+mat-expansion-panel div {
+    padding-bottom: 5px;
 }

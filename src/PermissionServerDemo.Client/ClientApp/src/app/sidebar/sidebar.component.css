@@ -14,7 +14,7 @@
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    height: calc(80vh - 4rem);
+    height: calc(80vh - 4.1rem);
     justify-content: space-between;
     flex-grow: 1;
 }
@@ -33,4 +33,14 @@
 }
 .nav-item {
     font-size: 17px;
+}
+.tbar-spacer {
+    flex: 1 1 auto;
+}
+.mobile-nav-links {
+    width: 100%;
+    padding: 5px 16px;
+    border-top: 1px #a5a1a1 solid;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
 }

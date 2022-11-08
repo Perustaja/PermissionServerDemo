@@ -1,15 +1,31 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 @media only screen and (min-width : 0px) {
+    .wrapper {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        flex-direction: column;
+    }
 }
 @media only screen and (min-width : 768px) {
-    .container-fluid {
-        padding-left: 0;
-        padding-right: 0;
+    .wrapper {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        flex-direction: row;
     }
     .container-padding {
         padding-right: 10vw;
         padding-left: 10vw;
     }
+}
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
 }
 .fw-350 {
     font-weight: 350;
@@ -39,6 +55,7 @@
     font-size: 22px;
 }
 .content {
+    padding: 0px 10px;
     width: 100%;
 }
 .controls-bg {
