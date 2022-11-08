@@ -16,7 +16,6 @@ import { ToastService } from "../toasts/toasts.service";
 export class DemoControlsComponent implements OnInit {
     apiUrl: string;
     idpApiUrl: string;
-    token?: string | null;
     subId: string | null | undefined;
     tenantId?: string | null;
     permCats: PermissionCategory[] = [];
@@ -38,7 +37,6 @@ export class DemoControlsComponent implements OnInit {
 
     ngOnInit() {
         // it doesn't make sense to react to changing user/tenant information, only for permissions
-        this.authorizeSvc.getAccessToken().pipe(take(1)).subscribe(t => this.token = t);
         this.authorizeSvc.getUser().pipe(map(u => u && u.sub), take(1)).subscribe(s => this.subId = s);
         this.tenantManager.tenantId$.pipe(take(1)).subscribe(tid => this.tenantId = tid);
         this.permissions$ = this.tenantManager.permissions$;
