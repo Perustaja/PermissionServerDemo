@@ -9,16 +9,16 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 export function getApiBaseUrl(): string {
-  return 'https://api.permissionserverdemo.dev/';
+  return 'https://localhost:6100/';
 }
 export function getApiUrl(): string {
-  return 'https://api.permissionserverdemo.dev/api/v1.0';
+  return 'https://localhost:6100/api/v1.0';
 }
 export function getIdpBaseUrl(): string {
-  return 'https://idp.permissionserverdemo.dev';
+  return 'https://localhost:5100';
 }
 export function getIdpApiUrl(): string {
-  return 'https://idp.permissionserverdemo.dev/api/v1.0';
+  return 'https://localhost:5100/api/v1.0';
 }
 
 const providers = [
