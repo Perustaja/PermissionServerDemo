@@ -1,11 +1,70 @@
-<nav class="sidebar controls-bg">
+<mat-toolbar class="controls-bg" *ngIf="sidenavMode === 'over'">
+  <button mat-icon-button (click)="toggleMobileNavLinks()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <div>
+    <img class="sidebar-logo" src="https://www.infopulse.com/uploads/media/c-sharp.svg">
+    <span class="fs-5" style="padding-left:8px;">PermissionServerDemo</span>
+  </div>
+  <span class="tbar-spacer"></span>
+  <div class="btn-group">
+    <div ngbDropdown placement="bottom-end">
+        <a class="profile-preview dropdown-toggle" id="dropdownConfig" ngbDropdownToggle>
+            <fa-icon [icon]="faUserCircle" size="lg"></fa-icon>
+        </a>
+        <div ngbDropdownMenu>
+            <a ngbDropdownItem href="{{idpBaseUrl}}/account/settings/profile">Account</a>
+            <a ngbDropdownItem [routerLink]='["/authentication/logout"]' [state]='{ local: true }'>Logout</a>
+        </div>
+    </div>
+  </div>
+</mat-toolbar>
+<div class="mobile-nav-links controls-bg" id="mobileNavLinks" *ngIf="showMobileLinks">
+  <ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]='["/aircraft"]' [state]='{ local: true }' [routerLinkActive]="['active']">
+        <fa-icon [icon]="faPlaneDeparture" size="1x"></fa-icon>
+        Aircraft
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]='["/users"]' [state]='{ local: true }' [routerLinkActive]="['active']">
+        <fa-icon [icon]="faUsers" size="1x"></fa-icon>
+        Users
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]='["/roles"]' [state]='{ local: true }' [routerLinkActive]="['active']">
+        <fa-icon [icon]="faSitemap" size="1x"></fa-icon>
+        Roles
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]='["/demo-controls"]' [state]='{ local: true }' [routerLinkActive]="['active']">
+        <fa-icon [icon]="faCog" size="1x"></fa-icon>
+        Demo Controls
+      </a>
+    </li>
+  </ul>
+  <ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]='["/portal"]' [state]='{ local: true }'>
+        <fa-icon [icon]="faBuilding" size="1x"></fa-icon>
+        Portal
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+<nav *ngIf="sidenavMode === 'side'" class="sidebar controls-bg">
   <div class="sidebar-header">
     <img class="sidebar-logo" src="https://www.infopulse.com/uploads/media/c-sharp.svg">
     <span class="fs-5" style="padding-left:8px;">PermissionServerDemo</span>
   </div>
   <hr>
   <div class="sidebar-nav">
-    <ul class="nav nav-pills flex-column" id="sidebarNav">
+    <ul class="nav nav-pills flex-column" id="sidebarNavLinks">
       <li class="nav-item">
         <a class="nav-link" [routerLink]='["/aircraft"]' [state]='{ local: true }' [routerLinkActive]="['active']">
           <fa-icon [icon]="faPlaneDeparture" size="1x"></fa-icon>
