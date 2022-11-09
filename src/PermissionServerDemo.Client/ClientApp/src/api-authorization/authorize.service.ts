@@ -175,10 +175,10 @@ export class AuthorizeService {
     }
 
     const settings: UserManagerSettings = {
-      authority: "https://localhost:5100",
+      authority: "https://idp.permissionserverdemo.dev",
       client_id: "testclient",
-      redirect_uri: "https://localhost:44459/authentication/login-callback",
-      post_logout_redirect_uri: "https://localhost:44459/authentication/logout-callback",
+      redirect_uri: "https://permissionserverdemo.dev/authentication/login-callback",
+      post_logout_redirect_uri: "https://permissionserverdemo.dev/authentication/logout-callback",
       scope: "openid profile testapi IdentityServerApi",
       response_type: "code",
       filterProtocolClaims: true,
