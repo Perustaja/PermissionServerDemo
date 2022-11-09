@@ -8,7 +8,7 @@ import { mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthorizeInterceptor implements HttpInterceptor {
-  tokenDestinations: string[] = ['https://localhost:5100', 'https://localhost:6100'];
+  tokenDestinations: string[] = ['https://idp.permissionserverdemo.dev', 'https://api.permissionserverdemo.dev'];
   constructor(private authorize: AuthorizeService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
