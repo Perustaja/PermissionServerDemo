@@ -36,6 +36,7 @@ Email configuration is stored in user secrets and injected via the IOptions<TOpt
 To set the email configuration, sign up for a free account with SendGrid and enter your credentials into user secrets. <b>This is not necessary for the main demo. Only if you want to test out registration.</b> 
 ```
 $ cd src/PermissionServerDemo.Identity
+$ dotnet user-secrets init
 $ dotnet user-secrets set "Email:SendGridUser" "<your_username>"
 $ dotnet user-secrets set "Email:SendGridKey" "<your_key>"
 ```
