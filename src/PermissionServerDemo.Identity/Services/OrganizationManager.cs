@@ -6,12 +6,17 @@ using Perustaja.Polyglot.Option;
 using PermissionServerDemo.Identity.Results.Errors;
 using Microsoft.AspNetCore.Identity;
 using PermissionServerDemo.Core.Authorization;
+using PermissionServerDemo.Identity.Extensions;
 
 namespace PermissionServerDemo.Identity.Services
 {
     public class OrganizationManager : IOrganizationManager
     {
         private readonly string _connectionString;
+        private readonly Guid _defaultAdminRoleId;
+        private readonly Guid _defaultNewUserRoleId;
+        private readonly Guid _aircraftCreateRoleId;
+        private readonly Guid _demoShadowAdminId;
         private readonly UserManager<User> _userManager;
         private readonly IUserOrganizationRepository _userOrgRepo;
         private readonly IOrganizationRepository _orgRepo;
@@ -29,6 +34,10 @@ namespace PermissionServerDemo.Identity.Services
             IOrganizationInviteService inviteSvc)
         {
             _connectionString = config.GetConnectionString("IdentityDb");
+            _defaultAdminRoleId = config.GetDemoRoleId("DefaultAdminRoleId");
+            _defaultNewUserRoleId = config.GetDemoRoleId("DefaultNewUserRoleId");
+            _aircraftCreateRoleId = config.GetDemoRoleId("AircraftCreateRoleId");
+            _demoShadowAdminId = Guid.Parse(config["DemoShadowAdminId"]);
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _userOrgRepo = userOrgRepo ?? throw new ArgumentNullException(nameof(userOrgRepo));
             _orgRepo = orgRepo ?? throw new ArgumentNullException(nameof(orgRepo));
@@ -162,7 +171,7 @@ namespace PermissionServerDemo.Identity.Services
                 {
                     _userOrgRepo.Delete(uo);
                     await _userOrgRepo.UnitOfWork.Commit();
-                    return Option<Error>.None;         
+                    return Option<Error>.None;
                 }
                 else
                     return Option<Error>.Some(new Error($"User {userId} cannot have access revoked as it is the owner of the organization.", ErrorType.DomainLogic));
@@ -191,6 +200,43 @@ namespace PermissionServerDemo.Identity.Services
         public async Task<bool> UserHasAccessAsync(Guid userId, Guid orgId)
             => await _userOrgRepo.ExistsWithAccessAsync(userId, orgId);
 
+        #endregion
+
+
+        #region DemoProd
+        public async Task GenerateNewUserEnvironment(Guid newUserId)
+        {
+            var newUserOrgId = Guid.NewGuid();
+            var newUserOtherOrgId = Guid.NewGuid();
+            var newUserOrg = new Organization(newUserOrgId, "MyCompany", false, newUserId, "tenantlogo1.jpg"); // make sure id is generated here
+            var newUserOtherOrg = new Organization(newUserOtherOrgId, "OtherCompany", false, _demoShadowAdminId, "tenantlogo2.jpg");
+
+            // tenancy and permissions
+            var tenancy1 = new UserOrganization(newUserId, newUserOrgId);
+            tenancy1.Approve();
+            var tenancy2 = new UserOrganization(newUserId, newUserOtherOrgId);
+            tenancy2.Approve();
+            var tenancy3 = new UserOrganization(_demoShadowAdminId, newUserOtherOrgId);
+            tenancy3.Approve();
+            var adminRole1 = new UserOrganizationRole(newUserId, newUserOrgId, _defaultAdminRoleId);
+            var adminRole2 = new UserOrganizationRole(newUserId, newUserOtherOrgId, _defaultAdminRoleId);
+            var adminAircraftRole1 = new UserOrganizationRole(newUserId, newUserOrgId, _aircraftCreateRoleId);
+            var adminAircraftRole2 = new UserOrganizationRole(newUserId, newUserOtherOrgId, _aircraftCreateRoleId);
+            var shadowAdminRole = new UserOrganizationRole(_demoShadowAdminId, newUserOtherOrgId, _defaultAdminRoleId);
+            
+            // check for bulk operations if performance is bad, not worried for demo
+            _orgRepo.Add(newUserOrg);
+            _orgRepo.Add(newUserOtherOrg);
+            _userOrgRepo.Add(tenancy1);
+            _userOrgRepo.Add(tenancy2);
+            _userOrgRepo.Add(tenancy3);
+            _userOrgRoleRepo.Add(adminRole1);
+            _userOrgRoleRepo.Add(adminRole2);
+            _userOrgRoleRepo.Add(adminAircraftRole1);
+            _userOrgRoleRepo.Add(adminAircraftRole2);
+            _userOrgRoleRepo.Add(shadowAdminRole);
+            await _orgRepo.UnitOfWork.Commit();
+        }
         #endregion
 
         private async Task<InviteResult> GrantAccessAsync(User user, Organization org)

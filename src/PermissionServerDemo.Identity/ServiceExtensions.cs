@@ -180,8 +180,6 @@ internal static class ServiceExtensions
     {
         builder.Services.AddGlobalRoles(options =>
         {
-            // in a normal application you will not need to hardcode these ids, the demo
-            // just seeds some users for brevity
             var adminRoleId = builder.Configuration.GetDemoRoleId("DefaultAdminRoleId");
             var newUserRoleId = builder.Configuration.GetDemoRoleId("DefaultNewUserRoleId");
             var aircraftCreateRoleId = builder.Configuration.GetDemoRoleId("AircraftCreateRoleId");

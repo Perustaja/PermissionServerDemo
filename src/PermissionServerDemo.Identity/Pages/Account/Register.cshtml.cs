@@ -1,7 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using PermissionServerDemo.Identity.Extensions;
 using PermissionServerDemo.Identity.Interfaces;
 using PermissionServerDemo.Identity.Entities;
@@ -9,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace PermissionServerDemo.Identity.Pages.Account
 {
@@ -20,9 +17,13 @@ namespace PermissionServerDemo.Identity.Pages.Account
     {
         private readonly IAccountEmailService _acctEmailService;
         private readonly UserManager<User> _userManager;
-        public RegisterModel(IAccountEmailService acctEmailService,
+        private readonly IOrganizationManager _orgManager;
+
+        public RegisterModel(IOrganizationManager orgManager,
+            IAccountEmailService acctEmailService,
             UserManager<User> userManager)
         {
+            _orgManager = orgManager ?? throw new ArgumentNullException(nameof(orgManager));
             _acctEmailService = acctEmailService ?? throw new ArgumentNullException(nameof(acctEmailService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
@@ -80,6 +81,11 @@ namespace PermissionServerDemo.Identity.Pages.Account
             }
             // Send email confirmation email
             await _acctEmailService.SendConfToAuthUserAsync(newUser);
+
+            // generate tenancy and stuff, ideally this should be wholly atomic with the user creation
+            // so UserManager.CreateAsync should be overriden, but this is quick and dirty for demo
+            await _orgManager.GenerateNewUserEnvironment(newUser.Id);
+
             return RedirectToPage("Login");
         }
     }
