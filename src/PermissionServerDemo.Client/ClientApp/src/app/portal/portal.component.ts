@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { TenantManagerService } from '../../tenancy/tenantManager.service';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-portal-component',
@@ -12,16 +13,17 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
   styleUrls: ['./portal.component.css'],
   providers: [TenantManagerService]
 })
-export class PortalComponent implements OnInit{
+export class PortalComponent implements OnInit, OnDestroy {
+  private ngUnsub = new Subject<void>();
   faUserCircle = faUserCircle;
-  
+
   idpApiUrl: string;
   idpBaseUrl: string;
   userOrganizations: UserOrganization[] = [];
 
-  constructor(private http: HttpClient, 
+  constructor(private http: HttpClient,
     private authorizeSvc: AuthorizeService,
-    private tenantManager: TenantManagerService, 
+    private tenantManager: TenantManagerService,
     private router: Router,
     @Inject('IDP_API_URL') idpApiUrl: string,
     @Inject('IDP_BASE_URL') idpBaseUrl: string) {
@@ -31,17 +33,27 @@ export class PortalComponent implements OnInit{
 
   ngOnInit() {
     this.authorizeSvc.getUser()
-      .pipe(map(u => u && u.sub))
-      .subscribe(userId => 
+      .pipe(
+        takeUntil(this.ngUnsub),
+        map(u => u && u.sub)
+      )
+      .subscribe(userId =>
         this.http.get<UserOrganization[]>(`${this.idpApiUrl}/users/${userId}/organizations`).subscribe({
           next: (res) => this.userOrganizations = res,
-          error: (e) => console.log(e)})
+          error: (e) => console.log(e)
+        })
       )
-  } 
-  
+  }
+
   selectTenant(id: string) {
-    this.tenantManager.updateTenantSelection(id);
-    this.router.navigate(['/aircraft'])
+    this.tenantManager.updateTenantSelection(id).then((res) => {
+      this.router.navigate(['/aircraft'])
+    })
+  }
+
+  ngOnDestroy() {
+    this.ngUnsub.next();
+    this.ngUnsub.complete();
   }
 }
 
