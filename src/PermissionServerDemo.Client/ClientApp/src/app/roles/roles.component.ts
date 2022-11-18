@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { TenantManagerService } from '../../tenancy/tenantManager.service';
 
 @Component({
@@ -7,7 +8,8 @@ import { TenantManagerService } from '../../tenancy/tenantManager.service';
     templateUrl: './roles.component.html',
     styleUrls: ['./roles.component.css']
 })
-export class RolesComponent implements OnInit {
+export class RolesComponent implements OnInit, OnDestroy {
+    private ngUnsub = new Subject<void>();
     idpApiUrl: string;
     userRoles: Role[] = [];
     globalRoles: Role[] = [];
@@ -26,17 +28,26 @@ export class RolesComponent implements OnInit {
                 error: (e) => console.log(e)
             })
 
-        this.tenantManager.tenantId$.subscribe(tid => {
-            this.http.get<Role[]>(`${this.idpApiUrl}/organizations/${tid}/roles`)
-                .subscribe({
-                    next: (res) => res.forEach(r => r.isGlobal ? this.globalRoles.push(r) : this.userRoles.push(r)),
-                    error: (e) => console.log(e)
-                })
-        })
+        this.tenantManager.tenantId$
+            .pipe(
+                takeUntil(this.ngUnsub)
+            )
+            .subscribe(tid => {
+                this.http.get<Role[]>(`${this.idpApiUrl}/organizations/${tid}/roles`)
+                    .subscribe({
+                        next: (res) => res.forEach(r => r.isGlobal ? this.globalRoles.push(r) : this.userRoles.push(r)),
+                        error: (e) => console.log(e)
+                    })
+            })
     }
 
     roleHasPermission(role: Role, perm: Permission): boolean {
         return role.permissions.some(p => p.id == perm.id);
+    }
+
+    ngOnDestroy() {
+        this.ngUnsub.next();
+        this.ngUnsub.complete();
     }
 }
 

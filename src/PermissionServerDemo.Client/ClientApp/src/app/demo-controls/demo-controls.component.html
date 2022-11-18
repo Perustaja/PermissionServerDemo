@@ -3,58 +3,87 @@
     <app-sidebar></app-sidebar>
     <div class="content">
         <div class="content-main">
-            <h4>Controls</h4>
-            <div class="demo-controls">
-                <div class="demo-control">
-                    <div class="demo-button">
-                        <button mat-raised-button color="blue" (click)="createDemoAircraft()">Create random
-                            aircraft</button>
-                    </div>
-                    <div class="demo-label">
-                        This button will generate a random aircraft to add to the tenant once.
-                    </div>
-                </div>
-                <div class="demo-control">
-                    <div class="demo-button">
-                        <button mat-raised-button color="blue" (click)="openRoleModal(content)">Create a custom
-                            role</button>
-                    </div>
-                    <div class="demo-label">
-                        This button will open a modal window that allows you to create a custom role with specific
-                        permissions,
-                        showcasing how customizable roles are for each tenant.
-                    </div>
-                </div>
-                <div class="demo-control">
-                    <div class="demo-button">
-                        <button mat-raised-button color="warning" (click)="removeCreateAircraftRole()">Remove my "Create Aircraft" Role</button>
-                    </div>
-                    <div class="demo-label">
-                        This will remove the "Create Aircraft" role from yourself. Afterwards, you will not be able to
-                        create
-                        an aircraft. This showcases immediate updating of permissions and roles when changed.
-                    </div>
-                </div>
-                <div class="demo-control">
-                    <div class="demo-button">
-                        <button mat-raised-button color="danger" (click)="revokeAccess()">Revoke my access to this tenant</button>
-                    </div>
-                    <div class="demo-label">
-                        This button will revoke your access to the current tenant. It will be disabled if you are the
-                        owner of
-                        the current tenant. Note that this is irreversable without reseeding the database!
-                    </div>
-                </div>
-            </div>
             <div class="identity-dashboard">
                 <h4>My Identity</h4>
                 <div class="identity-labels">
                     <div class="pb-1"><span class="identity-label">Subject Id:</span> {{subId}}</div>
                     <div class="pb-1"><span class="identity-label">Tenant Id:</span> {{tenantId}}</div>
-                    <div class="pb-1"><span class="identity-label">Permissions:</span> {{permissions$ | async | json}}</div>
-                    <div class="pb-1"><span class="identity-label">JWT:</span> {{token}}</div>
+                    <div class="pb-1"><span class="identity-label">Permissions:</span> {{permissions$ | async | json}}
+                    </div>
                 </div>
             </div>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Showcase: Tenant-Segregated Data
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div>
+                        <button mat-raised-button color="blue" (click)="createDemoAircraft()">Create random
+                            aircraft</button>
+                    </div>
+                    This button will generate a random aircraft to add to the tenant once. If you navigate to the other
+                    tenant, you will see it only exists for this tenant.
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Showcase: Custom User-Defined Roles
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div>
+                        <button mat-raised-button color="blue" (click)="openRoleModal(content)">Create a custom
+                            role</button>
+                    </div>
+                    This button will open a modal window that allows you to create a custom role with specific
+                    permissions,
+                    showcasing how customizable roles are for each tenant.
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Showcase: Underlying Permissions Packaged by Roles
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div>
+                        <button mat-raised-button color="warning" (click)="removeCreateAircraftRole()">Remove my "Create
+                            Aircraft" Role</button>
+                    </div>
+                    This will remove the "Create Aircraft" role from yourself. Afterwards, you will not be able to
+                    create
+                    an aircraft. This showcases immediate updating of permissions and roles when changed.
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Showcase: Tenant Access & Immediate Updating of Permissions
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div>
+                        <button mat-raised-button color="danger" (click)="revokeAccess()">Revoke my access to this
+                            tenant</button>
+                    </div>
+                    This button will revoke your access to the current tenant. It will be disabled if you are the
+                    owner of
+                    the current tenant. <strong>Note that this is irreversible for your account!</strong>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
 </div>
