@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Subject, takeUntil } from "rxjs";
 import { TenantManagerService } from "src/tenancy/tenantManager.service";
 
 @Component({
@@ -8,7 +9,8 @@ import { TenantManagerService } from "src/tenancy/tenantManager.service";
     styleUrls: ['./users.component.css'],
     providers: [TenantManagerService]
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
+    private ngUnsub = new Subject<void>();
     idpApiUrl: string;
     users: User[] = [];
 
@@ -19,12 +21,19 @@ export class UsersComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.tenantManager.tenantId$.subscribe(tid => {
-            this.http.get<User[]>(`${this.idpApiUrl}/organizations/${tid}/users`).subscribe({
-                next: (res) => this.users = res,
-                error: (e) => console.log(e)
-            });
-        })
+        this.tenantManager.tenantId$
+            .pipe(takeUntil(this.ngUnsub))
+            .subscribe(tid => {
+                this.http.get<User[]>(`${this.idpApiUrl}/organizations/${tid}/users`).subscribe({
+                    next: (res) => this.users = res,
+                    error: (e) => console.log(e)
+                });
+            })
+    }
+
+    ngOnDestroy() {
+        this.ngUnsub.next();
+        this.ngUnsub.complete();
     }
 }
 

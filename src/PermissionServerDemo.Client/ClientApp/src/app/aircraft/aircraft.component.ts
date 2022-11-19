@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TenantManagerService } from '../../tenancy/tenantManager.service';
+import { combineLatestWith, Subject, takeUntil } from "rxjs";
 
 @Component({
     selector: 'app-aircraft-component',
@@ -8,7 +9,8 @@ import { TenantManagerService } from '../../tenancy/tenantManager.service';
     styleUrls: ['./aircraft.component.css'],
     providers: [TenantManagerService]
 })
-export class AircraftComponent implements OnInit {
+export class AircraftComponent implements OnInit, OnDestroy {
+    ngUnsub = new Subject<void>();
     aircraft: Aircraft[] = [];
     apiUrl: string;
     apiBaseUrl: string;
@@ -22,12 +24,21 @@ export class AircraftComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.tenantManager.tenantId$.subscribe(tid => {
-            this.http.get<Aircraft[]>(`${this.apiUrl}/organizations/${tid}/aircraft`).subscribe({
+        this.tenantManager.tenantId$.pipe(
+            takeUntil(this.ngUnsub),
+            combineLatestWith(this.tenantManager.isTenantShadow$)
+        )
+        .subscribe(([tid, isTenantShadow]) => {
+                this.http.get<Aircraft[]>(`${this.apiUrl}/organizations/${tid}/aircraft/${isTenantShadow}`).subscribe({
                 next: (res) => this.aircraft = res,
                 error: (e) => console.log(e)
             });
         })
+    }
+
+    ngOnDestroy() {
+        this.ngUnsub.next();
+        this.ngUnsub.complete();
     }
 }
 

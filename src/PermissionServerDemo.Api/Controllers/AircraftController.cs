@@ -27,11 +27,22 @@ namespace PermissionServerDemo.Api.Controllers
 
         [HttpGet]
         [TenantedAuthorize]
-        [Route("{tenantId}/aircraft")]
-        public async Task<IActionResult> Get(Guid tenantId)
+        [Route("{tenantId}/aircraft/{isTenantShadow}")]
+        public async Task<IActionResult> Get(Guid tenantId, bool isTenantShadow = false)
         {
-            var ac = await _dbContext.Set<Aircraft>()
-                .ToListAsync();
+            List<Aircraft> ac;
+            if (isTenantShadow)
+            {
+                ac = await _dbContext.Set<Aircraft>()
+                    .Where(ac => ac.TenantId == tenantId || (ac.IsGlobal && ac.IsShadowOwned))
+                    .ToListAsync();
+            }
+            else
+            {
+                ac = await _dbContext.Set<Aircraft>()
+                    .Where(ac => ac.TenantId == tenantId || (ac.IsGlobal && !ac.IsShadowOwned))
+                    .ToListAsync();
+            }
             var mappedAc = _mapper.Map<List<AircraftGetDto>>(ac);
             return Ok(mappedAc);
         }
@@ -41,7 +52,8 @@ namespace PermissionServerDemo.Api.Controllers
         [TenantedAuthorize(PermissionEnum.AircraftCreate)]
         public async Task<IActionResult> Post(Guid tenantId, [FromBody] AircraftCreateDto dto)
         {
-            if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == dto.RegNumber))
+            // this logic isn't strict enough for real world but it'll work for the demo
+            if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == dto.RegNumber && a.TenantId == tenantId))
                 return Conflict($"Aircraft already exists with registration number: {dto.RegNumber}");
 
             var ac = new Aircraft(dto.RegNumber, tenantId, dto.ThumbnailUri, dto.Model);

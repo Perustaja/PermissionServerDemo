@@ -1,5 +1,4 @@
 using PermissionServerDemo.Core.Authorization;
-using PermissionServerDemo.Identity.Authorization;
 using PermissionServerDemo.Identity.Entities;
 using PermissionServerDemo.Identity.Results;
 using PermissionServerDemo.Identity.Results.Errors;
@@ -93,6 +92,11 @@ namespace PermissionServerDemo.Identity.Interfaces
         Task<InviteResult> UsePermanentInvitationAsync(User user, string link);
         /// <returns>Whether the User has access to the Organization, or false if either doesn't exist.</returns>
         Task<bool> UserHasAccessAsync(Guid userId, Guid orgId);
+        #endregion
+
+        #region DemoProd
+        Task GenerateNewUserEnvironmentAsync(Guid newUserId);
+        Task<bool> IsUserOwnerAsync(Guid userId, Guid orgId);
         #endregion
     }
 }

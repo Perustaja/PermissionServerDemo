@@ -40,13 +40,15 @@ namespace PermissionServerDemo.Identity.Controllers
         [TenantedAuthorize]
         public async Task<IActionResult> GetPermissionsWithinTenant(Guid userId, Guid orgId)
         {
+            // modified for workaround for demo
             var tokenId = new Guid(User.GetSubjectId());
             if (userId == tokenId)
             {
                 var perms = await _permSvc.GetUsersPermissionsAsync(userId, orgId);
                 if (perms.Count > 0)
                 {
-                    return Ok(perms.Select(p => p.ToString()));
+                    var isShadow = await _orgManager.IsUserOwnerAsync(userId, orgId);
+                    return Ok(new PermResult(perms.Select(p => p.ToString()).ToArray(), !isShadow));
                 }
 
                 throw new Exception($"User: {userId}, Org: {orgId} User has access but no permissions.");
@@ -55,4 +57,14 @@ namespace PermissionServerDemo.Identity.Controllers
             return BadRequest($"userId in the URI must match the userId within the access token. Token id: {tokenId}");
         }
     }
+}
+
+public class PermResult {
+    public PermResult(string[] perms, bool isTenantShadow)
+    {
+        Permissions = perms;
+        IsTenantShadow = isTenantShadow;
+    }
+    public string[] Permissions { get; set; }
+    public bool IsTenantShadow { get; set; }
 }

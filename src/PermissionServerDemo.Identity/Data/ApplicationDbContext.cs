@@ -23,10 +23,7 @@ namespace PermissionServerDemo.Identity.Data
         private readonly Guid _defaultAdminRoleId;
         private readonly Guid _defaultNewUserRoleId;
         private readonly Guid _aircraftCreateRoleId;
-        private readonly Guid _demoAdminId;
         private readonly Guid _demoShadowAdminId;
-        private readonly Guid _demoMyTenantId;
-        private readonly Guid _demoOtherTenantId;
         public ApplicationDbContext(IConfiguration config, DbContextOptions<ApplicationDbContext> options,
             IGlobalRoleProvider globalRoleProvider)
             : base(options)
@@ -36,10 +33,7 @@ namespace PermissionServerDemo.Identity.Data
             _defaultAdminRoleId = config.GetDemoRoleId("DefaultAdminRoleId");
             _defaultNewUserRoleId = config.GetDemoRoleId("DefaultNewUserRoleId");
             _aircraftCreateRoleId = config.GetDemoRoleId("AircraftCreateRoleId");
-            _demoAdminId = Guid.Parse(config["DemoAdminId"]);
             _demoShadowAdminId = Guid.Parse(config["DemoShadowAdminId"]);
-            _demoMyTenantId = Guid.Parse(config["DemoMyTenantId"]);
-            _demoOtherTenantId = Guid.Parse(config["DemoOtherTenantId"]);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -73,20 +67,6 @@ namespace PermissionServerDemo.Identity.Data
         {
             // users
             var hasher = new PasswordHasher<User>();
-            var admin = new User
-            {
-                Id = _demoAdminId,
-                UserName = "admin@mydomain.com",
-                NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                Email = "admin@mydomain.com",
-                NormalizedEmail = "ADMIN@MYDOMAIN.COM",
-                EmailConfirmed = true,
-                LockoutEnabled = false,
-                SecurityStamp = new Guid().ToString(),
-            };
-            admin.PasswordHash = hasher.HashPassword(admin, "password");
-            admin.UpdateName("Admin", "Admin");
-
             var shadowAdmin = new User
             {
                 Id = _demoShadowAdminId,
@@ -98,31 +78,9 @@ namespace PermissionServerDemo.Identity.Data
                 LockoutEnabled = false,
                 SecurityStamp = new Guid().ToString(),
             };
+            shadowAdmin.UpdateName("Shadow", "Admin");
             shadowAdmin.PasswordHash = hasher.HashPassword(shadowAdmin, "password");
-
-            // tenants
-            var myOrg = new Organization(_demoMyTenantId, "MyCompany", false, _demoAdminId, "tenantlogo1.jpg");
-            var otherOrg = new Organization(_demoOtherTenantId, "OtherCompany", false, _demoShadowAdminId, "tenantlogo2.jpg");
-
-            // tenancy and permissions
-            var tenancy1 = new UserOrganization(_demoAdminId, _demoMyTenantId);
-            tenancy1.Approve();
-            var tenancy2 = new UserOrganization(_demoAdminId, _demoOtherTenantId);
-            tenancy2.Approve();
-            var shadow = new UserOrganization(_demoShadowAdminId, _demoOtherTenantId);
-            var adminRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _defaultAdminRoleId);
-            var adminRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _defaultAdminRoleId);
-            var adminAircraftRole1 = new UserOrganizationRole(_demoAdminId, _demoMyTenantId, _aircraftCreateRoleId);
-            var adminAircraftRole2 = new UserOrganizationRole(_demoAdminId, _demoOtherTenantId, _aircraftCreateRoleId);
-            var shadowAdminRole = new UserOrganizationRole(_demoShadowAdminId, _demoOtherTenantId, _defaultAdminRoleId);
-
-            // note that global roles are seeded in RoleConfiguration.cs as that would take place
-            // outside of a demo environment
-            modelBuilder.Entity<User>().HasData(admin, shadowAdmin);
-            modelBuilder.Entity<Organization>().HasData(myOrg, otherOrg);
-            modelBuilder.Entity<UserOrganization>().HasData(tenancy1, tenancy2);
-            modelBuilder.Entity<UserOrganizationRole>().HasData(
-                adminRole1, adminRole2, adminAircraftRole1, adminAircraftRole2, shadowAdminRole);
+            modelBuilder.Entity<User>().HasData(shadowAdmin);
         }
     }
 }
