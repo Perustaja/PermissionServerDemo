@@ -60,5 +60,12 @@ namespace PermissionServerDemo.Identity.Data.Repositories
 
         public void Delete(Organization o)
             => _applicationContext.Set<Organization>().Remove(o);
+
+        public async Task<bool> IsUserOwnerAsync(Guid userId, Guid orgId)
+        {
+            return await _applicationContext.Set<Organization>()
+                .CountAsync(o => o.Id == orgId && o.OwnerUserId == userId)
+                > 0;
+        }
     }
 }

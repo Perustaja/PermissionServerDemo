@@ -95,7 +95,8 @@ namespace PermissionServerDemo.Identity.Interfaces
         #endregion
 
         #region DemoProd
-        Task GenerateNewUserEnvironment(Guid newUserId);
+        Task GenerateNewUserEnvironmentAsync(Guid newUserId);
+        Task<bool> IsUserOwnerAsync(Guid userId, Guid orgId);
         #endregion
     }
 }

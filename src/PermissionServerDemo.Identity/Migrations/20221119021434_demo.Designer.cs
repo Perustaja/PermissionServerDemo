@@ -11,7 +11,7 @@ using PermissionServerDemo.Identity.Data;
 namespace PermissionServerDemo.Identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221113074009_demo")]
+    [Migration("20221119021434_demo")]
     partial class demo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -324,7 +324,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "00a2774c-38d6-4445-a326-71d7d9f1742a",
+                            ConcurrencyStamp = "20d9d630-55ce-4d2f-9c88-691c7027bc2d",
                             Description = "Default admin role for new tenant owners",
                             IsGlobal = true,
                             IsGlobalAdminDefault = true,
@@ -336,7 +336,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "c493f61e-c8ec-48b8-a5c2-7dc5d30ac1d0",
+                            ConcurrencyStamp = "3598207c-5716-495b-b7e9-c4b80641b587",
                             Description = "Default user role with minimal permissions",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -348,7 +348,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "36ea601c-b941-488d-8e2f-9057477d2e2f",
+                            ConcurrencyStamp = "524e5985-c3c1-40db-95ab-05ad3a366a61",
                             Description = "Role for creating new aircraft",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -491,13 +491,15 @@ namespace PermissionServerDemo.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e3c2f5a5-6919-4979-b4be-1b1ff4870ce0",
+                            ConcurrencyStamp = "e49ad39d-c99c-4aba-88ad-661e47976978",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
+                            FirstName = "Shadow",
+                            LastName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMKU/Qm1FVFlfCu4MTdwqYFVShqiAoIOuAjGogmAcbqP3YNMNER2C9mhOKsyC/o9jw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBYMSWmwSIEMy3klWiBpUOoibZ+tdCejfbmi3tGkoMmf8AbJZV4XLByc1SVmZUD83Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,

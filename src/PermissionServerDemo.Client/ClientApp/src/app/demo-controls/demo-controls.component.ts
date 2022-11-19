@@ -105,12 +105,11 @@ export class DemoControlsComponent implements OnInit {
     }
 
     revokeAccess() {
-        const url = `${this.idpApiUrl}/organizations/${this.tenantId}/users/${this.subId}`
-        this.http.delete(url).subscribe({
+        this.http.delete(`${this.idpApiUrl}/organizations/${this.tenantId}/users/${this.subId}`).subscribe({
             next: (res) => this.router.navigate(['/portal']),
             error: (err) => {
                 if (err.status == 400)
-                    this.toastService.pushWarning("User is the owner of this tenant and cannot have access revoked.");
+                    this.toastService.pushWarning("User is the owner of this tenant and cannot have access revoked. Navigate to the portal and select the other tenant.");
                 else
                     console.log(err)
             }

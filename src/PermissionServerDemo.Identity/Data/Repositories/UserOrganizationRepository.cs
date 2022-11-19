@@ -56,6 +56,7 @@ namespace PermissionServerDemo.Identity.Data.Repositories
             return await _applicationContext.Set<UserOrganization>()
                 .Where(uo => uo.UserId == userId)
                 .Include(uo => uo.Organization)
+                .OrderBy(uo => uo.Organization.OwnerUserId != userId)
                 .ToListAsync();
         }
 

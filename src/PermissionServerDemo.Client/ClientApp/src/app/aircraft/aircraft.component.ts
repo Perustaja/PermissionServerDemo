@@ -26,9 +26,10 @@ export class AircraftComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.tenantManager.tenantId$.pipe(
             takeUntil(this.ngUnsub),
+            combineLatestWith(this.tenantManager.isTenantShadow$)
         )
-        .subscribe(tid => {
-                this.http.get<Aircraft[]>(`${this.apiUrl}/organizations/${tid}/aircraft/`).subscribe({
+        .subscribe(([tid, isTenantShadow]) => {
+                this.http.get<Aircraft[]>(`${this.apiUrl}/organizations/${tid}/aircraft/${isTenantShadow}`).subscribe({
                 next: (res) => this.aircraft = res,
                 error: (e) => console.log(e)
             });

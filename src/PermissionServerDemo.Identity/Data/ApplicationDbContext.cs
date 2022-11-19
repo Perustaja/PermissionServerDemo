@@ -78,6 +78,7 @@ namespace PermissionServerDemo.Identity.Data
                 LockoutEnabled = false,
                 SecurityStamp = new Guid().ToString(),
             };
+            shadowAdmin.UpdateName("Shadow", "Admin");
             shadowAdmin.PasswordHash = hasher.HashPassword(shadowAdmin, "password");
             modelBuilder.Entity<User>().HasData(shadowAdmin);
         }

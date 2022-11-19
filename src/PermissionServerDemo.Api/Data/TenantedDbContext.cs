@@ -31,9 +31,8 @@ namespace PermissionServerDemo.Api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // tenancy filter
-            modelBuilder.Entity<Aircraft>().HasQueryFilter(ac => EF.Property<Guid>(ac, "TenantId") == tenantId);
-
+            // composite key
+            modelBuilder.Entity<Aircraft>().HasKey(nameof(Entities.Aircraft.RegNumber), nameof(Entities.Aircraft.TenantId));
             SeedDatabaseForDemo(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
@@ -44,8 +43,8 @@ namespace PermissionServerDemo.Api.Data
 
         private void SeedDatabaseForDemo(ModelBuilder modelBuilder)
         {
-            var tenant1Ac = new Aircraft("N772GK", _demoMyTenantId, "N772GK.jpg", "Cessna 172S");
-            var tenant2Ac = new Aircraft("N5342K", _demoOtherTenantId, "N5342K.jpg", "Piper Archer");
+            var tenant1Ac = Entities.Aircraft.GlobalAircraft("N772GK", "N772GK.jpg", "Cessna 172S", false);
+            var tenant2Ac = Entities.Aircraft.GlobalAircraft("N5342K", "N5342K.jpg", "Piper Archer", true);
 
             modelBuilder.Entity<Aircraft>().HasData(tenant1Ac, tenant2Ac);
         }

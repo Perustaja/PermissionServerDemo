@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map } from "rxjs";
+import { BehaviorSubject, map, Observable } from "rxjs";
 import { AuthorizeService } from "src/api-authorization/authorize.service";
 
 @Injectable({
@@ -10,10 +10,12 @@ import { AuthorizeService } from "src/api-authorization/authorize.service";
 export class TenantManagerService {
     private idpApiUrl: string;
     private isTenantSetSubject = new BehaviorSubject<boolean>((localStorage.getItem('tenantId')?.length ?? 0) > 0);
+    private isTenantShadowSubject = new BehaviorSubject<boolean>(Boolean(JSON.parse(localStorage.getItem('isTenantShadow') ?? 'false')));
     private tenantIdSubject = new BehaviorSubject<string | null>(localStorage.getItem('tenantId'));
     private permissionsSubject = new BehaviorSubject<string[]>(JSON.parse(localStorage.getItem('permissions') ?? '[]'));
     private userId: string | null | undefined;
     isTenantSet$ = this.isTenantSetSubject.asObservable();
+    isTenantShadow$ = this.isTenantShadowSubject.asObservable();
     tenantId$ = this.tenantIdSubject.asObservable();
     permissions$ = this.permissionsSubject.asObservable();
 
@@ -41,12 +43,14 @@ export class TenantManagerService {
 
     private setPermissionsForTenant(tenantId: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.http.get<string[]>(this.idpApiUrl + `/users/${this.userId}/organizations/${tenantId}/permissions`)
+            this.http.get<PermResult>(this.idpApiUrl + `/users/${this.userId}/organizations/${tenantId}/permissions`)
                 .subscribe({
                     next: (res) => {
                         console.log(`User permissions updated: ${res}`);
-                        localStorage.setItem('permissions', JSON.stringify(res));
-                        this.permissionsSubject.next(res);
+                        localStorage.setItem('permissions', JSON.stringify(res.permissions));
+                        localStorage.setItem('isTenantShadow', JSON.stringify(res.isTenantShadow));
+                        this.permissionsSubject.next(res.permissions);
+                        this.isTenantShadowSubject.next(res.isTenantShadow);
                         resolve(true);
                     },
                     error: (e) => {
@@ -56,4 +60,8 @@ export class TenantManagerService {
                 })
         })
     }
+}
+export interface PermResult {
+    permissions: string[],
+    isTenantShadow: boolean,
 }

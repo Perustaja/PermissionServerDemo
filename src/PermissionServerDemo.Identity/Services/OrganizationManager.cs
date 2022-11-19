@@ -204,7 +204,7 @@ namespace PermissionServerDemo.Identity.Services
 
 
         #region DemoProd
-        public async Task GenerateNewUserEnvironment(Guid newUserId)
+        public async Task GenerateNewUserEnvironmentAsync(Guid newUserId)
         {
             var newUserOrgId = Guid.NewGuid();
             var newUserOtherOrgId = Guid.NewGuid();
@@ -236,6 +236,10 @@ namespace PermissionServerDemo.Identity.Services
             _userOrgRoleRepo.Add(adminAircraftRole2);
             _userOrgRoleRepo.Add(shadowAdminRole);
             await _orgRepo.UnitOfWork.Commit();
+        }
+
+        public async Task<bool> IsUserOwnerAsync(Guid userId, Guid orgId) {
+            return await _orgRepo.IsUserOwnerAsync(userId, orgId);
         }
         #endregion
 

@@ -79,14 +79,12 @@ namespace PermissionServerDemo.Identity.Pages.Account
                 this.AddIdentityResultErrors(res);
                 return Page();
             }
-            // Send email confirmation email
-            await _acctEmailService.SendConfToAuthUserAsync(newUser);
 
             // generate tenancy and stuff, ideally this should be wholly atomic with the user creation
             // so UserManager.CreateAsync should be overriden, but this is quick and dirty for demo
-            await _orgManager.GenerateNewUserEnvironment(newUser.Id);
+            await _orgManager.GenerateNewUserEnvironmentAsync(newUser.Id);
 
-            return RedirectToPage("Login");
+            return Redirect("https://permissionserverdemo.dev/portal");
         }
     }
 }

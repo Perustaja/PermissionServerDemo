@@ -17,5 +17,6 @@ namespace PermissionServerDemo.Identity.Data.Repositories
         /// <returns>The Organization entity being tracked upon update.</returns>
         Organization Update(Organization o);
         void Delete(Organization o);
+        Task<bool> IsUserOwnerAsync(Guid userId, Guid orgId);
     }
 }
