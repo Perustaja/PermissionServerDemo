@@ -21,7 +21,7 @@ namespace PermissionServerDemo.Api.Authorization
             logger.LogInformation("Beginning authorization request from Api to Idp.");
 
             // If user is somehow is an invalid state, challenge
-            if (context.HttpContext.User?.Identity.IsAuthenticated == false)
+            if (!context.HttpContext.User?.Identity.IsAuthenticated)
             {
                 logger.LogWarning("User was not authenticated for GRPC authorization. Returning challenge.");
                 context.Result = new ChallengeResult();

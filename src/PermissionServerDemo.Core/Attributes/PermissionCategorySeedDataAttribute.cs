@@ -11,7 +11,6 @@ namespace PermissionServerDemo.Core.Attributes
     public class PermissionCategorySeedDataAttribute : Attribute
     {
         public string Name { get; set; }
-        public bool VisibleToUser { get; set; }
 
         /// <summary>
         /// Creates an enum mapping profile so the db and application definition stay in synch.
