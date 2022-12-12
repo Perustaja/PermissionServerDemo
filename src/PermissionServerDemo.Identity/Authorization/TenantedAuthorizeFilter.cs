@@ -24,7 +24,7 @@ namespace PermissionServerDemo.Identity.Authorization
             logger.LogInformation("Beginning local authorization request.");
 
             // If user is somehow is an invalid state, challenge
-            if (!context.HttpContext.User?.Identity.IsAuthenticated)
+            if (context.HttpContext.User?.Identity.IsAuthenticated == false)
             {
                 logger.LogWarning("User was not authenticated for authorization. Returning challenge.");
                 context.Result = new ChallengeResult();
