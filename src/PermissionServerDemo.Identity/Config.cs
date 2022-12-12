@@ -44,6 +44,8 @@ namespace PermissionServerDemo.Identity
                         "testapi",
                     },
                     // NOTE: Configure a client secret for production.
+                    // this will need to also be configured in the client within authorize.service.ts 
+                    // See https://docs.duendesoftware.com/identityserver/v5/reference/models/client/
                     RequirePkce = true,
                     RequireClientSecret = false
                 },

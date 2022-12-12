@@ -185,6 +185,9 @@ export class AuthorizeService {
       loadUserInfo: true,
       automaticSilentRenew: true,
       includeIdTokenInSilentRenew: true,
+      // set client secret here in production, ideally sourced through some secure way
+      // client_secret: ...
+      // https://authts.github.io/oidc-client-ts/interfaces/UserManagerSettings.html#client_secret
     };
     this.userManager = new UserManager(settings);
 
