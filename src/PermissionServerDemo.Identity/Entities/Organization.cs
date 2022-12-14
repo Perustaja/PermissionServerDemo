@@ -17,7 +17,6 @@ namespace PermissionServerDemo.Identity.Entities
         public DateTime CreationDate { get; private set; }
         public List<UserOrganization> UserOrganizations { get; set; }
         public List<UserOrganizationRole> UserOrganizationRoles { get; set; }
-        public List<Role> Roles { get; set; }
         public Organization() { }
         public Organization(string title, bool requiresConf, Guid ownerId, string logoUri)
         {
