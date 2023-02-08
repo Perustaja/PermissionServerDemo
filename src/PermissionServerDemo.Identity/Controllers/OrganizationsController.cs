@@ -1,6 +1,5 @@
 using AutoMapper;
 using PermissionServerDemo.Core.Authorization;
-using PermissionServerDemo.Identity.Attributes;
 using PermissionServerDemo.Identity.Entities;
 using PermissionServerDemo.Identity.Entities.Dtos;
 using PermissionServerDemo.Identity.Interfaces;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static Duende.IdentityServer.IdentityServerConstants;
+using PermissionServerDemo.Core.Attributes;
 
 namespace PermissionServerDemo.Identity.Controllers
 {
@@ -30,7 +30,7 @@ namespace PermissionServerDemo.Identity.Controllers
         }
 
         [HttpGet("{orgId}/users")]
-        [TenantedAuthorize]
+        [LocalAuthorize]
         public async Task<IActionResult> GetOrganizationUsers(Guid orgId)
         {
             var userOrgs = await _orgManager.GetUsersOfOrgAsync(orgId);
@@ -48,7 +48,7 @@ namespace PermissionServerDemo.Identity.Controllers
         }
 
         [HttpDelete("{orgId}/users/{userId}")]
-        [TenantedAuthorize(PermissionEnum.UsersManageAccess)]
+        [LocalAuthorize(PermissionEnum.UsersManageAccess)]
         public async Task<IActionResult> RevokeTenantAccessForUser(Guid orgId, Guid userId)
         {
             var errOpt = await _orgManager.RevokeAccessAsync(userId, orgId);

@@ -1,11 +1,11 @@
 using AutoMapper;
-using PermissionServerDemo.Identity.Attributes;
 using PermissionServerDemo.Identity.Entities.Dtos;
 using PermissionServerDemo.Identity.Interfaces;
 using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Duende.IdentityServer.IdentityServerConstants;
+using PermissionServerDemo.Core.Attributes;
 
 namespace PermissionServerDemo.Identity.Controllers
 {
@@ -37,7 +37,7 @@ namespace PermissionServerDemo.Identity.Controllers
         }
 
         [HttpGet("users/{userId}/organizations/{orgId}/permissions")]
-        [TenantedAuthorize]
+        [LocalAuthorize]
         public async Task<IActionResult> GetPermissionsWithinTenant(Guid userId, Guid orgId)
         {
             var tokenId = new Guid(User.GetSubjectId());

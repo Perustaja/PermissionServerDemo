@@ -1,6 +1,7 @@
-using PermissionServerDemo.Core.Tenancy;
 
-namespace PermissionServerDemo.Api.Tenancy
+using PermissionServer;
+
+namespace PermissionServerDemo.Api.Data
 {
     /// <summary>
     /// Provides a way to handle design-time migrations.
@@ -14,6 +15,6 @@ namespace PermissionServerDemo.Api.Tenancy
             _tenantId = tenantId;
         }
 
-        public Tenant GetCurrentRequestTenant() => new Tenant(_tenantId);
+        public Guid GetCurrentRequestTenant() => _tenantId;
     }
 }

@@ -1,3 +1,4 @@
+using PermissionServer;
 using PermissionServerDemo.Core.Authorization;
 using PermissionServerDemo.Identity.Interfaces;
 

@@ -1,8 +1,10 @@
 using AutoMapper;
+using PermissionServer.Common;
+using PermissionServerDemo.Core.Authorization;
 
 namespace PermissionServerDemo.Identity.Entities.Dtos
 {
-    [AutoMap(typeof(Permission))]
+    [AutoMap(typeof(Permission<PermissionEnum, PermissionCategoryEnum>))]
     public class PermissionGetDto
     {
         public string Id { get; set; }

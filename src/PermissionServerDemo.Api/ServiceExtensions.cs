@@ -1,10 +1,9 @@
 using System.Reflection;
-using Psd.Protobuf;
 using PermissionServerDemo.Api.Data;
-using PermissionServerDemo.Api.Tenancy;
-using PermissionServerDemo.Core.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using PermissionServer;
+using PermissionServerDemo.Core.Authorization;
 
 namespace PermissionServerDemo.Api;
 
@@ -47,19 +46,11 @@ internal static class ServiceExtensions
             });
         });
 
-        builder.Services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
+        builder.Services.AddPermissionServer<PermissionEnum, PermissionCategoryEnum>()
+            .AddRemoteAuthorization("https://localhost:5100", false);
+
         builder.Services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
-        builder.Services.AddGrpc();
-        builder.Services.AddGrpcClients();
 
         return builder.Build();
-    }
-
-    public static void AddGrpcClients(this IServiceCollection sc)
-    {
-        sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeClient>(o =>
-        {
-            o.Address = new Uri("https://localhost:5100");
-        });
     }
 }

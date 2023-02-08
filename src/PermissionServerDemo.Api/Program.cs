@@ -1,3 +1,4 @@
+using PermissionServer;
 using PermissionServerDemo.Api;
 using Serilog;
 
@@ -19,6 +20,7 @@ app.UseRouting();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UsePermissionServer();
 
 app.UseEndpoints(e =>
 {

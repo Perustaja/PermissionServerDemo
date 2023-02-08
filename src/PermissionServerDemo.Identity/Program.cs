@@ -1,4 +1,5 @@
-﻿using PermissionServerDemo.Identity;
+﻿using PermissionServer;
+using PermissionServerDemo.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,13 +27,13 @@ app.UseRouting();
 app.UseCors();
 app.UseIdentityServer();
 app.UseAuthorization();
+app.UsePermissionServer();
 
 app.UseEndpoints(e =>
 {
     e.MapRazorPages()
         .RequireAuthorization();
     e.MapControllers();
-    e.MapGrpcAuthorizationServices();
 });
 
 app.Run();

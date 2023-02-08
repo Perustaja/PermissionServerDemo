@@ -1,5 +1,5 @@
+using PermissionServer.Common;
 using PermissionServerDemo.Core.Authorization;
-using PermissionServerDemo.Identity.Entities;
 
 namespace PermissionServerDemo.Identity.Interfaces
 {
@@ -15,8 +15,8 @@ namespace PermissionServerDemo.Identity.Interfaces
         Task<bool> UserHasPermissionsAsync(Guid userId, Guid orgId, params string[] perms);
         Task<List<PermissionEnum>> GetUsersPermissionsAsync(Guid userId, Guid orgId);
         /// <returns>A list of permission objects with populated PermissionCategories</returns>
-        Task<List<Permission>> GetAllPermissionsAsync();
+        Task<List<Permission<PermissionEnum, PermissionCategoryEnum>>> GetAllPermissionsAsync();
         /// <returns>A list of all PermissionCategories with populated Permissions</returns>
-        Task<List<PermissionCategory>> GetAllPermissionCategoriesAsync();
+        Task<List<PermissionCategory<PermissionEnum, PermissionCategoryEnum>>> GetAllPermissionCategoriesAsync();
     }
 }

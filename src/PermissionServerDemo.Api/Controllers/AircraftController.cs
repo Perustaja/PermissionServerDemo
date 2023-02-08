@@ -1,5 +1,4 @@
 using AutoMapper;
-using PermissionServerDemo.Api.Attributes;
 using PermissionServerDemo.Api.Data;
 using PermissionServerDemo.Api.Entities;
 using PermissionServerDemo.Api.Entities.Dtos;
@@ -7,6 +6,7 @@ using PermissionServerDemo.Core.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PermissionServerDemo.Core.Attributes;
 
 namespace PermissionServerDemo.Api.Controllers
 {
@@ -26,7 +26,7 @@ namespace PermissionServerDemo.Api.Controllers
         }
 
         [HttpGet]
-        [TenantedAuthorize]
+        [RemoteAuthorize]
         [Route("{tenantId}/aircraft")]
         public async Task<IActionResult> Get(Guid tenantId)
         {
@@ -38,7 +38,7 @@ namespace PermissionServerDemo.Api.Controllers
 
         [HttpPost]
         [Route("{tenantId}/aircraft")]
-        [TenantedAuthorize(PermissionEnum.AircraftCreate)]
+        [RemoteAuthorize(PermissionEnum.AircraftCreate)]
         public async Task<IActionResult> Post(Guid tenantId, [FromBody] AircraftCreateDto dto)
         {
             if (await _dbContext.Set<Aircraft>().AnyAsync(a => a.RegNumber == dto.RegNumber))
