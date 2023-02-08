@@ -1,7 +1,7 @@
 using PermissionServerDemo.Api.Entities;
 using PermissionServerDemo.Core.Interfaces;
-using PermissionServerDemo.Core.Tenancy;
 using Microsoft.EntityFrameworkCore;
+using PermissionServer;
 
 namespace PermissionServerDemo.Api.Data
 {
@@ -9,8 +9,7 @@ namespace PermissionServerDemo.Api.Data
     {
         private readonly IConfiguration _config;
         DbSet<Aircraft> Aircraft { get; set; }
-        public Guid tenantId => _tenant.Id;
-        private readonly Tenant _tenant;
+        public Guid tenantId { get; }
         private readonly Guid _demoMyTenantId;
         private readonly Guid _demoOtherTenantId;
         public TenantedDbContext(DbContextOptions<TenantedDbContext> options,
@@ -18,7 +17,7 @@ namespace PermissionServerDemo.Api.Data
             ITenantProvider tenantProvider)
             : base(options)
         {
-            _tenant = tenantProvider?.GetCurrentRequestTenant() ?? throw new ArgumentNullException(nameof(tenantProvider));
+            tenantId = tenantProvider?.GetCurrentRequestTenant() ?? throw new ArgumentNullException(nameof(tenantProvider));
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _demoMyTenantId = Guid.Parse(config["DemoMyTenantId"]);
             _demoOtherTenantId = Guid.Parse(config["DemoOtherTenantId"]);

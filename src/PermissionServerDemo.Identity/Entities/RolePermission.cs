@@ -1,3 +1,4 @@
+using PermissionServer.Common;
 using PermissionServerDemo.Core.Authorization;
 
 namespace PermissionServerDemo.Identity.Entities
@@ -10,7 +11,7 @@ namespace PermissionServerDemo.Identity.Entities
         public Guid RoleId { get; private set; }
         public string PermissionId { get; private set; }
         public Role Role { get; set; }
-        public Permission Permission { get; set; }
+        public Permission<PermissionEnum, PermissionCategoryEnum> Permission { get; set; }
         public RolePermission() { }
         public RolePermission(Guid roleId, PermissionEnum permId)
         {

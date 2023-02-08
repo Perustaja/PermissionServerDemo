@@ -1,4 +1,3 @@
-using PermissionServerDemo.Api.Tenancy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

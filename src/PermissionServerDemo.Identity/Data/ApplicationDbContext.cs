@@ -6,14 +6,14 @@ using PermissionServerDemo.Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PermissionServerDemo.Core.Authorization;
+using PermissionServer.Common;
 
 namespace PermissionServerDemo.Identity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>, IUnitOfWork
     {
         public DbSet<Organization> Organizations { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
-        public DbSet<PermissionCategory> PermissionCategories { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserOrganization> UserOrganizations { get; set; }
         public DbSet<UserOrganizationRole> UserOrganizationRoles { get; set; }
@@ -49,9 +49,8 @@ namespace PermissionServerDemo.Identity.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Permissions seeding MUST be done before others, and in this order to seed properly
-            modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionCategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new PermissionsSeeder.PermissionConfiguration());
+            modelBuilder.AddPermissionServer<PermissionEnum, PermissionCategoryEnum>();
+
             // Seed global defaults and setup join tables, this is for old EF core so these may be unnecessary
             modelBuilder.ApplyConfiguration(new RoleConfiguration(_globalRoleProvider));
             modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(_globalRoleProvider));

@@ -1,11 +1,11 @@
 using System;
-using Psd.Protobuf;
 using PermissionServerDemo.Core.Authorization;
 using PermissionServerDemo.Identity.Authorization;
 using PermissionServerDemo.Identity.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using PermissionServer;
 
 namespace UnitTests
 {

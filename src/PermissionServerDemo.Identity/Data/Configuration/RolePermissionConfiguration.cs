@@ -22,10 +22,6 @@ namespace PermissionServerDemo.Identity.Data.Configuration
                 .HasOne(rp => rp.Role)
                 .WithMany(r => r.RolePermissions)
                 .HasForeignKey(rp => rp.RoleId);
-            builder
-                .HasOne(rp => rp.Permission)
-                .WithMany(p => p.RolePermissions)
-                .HasForeignKey(rp => rp.PermissionId);
 
             SeedGlobalRolePerms(builder);
         }

@@ -1,6 +1,5 @@
 using AutoMapper;
 using PermissionServerDemo.Core.Authorization;
-using PermissionServerDemo.Identity.Attributes;
 using PermissionServerDemo.Identity.Entities;
 using PermissionServerDemo.Identity.Entities.Dtos;
 using PermissionServerDemo.Identity.Interfaces;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static Duende.IdentityServer.IdentityServerConstants;
+using PermissionServerDemo.Core.Attributes;
 
 namespace PermissionServerDemo.Identity.Controllers
 {
@@ -29,7 +29,7 @@ namespace PermissionServerDemo.Identity.Controllers
         }
 
         [HttpGet("organizations/{orgId}/roles")]
-        [TenantedAuthorize]
+        [LocalAuthorize]
         public async Task<IActionResult> GetOrganizationRoles(Guid orgId)
         {
             var roles = await _orgManager.GetRolesOfOrgAsync(orgId);
@@ -42,7 +42,7 @@ namespace PermissionServerDemo.Identity.Controllers
         }
 
         [HttpPost("organizations/{orgId}/roles")]
-        [TenantedAuthorize(PermissionEnum.RolesCreate)]
+        [LocalAuthorize(PermissionEnum.RolesCreate)]
         public async Task<IActionResult> CreateOrganizationRole(Guid orgId, [FromBody] RoleCreateDto dto)
         {
             var perms = new List<PermissionEnum>();
@@ -60,7 +60,7 @@ namespace PermissionServerDemo.Identity.Controllers
         }
 
         [HttpDelete("organizations/{orgId}/users/{userId}/roles/{roleId}")]
-        [TenantedAuthorize(PermissionEnum.UsersManageRoles)]
+        [LocalAuthorize(PermissionEnum.UsersManageRoles)]
         public async Task<IActionResult> RemoveRoleFromUser(Guid orgId, Guid userId, Guid roleId)
         {
             var errOpt = await _orgManager.RemoveRoleFromUserAsync(userId, orgId, roleId);

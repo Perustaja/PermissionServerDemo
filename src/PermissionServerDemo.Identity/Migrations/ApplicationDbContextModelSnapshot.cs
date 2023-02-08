@@ -116,6 +116,115 @@ namespace PermissionServerDemo.Identity.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PermissionServer.Common.Entities.Permission<PermissionServerDemo.Core.Authorization.PermissionEnum, PermissionServerDemo.Core.Authorization.PermissionCategoryEnum>", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PermCategoryId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermCategoryId");
+
+                    b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "AircraftCreate",
+                            Description = "Users with this permission can create new aircraft within the tenant.",
+                            Name = "Create Aircraft",
+                            PermCategoryId = "Aircraft"
+                        },
+                        new
+                        {
+                            Id = "AircraftEdit",
+                            Description = "Users with this permission can edit aircraft within the tenant.",
+                            Name = "Edit Aircraft",
+                            PermCategoryId = "Aircraft"
+                        },
+                        new
+                        {
+                            Id = "AircraftDelete",
+                            Description = "Users with this permission can delete aircraft within the tenant.",
+                            Name = "Delete Aircraft",
+                            PermCategoryId = "Aircraft"
+                        },
+                        new
+                        {
+                            Id = "RolesCreate",
+                            Description = "Users with this permission can create roles within the tenant.",
+                            Name = "Create Roles",
+                            PermCategoryId = "Roles"
+                        },
+                        new
+                        {
+                            Id = "RolesEdit",
+                            Description = "Users with this permission can edit roles within the tenant.",
+                            Name = "Edit Roles",
+                            PermCategoryId = "Roles"
+                        },
+                        new
+                        {
+                            Id = "RolesDelete",
+                            Description = "Users with this permission can delete roles within the tenant.",
+                            Name = "Delete Roles",
+                            PermCategoryId = "Roles"
+                        },
+                        new
+                        {
+                            Id = "UsersManageRoles",
+                            Description = "Users with this permission can add or remove users' roles within the tenant.",
+                            Name = "Manage Users' Roles",
+                            PermCategoryId = "Users"
+                        },
+                        new
+                        {
+                            Id = "UsersManageAccess",
+                            Description = "Users with this permission can revoke access for users within the tenant.",
+                            Name = "Manage Users' Access",
+                            PermCategoryId = "Users"
+                        });
+                });
+
+            modelBuilder.Entity("PermissionServer.Common.Entities.PermissionCategory<PermissionServerDemo.Core.Authorization.PermissionEnum, PermissionServerDemo.Core.Authorization.PermissionCategoryEnum>", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PermissionCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "Aircraft",
+                            Name = "Aircraft"
+                        },
+                        new
+                        {
+                            Id = "Roles",
+                            Name = "Roles"
+                        },
+                        new
+                        {
+                            Id = "Users",
+                            Name = "Users"
+                        });
+                });
+
             modelBuilder.Entity("PermissionServerDemo.Identity.Entities.Organization", b =>
                 {
                     b.Property<Guid>("Id")
@@ -148,7 +257,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 12, 14, 0, 55, 25, 258, DateTimeKind.Utc).AddTicks(3593),
+                            CreationDate = new DateTime(2023, 1, 27, 2, 26, 27, 724, DateTimeKind.Utc).AddTicks(9834),
                             IsActive = true,
                             LogoUri = "tenantlogo1.jpg",
                             OwnerUserId = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
@@ -158,138 +267,12 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
-                            CreationDate = new DateTime(2022, 12, 14, 0, 55, 25, 258, DateTimeKind.Utc).AddTicks(3596),
+                            CreationDate = new DateTime(2023, 1, 27, 2, 26, 27, 724, DateTimeKind.Utc).AddTicks(9839),
                             IsActive = true,
                             LogoUri = "tenantlogo2.jpg",
                             OwnerUserId = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             RequiresConfirmationForNewUsers = false,
                             Title = "OtherCompany"
-                        });
-                });
-
-            modelBuilder.Entity("PermissionServerDemo.Identity.Entities.Permission", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsObsolete")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PermCategoryId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PermCategoryId");
-
-                    b.ToTable("Permissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "AircraftCreate",
-                            Description = "Users with this permission can create new aircraft within the tenant.",
-                            IsObsolete = false,
-                            Name = "Create Aircraft",
-                            PermCategoryId = "Aircraft"
-                        },
-                        new
-                        {
-                            Id = "AircraftEdit",
-                            Description = "Users with this permission can edit aircraft within the tenant.",
-                            IsObsolete = false,
-                            Name = "Edit Aircraft",
-                            PermCategoryId = "Aircraft"
-                        },
-                        new
-                        {
-                            Id = "AircraftDelete",
-                            Description = "Users with this permission can delete aircraft within the tenant.",
-                            IsObsolete = false,
-                            Name = "Delete Aircraft",
-                            PermCategoryId = "Aircraft"
-                        },
-                        new
-                        {
-                            Id = "RolesCreate",
-                            Description = "Users with this permission can create roles within the tenant.",
-                            IsObsolete = false,
-                            Name = "Create Roles",
-                            PermCategoryId = "Roles"
-                        },
-                        new
-                        {
-                            Id = "RolesEdit",
-                            Description = "Users with this permission can edit roles within the tenant.",
-                            IsObsolete = false,
-                            Name = "Edit Roles",
-                            PermCategoryId = "Roles"
-                        },
-                        new
-                        {
-                            Id = "RolesDelete",
-                            Description = "Users with this permission can delete roles within the tenant.",
-                            IsObsolete = false,
-                            Name = "Delete Roles",
-                            PermCategoryId = "Roles"
-                        },
-                        new
-                        {
-                            Id = "UsersManageRoles",
-                            Description = "Users with this permission can add or remove users' roles within the tenant.",
-                            IsObsolete = false,
-                            Name = "Manage Users' Roles",
-                            PermCategoryId = "Users"
-                        },
-                        new
-                        {
-                            Id = "UsersManageAccess",
-                            Description = "Users with this permission can revoke access for users within the tenant.",
-                            IsObsolete = false,
-                            Name = "Manage Users' Access",
-                            PermCategoryId = "Users"
-                        });
-                });
-
-            modelBuilder.Entity("PermissionServerDemo.Identity.Entities.PermissionCategory", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsObsolete")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PermissionCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "Aircraft",
-                            IsObsolete = false,
-                            Name = "Aircraft"
-                        },
-                        new
-                        {
-                            Id = "Roles",
-                            IsObsolete = false,
-                            Name = "Roles"
-                        },
-                        new
-                        {
-                            Id = "Users",
-                            IsObsolete = false,
-                            Name = "Users"
                         });
                 });
 
@@ -344,7 +327,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("78a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "1733212b-7cad-425d-9be4-15a5d2e5e765",
+                            ConcurrencyStamp = "3fd39807-829e-438c-b894-9227d2115b3b",
                             Description = "Default admin role for new tenant owners",
                             IsGlobal = true,
                             IsGlobalAdminDefault = true,
@@ -356,7 +339,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("77a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "06bb6132-4ce3-49b7-8db6-81a20cb7e93a",
+                            ConcurrencyStamp = "8bdd6ce8-70dd-4b40-81c1-f42714ac085b",
                             Description = "Default user role with minimal permissions",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -368,7 +351,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         new
                         {
                             Id = new Guid("75a7570f-3ce5-48ba-9461-80283ed1d94d"),
-                            ConcurrencyStamp = "1b2b414e-9199-4a2b-bd83-fc562993b901",
+                            ConcurrencyStamp = "117f7d98-b1d1-427f-ac0a-109f678a18d0",
                             Description = "Role for creating new aircraft",
                             IsGlobal = true,
                             IsGlobalAdminDefault = false,
@@ -511,7 +494,7 @@ namespace PermissionServerDemo.Identity.Migrations
                         {
                             Id = new Guid("79a7570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5907a69b-0da6-4eca-b5c9-29c028409c25",
+                            ConcurrencyStamp = "d16a6919-a6c0-4f91-8f71-04037c03f1bd",
                             Email = "admin@mydomain.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -519,7 +502,7 @@ namespace PermissionServerDemo.Identity.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MYDOMAIN.COM",
                             NormalizedUserName = "ADMIN@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEI3W359atDUX7WXd0tucD+9xCCRZ8gubPrnlTMRI+0RTbsj2IvA3Ay545Ofo6OR6ZQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBdIUcXK9GF348FQ4S6+aypYwylfqg8jlnrPLTWv1jAY6FShouRjr2hzxhQH/cuqdg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -529,13 +512,13 @@ namespace PermissionServerDemo.Identity.Migrations
                         {
                             Id = new Guid("77a6570f-3ce5-48ba-9461-80283ed1d94d"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6a1e1a0a-1fa9-4a26-b06b-3157534095b9",
+                            ConcurrencyStamp = "9b36ee70-2a57-470e-8be9-1e4a69f443e5",
                             Email = "shadow@mydomain.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHADOW@MYDOMAIN.COM",
                             NormalizedUserName = "SHADOW@MYDOMAIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENyINnKrOIRcELA44i8IfumF7MEbI/olXy9d1bzdoecv4oI2U4dubPm+tkwz4OJJFg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENNQhj4JS1Mw/goWVCXLwF3JeqWh+lBFQz93hBGxpdlmbEfwJSD6I7nSBsYzkYM28Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "00000000-0000-0000-0000-000000000000",
                             TwoFactorEnabled = false,
@@ -582,8 +565,8 @@ namespace PermissionServerDemo.Identity.Migrations
                             OrgId = new Guid("77a5570f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 12, 13, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 12, 13, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2023, 1, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2023, 1, 26, 0, 0, 0, 0, DateTimeKind.Local)
                         },
                         new
                         {
@@ -591,8 +574,8 @@ namespace PermissionServerDemo.Identity.Migrations
                             OrgId = new Guid("77a6550f-3ce5-48ba-9461-80283ed1d94d"),
                             AwaitingApproval = false,
                             Blacklisted = false,
-                            DateApproved = new DateTime(2022, 12, 13, 0, 0, 0, 0, DateTimeKind.Local),
-                            DateSubmitted = new DateTime(2022, 12, 13, 0, 0, 0, 0, DateTimeKind.Local)
+                            DateApproved = new DateTime(2023, 1, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            DateSubmitted = new DateTime(2023, 1, 26, 0, 0, 0, 0, DateTimeKind.Local)
                         });
                 });
 
@@ -699,9 +682,9 @@ namespace PermissionServerDemo.Identity.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PermissionServerDemo.Identity.Entities.Permission", b =>
+            modelBuilder.Entity("PermissionServer.Common.Entities.Permission<PermissionServerDemo.Core.Authorization.PermissionEnum, PermissionServerDemo.Core.Authorization.PermissionCategoryEnum>", b =>
                 {
-                    b.HasOne("PermissionServerDemo.Identity.Entities.PermissionCategory", "PermCategory")
+                    b.HasOne("PermissionServer.Common.Entities.PermissionCategory<PermissionServerDemo.Core.Authorization.PermissionEnum, PermissionServerDemo.Core.Authorization.PermissionCategoryEnum>", "PermCategory")
                         .WithMany("Permissions")
                         .HasForeignKey("PermCategoryId");
 
@@ -719,8 +702,8 @@ namespace PermissionServerDemo.Identity.Migrations
 
             modelBuilder.Entity("PermissionServerDemo.Identity.Entities.RolePermission", b =>
                 {
-                    b.HasOne("PermissionServerDemo.Identity.Entities.Permission", "Permission")
-                        .WithMany("RolePermissions")
+                    b.HasOne("PermissionServer.Common.Entities.Permission<PermissionServerDemo.Core.Authorization.PermissionEnum, PermissionServerDemo.Core.Authorization.PermissionCategoryEnum>", "Permission")
+                        .WithMany()
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -782,21 +765,16 @@ namespace PermissionServerDemo.Identity.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PermissionServer.Common.Entities.PermissionCategory<PermissionServerDemo.Core.Authorization.PermissionEnum, PermissionServerDemo.Core.Authorization.PermissionCategoryEnum>", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
             modelBuilder.Entity("PermissionServerDemo.Identity.Entities.Organization", b =>
                 {
                     b.Navigation("UserOrganizationRoles");
 
                     b.Navigation("UserOrganizations");
-                });
-
-            modelBuilder.Entity("PermissionServerDemo.Identity.Entities.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
-
-            modelBuilder.Entity("PermissionServerDemo.Identity.Entities.PermissionCategory", b =>
-                {
-                    b.Navigation("Permissions");
                 });
 
             modelBuilder.Entity("PermissionServerDemo.Identity.Entities.Role", b =>

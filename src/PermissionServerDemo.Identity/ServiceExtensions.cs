@@ -1,7 +1,5 @@
 using System.Reflection;
-using Psd.Protobuf;
 using PermissionServerDemo.Core.Authorization;
-using PermissionServerDemo.Core.Tenancy;
 using PermissionServerDemo.Identity.Authorization;
 using PermissionServerDemo.Identity.Data;
 using PermissionServerDemo.Identity.Data.Configuration.DependencyInjection;
@@ -9,14 +7,13 @@ using PermissionServerDemo.Identity.Data.Repositories;
 using PermissionServerDemo.Identity.Entities;
 using PermissionServerDemo.Identity.Entities.Dtos;
 using PermissionServerDemo.Identity.Extensions;
-using PermissionServerDemo.Identity.Grpc;
 using PermissionServerDemo.Identity.Interfaces;
 using PermissionServerDemo.Identity.Mapping;
 using PermissionServerDemo.Identity.Options;
 using PermissionServerDemo.Identity.Services;
-using PermissionServerDemo.Identity.Tenancy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PermissionServer;
 
 namespace PermissionServerDemo.Identity;
 
@@ -24,7 +21,6 @@ internal static class ServiceExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-
         builder.Services.AddDbContext<ApplicationDbContext>();
 
         builder.Services.AddIdentity<User, Role>()
@@ -32,7 +28,8 @@ internal static class ServiceExtensions
             .AddSignInManager<UserSignInManager>()
             .AddDefaultTokenProviders();
 
-        builder.Services.AddApiVersioning(options => {
+        builder.Services.AddApiVersioning(options =>
+        {
             options.AssumeDefaultVersionWhenUnspecified = true;
         });
 
@@ -46,14 +43,12 @@ internal static class ServiceExtensions
             });
         });
 
-        builder.Services
-            .AddIdentityServer(options =>
+        builder.Services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
-
                 options.EmitStaticAudienceClaim = true;
             })
             .AddInMemoryIdentityResources(Config.Ids)
@@ -61,7 +56,6 @@ internal static class ServiceExtensions
             .AddInMemoryClients(Config.Clients)
             .AddAspNetIdentity<User>();
 
-        builder.Services.AddGrpc();
         builder.Services.AddHttpContextAccessor();
 
         // Services
@@ -71,16 +65,13 @@ internal static class ServiceExtensions
         builder.Services.AddScoped<IOrganizationManager, OrganizationManager>();
         builder.Services.AddScoped<IOrganizationInviteService, OrganizationInviteService>();
         builder.Services.AddScoped<IAccountEmailService, AccountEmailService>();
-        builder.Services.AddScoped<IAuthorizationEvaluator, AuthorizationEvaluator>();
         builder.Services.AddScoped<IPermissionService, PermissionService>();
-        builder.Services.AddScoped<ITenantProvider, RouteDataTenantProvider>();
         // Repositories
         builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
         builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
         builder.Services.AddScoped<IUserOrganizationRepository, UserOrganizationRepository>();
         builder.Services.AddScoped<IUserOrganizationRoleRepository, UserOrganizationRoleRepository>();
-        builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
         builder.Services.AddRazorPages()
             .AddRazorPagesOptions(o =>
@@ -116,7 +107,14 @@ internal static class ServiceExtensions
             options.Cookie.IsEssential = true;
         });
 
-        builder.Services.AddGrpcClients();
+        builder.Services.AddPermissionServer<PermissionEnum, PermissionCategoryEnum>(o =>
+            {
+                o.RouteDataTenantIdentifier = "orgId";
+            })
+            .AddRemoteAuthorization("https://localhost:6100", true)
+            .AddAuthorizationEvaluator<AuthorizationEvaluator>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
         builder.Services.AddLocalApiAuthentication();
         builder.Services.AddAutoMapperWithTypeConverters();
         builder.AddDemoGlobalRoles();
@@ -139,20 +137,6 @@ internal static class ServiceExtensions
                 context.Request.Path = path;
                 await next();
             }
-        });
-    }
-
-    public static IEndpointRouteBuilder MapGrpcAuthorizationServices(this IEndpointRouteBuilder e)
-    {
-        e.MapGrpcService<RemotePermissionAuthorizeService>();
-        return e;
-    }
-
-    private static void AddGrpcClients(this IServiceCollection sc)
-    {
-        sc.AddGrpcClient<GrpcPermissionAuthorize.GrpcPermissionAuthorizeBase>(o =>
-        {
-            o.Address = new Uri("https://localhost:6100");
         });
     }
 
