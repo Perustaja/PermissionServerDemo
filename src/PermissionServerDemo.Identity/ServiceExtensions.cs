@@ -111,8 +111,7 @@ internal static class ServiceExtensions
             {
                 o.RouteDataTenantIdentifier = "orgId";
             })
-            .AddRemoteAuthorization("https://localhost:6100", true)
-            .AddAuthorizationEvaluator<AuthorizationEvaluator>()
+            .AddRemoteAuthorization<AuthorizationEvaluator>("https://localhost:6100")
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.AddLocalApiAuthentication();

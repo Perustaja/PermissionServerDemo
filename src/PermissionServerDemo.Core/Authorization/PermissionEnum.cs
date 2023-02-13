@@ -1,5 +1,6 @@
 
 using PermissionServer.Common;
+using PermissionServerDemo.Core.Attributes;
 
 namespace PermissionServerDemo.Core.Authorization
 {
@@ -10,23 +11,23 @@ namespace PermissionServerDemo.Core.Authorization
     /// </summary>
     public enum PermissionEnum : byte
     {
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Aircraft, "Create Aircraft", "Users with this permission can create new aircraft within the tenant.")]
+        [Permission(PermissionCategoryEnum.Aircraft, "Create Aircraft", "Users with this permission can create new aircraft within the tenant.")]
         AircraftCreate,
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Aircraft, "Edit Aircraft", "Users with this permission can edit aircraft within the tenant.")]
+        [Permission(PermissionCategoryEnum.Aircraft, "Edit Aircraft", "Users with this permission can edit aircraft within the tenant.")]
         AircraftEdit,
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Aircraft, "Delete Aircraft", "Users with this permission can delete aircraft within the tenant.")]
+        [Permission(PermissionCategoryEnum.Aircraft, "Delete Aircraft", "Users with this permission can delete aircraft within the tenant.")]
         AircraftDelete,
 
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Roles, "Create Roles", "Users with this permission can create roles within the tenant.")]
+        [Permission(PermissionCategoryEnum.Roles, "Create Roles", "Users with this permission can create roles within the tenant.")]
         RolesCreate,
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Roles, "Edit Roles", "Users with this permission can edit roles within the tenant.")]
+        [Permission(PermissionCategoryEnum.Roles, "Edit Roles", "Users with this permission can edit roles within the tenant.")]
         RolesEdit,
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Roles, "Delete Roles", "Users with this permission can delete roles within the tenant.")]
+        [Permission(PermissionCategoryEnum.Roles, "Delete Roles", "Users with this permission can delete roles within the tenant.")]
         RolesDelete,
 
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Users, "Manage Users' Roles", "Users with this permission can add or remove users' roles within the tenant.")]
+        [Permission(PermissionCategoryEnum.Users, "Manage Users' Roles", "Users with this permission can add or remove users' roles within the tenant.")]
         UsersManageRoles,
-        [PermissionData<PermissionCategoryEnum>(PermissionCategoryEnum.Users, "Manage Users' Access", "Users with this permission can revoke access for users within the tenant.")]
+        [Permission(PermissionCategoryEnum.Users, "Manage Users' Access", "Users with this permission can revoke access for users within the tenant.")]
         UsersManageAccess
     }
 }

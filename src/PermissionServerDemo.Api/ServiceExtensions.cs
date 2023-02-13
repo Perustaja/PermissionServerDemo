@@ -47,7 +47,7 @@ internal static class ServiceExtensions
         });
 
         builder.Services.AddPermissionServer<PermissionEnum, PermissionCategoryEnum>()
-            .AddRemoteAuthorization("https://localhost:5100", false);
+            .AddRemoteAuthorization("https://localhost:5100");
 
         builder.Services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
 
