@@ -2,6 +2,7 @@
 1. [Demo Setup](#demosetup)
 2. [Features](#features)
 3. [Goals and methodology](#thoughts)
+4. [Reflection and what I'd do differently](#reflection)
  
 # Demo Setup <a name="demosetup"></a>
 #### Minimal setup
@@ -105,3 +106,6 @@ Regardless, using the existing authorization within ASP.NET Core and gRPC leads 
 
 #### User-defined roles
 The last feature of this project is the ability for admins to make their own roles and assign them to their users. Global roles are provided as suggested defaults. This is likely overkill for most projects but is another interesting feature for more complicated designs.
+ 
+ # Reflection and what I'd do differently <a name="reflection"></a>
+ Seeing as .NET is moving away from IdentityServer, something like Keycloak or another open-source authentication library would be better. A more fleshed out system for tracking and managing permissions can be done, specifically it was not possible to do some checks on permissions and existing records during migration at the time, but it was planned to allow this when I checked. 
